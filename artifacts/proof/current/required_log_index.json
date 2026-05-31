@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-31T23:18:14.558739+00:00",
+  "generated_at": "2026-05-31T23:31:49.212063+00:00",
   "proof_root": "artifacts/proof/current",
   "required_logs_total": 7,
   "missing_required_logs": [],
@@ -8,18 +8,18 @@
       "path": "artifacts/proof/current/release_gate.log",
       "location_scope": "archive_internal",
       "exists": true,
-      "recorded_sha256": "2fbe1c5d4f4dea40303c4c3f8201a0239419c61339aea6562b56587f40c0b5be",
-      "actual_sha256": "2fbe1c5d4f4dea40303c4c3f8201a0239419c61339aea6562b56587f40c0b5be",
-      "recorded_size_bytes": 4206,
-      "actual_size_bytes": 4206,
+      "recorded_sha256": "eca4614cb1ca1c0aed29edc097cdd4299f95c47638c208cbde168ee9456625c7",
+      "actual_sha256": "eca4614cb1ca1c0aed29edc097cdd4299f95c47638c208cbde168ee9456625c7",
+      "recorded_size_bytes": 4200,
+      "actual_size_bytes": 4200,
       "status": "PASS"
     },
     {
       "path": "artifacts/proof/current/backend_pytest.log",
       "location_scope": "archive_internal",
       "exists": true,
-      "recorded_sha256": "575d62f05a95609642115309842c2d26249bed4795a5873401b279b5d39e3df8",
-      "actual_sha256": "575d62f05a95609642115309842c2d26249bed4795a5873401b279b5d39e3df8",
+      "recorded_sha256": "c10f4f0158a8e2363e65049d57d887ca19a3a42441d55beb8b8a484078b4743e",
+      "actual_sha256": "c10f4f0158a8e2363e65049d57d887ca19a3a42441d55beb8b8a484078b4743e",
       "recorded_size_bytes": 11794,
       "actual_size_bytes": 11794,
       "status": "PASS"
@@ -28,8 +28,8 @@
       "path": "artifacts/proof/current/frontend_build.log",
       "location_scope": "archive_internal",
       "exists": true,
-      "recorded_sha256": "aa4147f2f9f32d791c53217a8de7b05349fe663ade0ac8846a163ca6154d3147",
-      "actual_sha256": "aa4147f2f9f32d791c53217a8de7b05349fe663ade0ac8846a163ca6154d3147",
+      "recorded_sha256": "f5c0fd9e7b5105d1d4b9366169b4026967eb4b0ffee1343822ef7be2c71cd4ea",
+      "actual_sha256": "f5c0fd9e7b5105d1d4b9366169b4026967eb4b0ffee1343822ef7be2c71cd4ea",
       "recorded_size_bytes": 4867,
       "actual_size_bytes": 4867,
       "status": "PASS"
@@ -48,8 +48,8 @@
       "path": "artifacts/proof/current/proof_consistency_pytest.log",
       "location_scope": "archive_internal",
       "exists": true,
-      "recorded_sha256": "71b613bcd27213dfff551d96b719001cddd9753def7294194d078f5a3c0dc56a",
-      "actual_sha256": "71b613bcd27213dfff551d96b719001cddd9753def7294194d078f5a3c0dc56a",
+      "recorded_sha256": "e229541b306ca52d9ecce9c536c76cbe3da08c272aa8fdd2458d6f31a93e9481",
+      "actual_sha256": "e229541b306ca52d9ecce9c536c76cbe3da08c272aa8fdd2458d6f31a93e9481",
       "recorded_size_bytes": 616,
       "actual_size_bytes": 616,
       "status": "PASS"

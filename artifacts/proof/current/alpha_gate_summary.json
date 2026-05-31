@@ -12,8 +12,8 @@
   "proof_freshness_passed": true,
   "archive_validation_passed": "not_run",
   "release_surface_passed": "not_run",
-  "justice_canada_ingestion_proof_passed": false,
-  "stub_adapter_fail_closed_passed": false,
+  "justice_canada_ingestion_proof_passed": true,
+  "stub_adapter_fail_closed_passed": true,
   "source_registry_truth_passed": true,
   "production_preflight_passed": false,
   "release_gate_effective_passed": false,
@@ -25,5 +25,5 @@
     "postgis_proof",
     "required_proof_logs"
   ],
-  "generated_at": "2026-05-31T23:18:24.695087+00:00"
+  "generated_at": "2026-05-31T23:32:01.392698+00:00"
 }

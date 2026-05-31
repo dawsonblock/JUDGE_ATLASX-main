@@ -1,15 +1,15 @@
 # Archive Validation
 
-- validated_at_utc: 2026-05-31T23:18:18.749777+00:00
+- validated_at_utc: 2026-05-31T23:31:53.216093+00:00
 - archive: [REDACTED_LOCAL_PATH]/JUDGE_ATLAS-main-final.zip
-- archive_sha256: 8f6b0da24b57b5c6e6be82f5d6cce0d832bc49682df5ccae6fa34d3f896ef24a
+- archive_sha256: f3edf5060ad67edbba86a3cfbe6cdfe3cec4f4a61174534e971ad8050f186ddb
 - expected_root: JUDGE_ATLAS-main
 - actual_root: JUDGE_ATLAS-main
 - top_level_roots: JUDGE_ATLAS-main
 - root_match: yes
 - valid: PASS
-- compressed_size_bytes: 2138394
-- uncompressed_size_bytes: 8324055
+- compressed_size_bytes: 2138418
+- uncompressed_size_bytes: 8324107
 
 ## Errors
 
@@ -26,11 +26,11 @@
 |---|---:|---:|
 | JUDGE_ATLAS-main/backend/uv.lock | 769811 | 238625 |
 | JUDGE_ATLAS-main/frontend/package-lock.json | 393441 | 85051 |
-| JUDGE_ATLAS-main/artifacts/proof/current/backend_pytest_collect.log | 322394 | 45756 |
+| JUDGE_ATLAS-main/artifacts/proof/current/backend_pytest_collect.log | 322394 | 45763 |
 | JUDGE_ATLAS-main/scripts/release_gate.py | 118932 | 21947 |
 | JUDGE_ATLAS-main/backend/app/models/entities.py | 101799 | 16701 |
-| JUDGE_ATLAS-main/artifacts/proof/current/release_gate.json | 91742 | 13724 |
-| JUDGE_ATLAS-main/artifacts/proof/current/proof_manifest.json | 49789 | 6857 |
+| JUDGE_ATLAS-main/artifacts/proof/current/release_gate.json | 91760 | 13724 |
+| JUDGE_ATLAS-main/artifacts/proof/current/proof_manifest.json | 49782 | 6869 |
 | JUDGE_ATLAS-main/backend/app/memory/contradiction_engine.py | 48640 | 8977 |
 | JUDGE_ATLAS-main/backend/app/ingestion/sources/canada_saskatchewan_sources.yaml | 48453 | 6929 |
 | JUDGE_ATLAS-main/backend/app/api/routes/admin_sources.py | 46092 | 9260 |
@@ -43,7 +43,7 @@
 | JUDGE_ATLAS-main/scripts/check_proof_consistency.py | 30006 | 5902 |
 | JUDGE_ATLAS-main/backend/app/ingestion/courtlistener_bulk_normalizer.py | 29758 | 5588 |
 | JUDGE_ATLAS-main/backend/app/tests/test_graph_layer.py | 28216 | 4765 |
-| JUDGE_ATLAS-main/artifacts/proof/current/source_registry_status.json | 27663 | 3322 |
+| JUDGE_ATLAS-main/artifacts/proof/current/source_registry_status.json | 27663 | 3321 |
 
 ## Largest Top-Level Directories
 
@@ -52,7 +52,7 @@
 | backend | 5566237 |
 | frontend | 873785 |
 | scripts | 812997 |
-| artifacts | 580868 |
+| artifacts | 580894 |
 | docs | 355385 |
 | .github | 50671 |
 | demo | 26537 |
@@ -66,6 +66,6 @@
 | docker-compose.yml | 2496 |
 | RELEASE_BLOCKERS.md | 2219 |
 | README.md | 2194 |
-| RELEASE_MANIFEST.json | 1589 |
+| RELEASE_MANIFEST.json | 1615 |
 | Dockerfile.proof | 890 |
 | deploy | 389 |
