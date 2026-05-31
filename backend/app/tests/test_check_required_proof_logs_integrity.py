@@ -97,8 +97,10 @@ def test_required_log_integrity_ignores_non_log_payload_artifacts(tmp_path):
 
     gate_path = proof_dir / "release_gate.json"
     manifest_path = proof_dir / "proof_manifest.json"
+    index_path = proof_dir / "required_log_index.json"
     gate_path.write_text(json.dumps(gate_payload), encoding="utf-8")
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    index_path.write_text(json.dumps({"entries": []}), encoding="utf-8")
 
     missing, referenced_total, present_total = module.check_required_proof_logs(repo_root)
 
