@@ -1,7 +1,7 @@
 # CURRENT_PROOF
 
-- generated_at_utc: 2026-05-31T21:10:26.642296+00:00
-- commit_hash: 315df794c4cfadbe5f8df84ae17258d79ab59f8f
+- generated_at_utc: 2026-05-31T23:18:14.558739+00:00
+- commit_hash: d3bf5d5efb08b5416842b22cd3c20d163fac1945
 - alpha_gate_status: BLOCKED
 - alpha_gate_passed: false
 - release_gate_check_count: 52
@@ -11,7 +11,7 @@
 - demo_proof_result: PASS
 - proof_freshness_result: PASS
 - archive_validation_result: FAIL
-- proof_input_tree_hash: 7ea0f78fa9926aadcbaaac0f53079c7e7c138cd8fd201d965113304f031d2adb
+- proof_input_tree_hash: 7a3c7e0315f77df846d8b9a47914a889b5ef53b47638a7adb43fbc560584f030
 - proof_input_file_count: 1109
 - egress_proxy_proof_log: artifacts/proof/current/egress_proxy_proof.log
 - demo_proof_log: artifacts/proof/current/demo_proof.log
@@ -19,7 +19,7 @@
 ## Runtime Metadata
 
 - gate_runner_python_version: 3.11.9
-- gate_runner_python_executable: [REDACTED_LOCAL_PATH]/backend/.venv/bin/python
+- gate_runner_python_executable: [REDACTED_LOCAL_PATH]
 - backend_test_python_version: 3.11.9
 - backend_test_python_executable: [REDACTED_LOCAL_PATH]/backend/.venv/bin/python
 - backend_required_python: >=3.11
@@ -79,6 +79,7 @@
 - postgis_proof
 - archive_validation
 - required_proof_logs
+- validation_summary_missing
 
 ## Blocked Checks
 

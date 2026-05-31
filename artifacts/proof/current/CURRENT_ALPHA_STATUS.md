@@ -1,7 +1,7 @@
 # CURRENT_ALPHA_STATUS
 
-- generated_at_utc: 2026-05-31T21:10:26.642296+00:00
-- commit_hash: 315df794c4cfadbe5f8df84ae17258d79ab59f8f
+- generated_at_utc: 2026-05-31T23:18:14.558739+00:00
+- commit_hash: d3bf5d5efb08b5416842b22cd3c20d163fac1945
 - operational_posture: alpha
 - production_ready: false
 - alpha_gate_passed: false
@@ -25,3 +25,4 @@
 - postgis_proof
 - archive_validation
 - required_proof_logs
+- validation_summary_missing

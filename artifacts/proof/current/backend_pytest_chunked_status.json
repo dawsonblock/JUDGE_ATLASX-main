@@ -1,6 +1,6 @@
 {
-  "started_at": "2026-05-31T21:07:57.780882+00:00",
-  "finished_at": "2026-05-31T21:08:18.279834+00:00",
+  "started_at": "2026-05-31T23:15:56.014550+00:00",
+  "finished_at": "2026-05-31T23:16:16.366731+00:00",
   "collect_exit_code": 0,
   "batch_exit_code": 1,
   "batch_size": 40,
@@ -8,8 +8,8 @@
   "batches": [
     {
       "index": 1,
-      "started_at": "2026-05-31T21:08:01.083296+00:00",
-      "finished_at": "2026-05-31T21:08:14.039639+00:00",
+      "started_at": "2026-05-31T23:15:59.202135+00:00",
+      "finished_at": "2026-05-31T23:16:12.391614+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/ingestion/test_ckan_adapter.py",
@@ -17,8 +17,8 @@
     },
     {
       "index": 2,
-      "started_at": "2026-05-31T21:08:14.039708+00:00",
-      "finished_at": "2026-05-31T21:08:18.279793+00:00",
+      "started_at": "2026-05-31T23:16:12.391701+00:00",
+      "finished_at": "2026-05-31T23:16:16.366689+00:00",
       "exit_code": 1,
       "file_count": 40,
       "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_auto_review.py",
