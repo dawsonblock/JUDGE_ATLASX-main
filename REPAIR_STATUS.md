@@ -14,24 +14,26 @@ The authoritative release state is defined by:
 - `artifacts/proof/current/CURRENT_ALPHA_STATUS.md`
 - `artifacts/proof/current/release_readiness.md`
 
-Current canonical state:
+Current canonical state (from release_gate.json):
 
 ```json
 {
-  "alpha_gate_passed": true,
-  "release_candidate": true,
+  "alpha_gate_passed": false,
+  "release_candidate": false,
   "production_ready": false
 }
 ```
 
-This project is an evidence-governed alpha release candidate. It is not production-ready and is not a public legal authority.
+This project is an alpha work-in-progress. It is NOT a release candidate and is NOT production-ready.
+
+**Blockers:** Backend tests, Docker runtime unavailable, proof logs missing.
 
 Production-ready=false until all production gates pass.
 
 ## Status Matrix
 
 - authority: artifacts/proof/current/release_gate.json
-- alpha_ready: true
+- alpha_ready: false
 - production_ready: false
 - public_release_safe: false
 - ingestion_coverage: 2/26 runnable sources (from canonical source-registry proof)

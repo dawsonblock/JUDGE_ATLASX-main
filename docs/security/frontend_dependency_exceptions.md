@@ -17,7 +17,7 @@ Each package entry must include:
 - **Version**: transitive via eslint-config-next / @next/eslint-plugin-next (see frontend/package-lock.json)
 - **Vulnerability ID**: GHSA-5j98-mcp5-4vw2
 - **Reason it is not exploitable**: JUDGE_ATLAS does not execute glob CLI `-c/--cmd`; usage is limited to developer/CI lint tooling and not exposed to runtime user input.
-- **Mitigation**: Keep lint/build isolated to trusted CI runners, pin Node 20 in gates, and upgrade upstream dependency chain when patched release is available.
+- **Mitigation**: Keep lint/build isolated to trusted CI runners, pin Node 22 in gates, and upgrade upstream dependency chain when patched release is available.
 - **Expiry date**: 2026-07-31
 - **Owner**: security-review-alpha
 

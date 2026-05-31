@@ -9,7 +9,7 @@ This system is an alpha. Public-facing records require human review and evidence
 ## 1) Baseline prerequisites
 
 - Python 3.11.x
-- Node 20.x
+- Node 22.x
 - npm 10.x
 - Optional local services: PostgreSQL/PostGIS, Redis, Docker Desktop or Colima
 

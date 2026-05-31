@@ -212,7 +212,7 @@
 ## Configuration & Environment
 
 - **Backend**: Python 3.11+, FastAPI, SQLAlchemy, PostgreSQL (prod) / SQLite (test)
-- **Frontend**: React/Next.js, Node 20 (target), TypeScript, Tailwind CSS
+- **Frontend**: React/Next.js, Node 22 (target), TypeScript, Tailwind CSS
 - **Database**: PostgreSQL 12+ with PostGIS for geospatial queries
 - **Cache**: Redis for session storage (optional, not core)
 - **Auth**: JWT with custom RBAC
