@@ -18,9 +18,11 @@ Manual edits are not authoritative.
 
 ## Release Status
 - release_classification: proof-blocked alpha proof snapshot
-- alpha_gate_passed: false
-- release_candidate: false
+- alpha_candidate: false
+- self_verifying_alpha: false
+- production_release_candidate: false
 - production_ready: false
+- public_release_safe: false
 - proof_complete: false
 - blocked_release_checks: ["backend_pytest", "docker_runtime_preflight", "docker_smoke", "postgis_proof", "archive_validation", "required_proof_logs", "validation_summary_missing"]
 

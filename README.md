@@ -16,6 +16,21 @@ It is not an autonomous accusation engine, predictive policing system, or produc
 
 This repository is alpha only. Do not treat outputs as legal determinations.
 
+## Maturity Definitions
+
+- alpha_candidate: build/tests/gates pass for alpha scope only.
+- self_verifying_alpha: archive contains the proof artifacts needed to verify its own claims.
+- production_release_candidate: full production deployment/security/rollback proof complete.
+- production_ready: approved for operational production use.
+- public_release_safe: safe to publish without misleading claims or incomplete proof.
+
+Current expected release posture:
+
+- self_verifying_alpha: true only when canonical proof/archive validators pass.
+- production_release_candidate: false
+- production_ready: false
+- public_release_safe: false
+
 ## Quickstart
 
 ```bash

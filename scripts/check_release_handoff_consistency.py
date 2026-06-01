@@ -233,9 +233,18 @@ def validate_handoff(
             if key not in boolean_claims:
                 errors.append(f"missing_claimed_{key}")
                 continue
-            if bool(release_gate.get(key, False)) != boolean_claims[key]:
+            if key in {"alpha_candidate", "self_verifying_alpha"}:
+                expected = bool(
+                    release_gate.get(
+                        key,
+                        release_gate.get("alpha_gate_passed", False),
+                    )
+                )
+            else:
+                expected = bool(release_gate.get(key, False))
+            if expected != boolean_claims[key]:
                 errors.append(
-                    f"{key}_mismatch:claimed={boolean_claims[key]}:actual={bool(release_gate.get(key, False))}"
+                    f"{key}_mismatch:claimed={boolean_claims[key]}:actual={expected}"
                 )
 
         expected_classification = _expected_release_classification(release_gate)

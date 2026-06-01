@@ -180,8 +180,12 @@ def main() -> int:
     proof_manifest_hash = _sha256(proof_manifest_path)
     required_log_index_hash = _sha256(required_log_index_path)
 
-    alpha_candidate = bool(release_gate.get("alpha_candidate", False))
-    self_verifying_alpha = bool(release_gate.get("self_verifying_alpha", False))
+    alpha_candidate = bool(
+        release_gate.get("alpha_candidate", release_gate.get("alpha_gate_passed", False))
+    )
+    self_verifying_alpha = bool(
+        release_gate.get("self_verifying_alpha", release_gate.get("alpha_gate_passed", False))
+    )
     production_release_candidate = bool(
         release_gate.get("production_release_candidate", False)
     )

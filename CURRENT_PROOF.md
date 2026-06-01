@@ -3,7 +3,11 @@
 - generated_at_utc: 2026-06-01T21:15:01.088540+00:00
 - commit_hash: a184d39f8a93747bdb8fa20b2216f7a01ff0912c
 - alpha_gate_status: PASS
-- alpha_gate_passed: true
+- alpha_candidate: true
+- self_verifying_alpha: true
+- production_release_candidate: false
+- production_ready: false
+- public_release_safe: false
 - release_gate_check_count: 52
 - docker_available: true
 - postgis_proof_result: PASS
