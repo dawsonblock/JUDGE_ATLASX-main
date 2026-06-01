@@ -136,6 +136,7 @@ release-proof:
 	@python3 scripts/check_proof_freshness.py
 	@python3 scripts/verify_proof_hash_sync.py --root .
 	@python3 scripts/check_proof_consistency.py
+	@python3 scripts/check_release_gate.py --root .
 	@python3 scripts/check_required_proof_logs.py --root . --strict-required-files
 	@python3 scripts/check_single_proof_authority.py --root .
 	@bash scripts/check_no_pyc.sh

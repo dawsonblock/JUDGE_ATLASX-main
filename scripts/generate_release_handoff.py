@@ -46,10 +46,12 @@ def _load_json(path: Path) -> dict:
 
 
 def _release_classification(release_gate: dict) -> str:
-    if bool(release_gate.get("release_candidate", False)):
-        return "proof-hardened alpha release candidate"
-    if bool(release_gate.get("alpha_gate_passed", False)):
-        return "proof-hardened alpha proof snapshot"
+    if bool(release_gate.get("production_release_candidate", False)):
+        return "production release candidate"
+    if bool(release_gate.get("self_verifying_alpha", False)):
+        return "self-verifying alpha"
+    if bool(release_gate.get("alpha_candidate", False)):
+        return "alpha candidate (not self-verifying)"
     return "proof-blocked alpha proof snapshot"
 
 
@@ -119,8 +121,8 @@ def main() -> int:
         "--allow-blocked-snapshot",
         action="store_true",
         help=(
-            "Allow generating handoff when release_candidate is false. "
-            "Without this flag, handoff generation requires release_candidate=true."
+            "Allow generating handoff when self_verifying_alpha is false. "
+            "Without this flag, handoff generation requires self_verifying_alpha=true."
         ),
     )
     args = parser.parse_args()
@@ -178,13 +180,17 @@ def main() -> int:
     proof_manifest_hash = _sha256(proof_manifest_path)
     required_log_index_hash = _sha256(required_log_index_path)
 
-    alpha_gate_passed = bool(release_gate.get("alpha_gate_passed", False))
-    release_candidate = bool(release_gate.get("release_candidate", False))
+    alpha_candidate = bool(release_gate.get("alpha_candidate", False))
+    self_verifying_alpha = bool(release_gate.get("self_verifying_alpha", False))
+    production_release_candidate = bool(
+        release_gate.get("production_release_candidate", False)
+    )
     production_ready = bool(release_gate.get("production_ready", False))
-    proof_complete = bool(release_candidate)
-    if not release_candidate and not args.allow_blocked_snapshot:
+    public_release_safe = bool(release_gate.get("public_release_safe", False))
+    proof_complete = bool(self_verifying_alpha)
+    if not self_verifying_alpha and not args.allow_blocked_snapshot:
         raise SystemExit(
-            "release_candidate_false: refusing handoff generation without --allow-blocked-snapshot"
+            "self_verifying_alpha_false: refusing handoff generation without --allow-blocked-snapshot"
         )
     runtime = release_gate.get("runtime", {})
     if not isinstance(runtime, dict):
@@ -232,9 +238,11 @@ def main() -> int:
             "",
             "## Release Status",
             f"- release_classification: {release_classification}",
-            f"- alpha_gate_passed: {str(alpha_gate_passed).lower()}",
-            f"- release_candidate: {str(release_candidate).lower()}",
+            f"- alpha_candidate: {str(alpha_candidate).lower()}",
+            f"- self_verifying_alpha: {str(self_verifying_alpha).lower()}",
+            f"- production_release_candidate: {str(production_release_candidate).lower()}",
             f"- production_ready: {str(production_ready).lower()}",
+            f"- public_release_safe: {str(public_release_safe).lower()}",
             f"- proof_complete: {str(proof_complete).lower()}",
             f"- blocked_release_checks: {blocker_text}",
             "",

@@ -12,7 +12,8 @@
 - Canonical machine truth is artifacts/proof/current/release_gate.json.
 - This file summarizes proof state and must not override release_gate.json.
 - Proof gate PASS, if present in canonical artifacts, indicates alpha proof-check completion only.
-- production_ready remains false unless explicitly changed in canonical artifacts.
+- self_verifying_alpha indicates whether the archive can verify its own claims.
+- production_release_candidate and production_ready remain false for alpha scope.
 - Production-ready=false until all production gates pass.
 
 ## Runtime Environment
@@ -23,7 +24,11 @@
 - **Platform**: macOS-26.2-arm64
 - **Database**: SQLite (test), PostgreSQL (PostGIS proof)
 - **Docker**: See canonical proof logs for the current run state.
+- **alpha_candidate**: false
+- **self_verifying_alpha**: false
+- **production_release_candidate**: false
 - **production_ready**: false
+- **public_release_safe**: false
 
 ## Proof Execution
 
@@ -56,7 +61,9 @@ make proof
 ## Status Matrix
 
 - authority: artifacts/proof/current/release_gate.json
-- alpha_ready: false
+- alpha_candidate: false
+- self_verifying_alpha: false
+- production_release_candidate: false
 - production_ready: false
 - public_release_safe: false
 - ingestion_coverage: 2/26 runnable sources (from canonical source-registry proof)

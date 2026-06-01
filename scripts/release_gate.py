@@ -620,9 +620,14 @@ def _refresh_release_payload_schema(
     payload: dict, results: list[GateStep]
 ) -> None:
     payload["schema_version"] = "1.1.0"
-    payload["release_candidate"] = bool(
-        payload.get("alpha_gate_passed", False)
-    )
+    alpha_gate_passed = bool(payload.get("alpha_gate_passed", False))
+    payload["alpha_candidate"] = alpha_gate_passed
+    payload["self_verifying_alpha"] = alpha_gate_passed
+    payload["production_release_candidate"] = False
+    payload["production_ready"] = False
+    payload["public_release_safe"] = False
+    # Legacy compatibility key retained for downstream scripts during migration.
+    payload["release_candidate"] = False
     payload["checks_summary"] = _canonical_checks_summary(results)
 
 
@@ -1074,13 +1079,17 @@ def _generate_release_readiness_from_manifest(
     else:
         merged_blockers = list(blockers)
 
-    status = "alpha-proof-pass" if not merged_blockers else "blocked"
-    recommendation = "alpha-proof-pass" if not merged_blockers else "blocked"
+    status = "self-verifying-alpha" if not merged_blockers else "blocked"
+    recommendation = "self-verifying-alpha" if not merged_blockers else "blocked"
     production_ready = False
 
     readiness = {
         "overall_status": status,
+        "alpha_candidate": True,
+        "self_verifying_alpha": not merged_blockers,
+        "production_release_candidate": False,
         "production_ready": production_ready,
+        "public_release_safe": False,
         "release_recommendation": recommendation,
         "blockers": merged_blockers,
     }
@@ -1090,7 +1099,11 @@ def _generate_release_readiness_from_manifest(
         "",
         f"- generated_at_utc: {manifest.get('generated_at', 'unknown')}",
         f"- overall_status: {status}",
+        "- alpha_candidate: true",
+        f"- self_verifying_alpha: {str((not merged_blockers)).lower()}",
+        "- production_release_candidate: false",
         f"- production_ready: {str(production_ready).lower()}",
+        "- public_release_safe: false",
         f"- release_recommendation: {recommendation}",
         f"- archive_hash: {manifest.get('archive_hash', 'unknown')}",
         f"- platform: {manifest.get('platform', 'unknown')}",
@@ -1167,8 +1180,11 @@ def _write_current_alpha_status_md(
         f"- generated_at_utc: {payload.get('timestamp_utc', 'unknown')}",
         f"- commit_hash: {payload.get('commit_hash', 'unknown')}",
         "- operational_posture: alpha",
+        f"- alpha_candidate: {str(payload.get('alpha_candidate', False)).lower()}",
+        f"- self_verifying_alpha: {str(payload.get('self_verifying_alpha', False)).lower()}",
+        f"- production_release_candidate: {str(payload.get('production_release_candidate', False)).lower()}",
         "- production_ready: false",
-        f"- alpha_gate_passed: {str(payload.get('alpha_gate_passed', False)).lower()}",
+        "- public_release_safe: false",
         f"- proof_freshness_result: {payload.get('proof_freshness_result', 'UNKNOWN')}",
         f"- release_gate_check_count: {payload.get('check_count', 0)}",
         f"- postgis_proof_result: {payload.get('postgis_proof_result', 'UNKNOWN')}",
@@ -1431,7 +1447,11 @@ def _write_repair_report_md(
         "",
         f"- generated_at_utc: {payload.get('timestamp_utc', 'unknown')}",
         f"- commit_hash: {payload.get('commit_hash', 'unknown')}",
-        f"- alpha_gate_passed: {str(payload.get('alpha_gate_passed', False)).lower()}",
+        f"- alpha_candidate: {str(payload.get('alpha_candidate', False)).lower()}",
+        f"- self_verifying_alpha: {str(payload.get('self_verifying_alpha', False)).lower()}",
+        f"- production_release_candidate: {str(payload.get('production_release_candidate', False)).lower()}",
+        f"- production_ready: {str(payload.get('production_ready', False)).lower()}",
+        f"- public_release_safe: {str(payload.get('public_release_safe', False)).lower()}",
         "",
         "## Phase Results",
         "",
@@ -1449,7 +1469,7 @@ def _write_repair_report_md(
     blockers = payload.get("release_blockers_remaining", [])
     if blockers:
         lines.extend(f"- {blocker}" for blocker in blockers)
-    elif payload.get("alpha_gate_passed", False):
+    elif payload.get("self_verifying_alpha", False):
         lines.append("- none")
     else:
         lines.append("- unresolved_gate_failure")
@@ -1474,7 +1494,11 @@ def _write_fix_verification_report_md(
         "",
         f"- generated_at_utc: {payload.get('timestamp_utc', 'unknown')}",
         f"- commit_hash: {payload.get('commit_hash', 'unknown')}",
-        f"- alpha_gate_passed: {str(payload.get('alpha_gate_passed', False)).lower()}",
+        f"- alpha_candidate: {str(payload.get('alpha_candidate', False)).lower()}",
+        f"- self_verifying_alpha: {str(payload.get('self_verifying_alpha', False)).lower()}",
+        f"- production_release_candidate: {str(payload.get('production_release_candidate', False)).lower()}",
+        f"- production_ready: {str(payload.get('production_ready', False)).lower()}",
+        f"- public_release_safe: {str(payload.get('public_release_safe', False)).lower()}",
         "",
         "## Required Gate Signals",
         "",
@@ -1632,7 +1656,11 @@ def _write_current_proof_md(
         f"- generated_at_utc: {payload.get('timestamp_utc', 'unknown')}",
         f"- commit_hash: {payload.get('commit_hash', 'unknown')}",
         f"- alpha_gate_status: {status}",
-        f"- alpha_gate_passed: {str(payload.get('alpha_gate_passed', False)).lower()}",
+        f"- alpha_candidate: {str(payload.get('alpha_candidate', False)).lower()}",
+        f"- self_verifying_alpha: {str(payload.get('self_verifying_alpha', False)).lower()}",
+        f"- production_release_candidate: {str(payload.get('production_release_candidate', False)).lower()}",
+        f"- production_ready: {str(payload.get('production_ready', False)).lower()}",
+        f"- public_release_safe: {str(payload.get('public_release_safe', False)).lower()}",
         f"- release_gate_check_count: {check_count}",
         f"- docker_available: {str(payload.get('docker_available', False)).lower()}",
         f"- postgis_proof_result: {payload.get('postgis_proof_result', 'UNKNOWN')}",
@@ -2732,12 +2760,17 @@ def main() -> int:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "alpha_gate_passed": False,  # updated after proof_freshness step
-        "release_candidate": False,
+        "alpha_candidate": False,
+        "self_verifying_alpha": False,
+        "production_release_candidate": False,
         # production_ready is intentionally ALWAYS False during alpha phase.
         # It is DISTINCT from alpha_gate_passed: alpha_gate_passed=True means
         # hardening gates pass; production_ready=True would require Postgres
         # proof, egress proof, stub adapters resolved, and PostGIS runtime.
         "production_ready": False,
+        "public_release_safe": False,
+        # Legacy compatibility key retained for downstream scripts during migration.
+        "release_candidate": False,
         "git_commit": os.environ.get("GIT_COMMIT", "unknown"),
         "commit_hash": subprocess.run(
             ["git", "rev-parse", "HEAD"],

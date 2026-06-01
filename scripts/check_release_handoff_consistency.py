@@ -15,9 +15,11 @@ SHA_PATTERN = re.compile(
     re.IGNORECASE,
 )
 BOOLEAN_FIELD_PATTERNS = {
-    "alpha_gate_passed": re.compile(r"^\s*-\s*alpha_gate_passed:\s*(true|false)\s*$", re.IGNORECASE),
-    "release_candidate": re.compile(r"^\s*-\s*release_candidate:\s*(true|false)\s*$", re.IGNORECASE),
+    "alpha_candidate": re.compile(r"^\s*-\s*alpha_candidate:\s*(true|false)\s*$", re.IGNORECASE),
+    "self_verifying_alpha": re.compile(r"^\s*-\s*self_verifying_alpha:\s*(true|false)\s*$", re.IGNORECASE),
+    "production_release_candidate": re.compile(r"^\s*-\s*production_release_candidate:\s*(true|false)\s*$", re.IGNORECASE),
     "production_ready": re.compile(r"^\s*-\s*production_ready:\s*(true|false)\s*$", re.IGNORECASE),
+    "public_release_safe": re.compile(r"^\s*-\s*public_release_safe:\s*(true|false)\s*$", re.IGNORECASE),
 }
 CLASSIFICATION_PATTERN = re.compile(
     r"^\s*-\s*release_classification:\s*(.+?)\s*$",
@@ -119,10 +121,12 @@ def _extract_claims(
 
 
 def _expected_release_classification(release_gate: dict) -> str:
-    if bool(release_gate.get("release_candidate", False)):
-        return "proof-hardened alpha release candidate"
-    if bool(release_gate.get("alpha_gate_passed", False)):
-        return "proof-hardened alpha proof snapshot"
+    if bool(release_gate.get("production_release_candidate", False)):
+        return "production release candidate"
+    if bool(release_gate.get("self_verifying_alpha", False)):
+        return "self-verifying alpha"
+    if bool(release_gate.get("alpha_candidate", False)):
+        return "alpha candidate (not self-verifying)"
     return "proof-blocked alpha proof snapshot"
 
 
@@ -219,7 +223,13 @@ def validate_handoff(
             )
 
     if release_gate is not None:
-        for key in ("alpha_gate_passed", "release_candidate", "production_ready"):
+        for key in (
+            "alpha_candidate",
+            "self_verifying_alpha",
+            "production_release_candidate",
+            "production_ready",
+            "public_release_safe",
+        ):
             if key not in boolean_claims:
                 errors.append(f"missing_claimed_{key}")
                 continue
@@ -239,6 +249,11 @@ def validate_handoff(
         normalized_handoff = handoff_text.lower()
         if "not ready for production deployment" not in normalized_handoff:
             errors.append("missing_not_production_ready_note")
+        if (
+            "production release candidate" in normalized_handoff
+            and not bool(release_gate.get("production_release_candidate", False))
+        ):
+            errors.append("misleading_production_release_candidate_wording")
         if (
             (classification is None or "alpha" not in classification.lower())
             and "proof-hardened alpha" not in normalized_handoff
