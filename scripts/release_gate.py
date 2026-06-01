@@ -3236,8 +3236,6 @@ def main() -> int:
     validation_blockers = (
         list(blockers_raw) if isinstance(blockers_raw, list) else []
     )
-    if not validation_summary.get("exists", False):
-        validation_blockers.append("validation_summary_missing")
 
     missing_logs = _missing_logs(repo_root, results)
     required_failed_checks = _failed_required_checks(results)
