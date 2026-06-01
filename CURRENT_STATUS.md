@@ -46,7 +46,7 @@
 ## Status Matrix
 
 - authority: artifacts/proof/current/release_gate.json
-- alpha_ready: true
+- alpha_ready: false (derived from release_gate.json)
 - production_ready: false
 - public_release_safe: false
 - ingestion_coverage: 2/26 runnable sources (from canonical source-registry proof)
@@ -58,7 +58,7 @@
 
 - Archive build/validation must be confirmed by the current release gate and archive validators.
 - False-claim scanner, proof consistency, and proof freshness must be confirmed by regenerated artifacts.
-- Node baseline remains 20 in frontend and proof workflows.
+- Node baseline is 22 in frontend and proof workflows.
 - Python baseline remains 3.11 in proof workflows.
 
 ---

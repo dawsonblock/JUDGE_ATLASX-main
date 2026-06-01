@@ -6,7 +6,7 @@ Manual edits are not authoritative.
 
 ## Authoritative Archive
 - Path: dist/JUDGE_ATLAS-main-final.zip
-- SHA-256: 71ffdd99b8636e7e71490d5bc5549dc9a33729e74ccd4686a2d68c431fb62967
+- SHA-256: e643a0e5d4b7c7b169b817dd2fa99ac6f1d2de6978c12ea97e3b8b223657f9b4
 
 ## Proof Anchors
 - release_gate_path: artifacts/proof/current/release_gate.json
@@ -25,8 +25,8 @@ Manual edits are not authoritative.
 - blocked_release_checks: ["backend_pytest", "docker_runtime_preflight", "docker_smoke", "postgis_proof", "archive_validation", "required_proof_logs", "validation_summary_missing"]
 
 ## Build Metadata
-- created_at_utc: 2026-06-01T06:24:53.098791+00:00
-- generated_at_utc: 2026-06-01T06:24:53.098791+00:00
+- created_at_utc: 2026-06-01T07:31:10.589650+00:00
+- generated_at_utc: 2026-06-01T07:31:10.589650+00:00
 - git_commit: unknown
 - python: unknown
 - node: unknown

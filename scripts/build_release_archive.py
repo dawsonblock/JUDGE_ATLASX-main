@@ -92,6 +92,7 @@ EXCLUDED_SEGMENTS = {
     ".pytest_cache",
     ".mypy_cache",
     ".ruff_cache",
+    "egg-info",
 }
 EXCLUDED_SUFFIXES = (
     ".pyc",
@@ -204,6 +205,8 @@ def _is_excluded(rel_path: str, include_external: bool, include_proof_archive: b
     if "__MACOSX" in parts:
         return True
     if any(part in EXCLUDED_SEGMENTS for part in parts):
+        return True
+    if any(".egg-info" in part for part in parts):
         return True
     if any(_is_macos_sidecar(part) for part in parts):
         return True

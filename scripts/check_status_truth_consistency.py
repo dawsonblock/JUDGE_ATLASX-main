@@ -82,9 +82,16 @@ def _scan_stale_repair_status(root: Path) -> list[str]:
         "node_modules",
         ".venv",
         "docs/history",
+        "docs/proof",
         "artifacts/history",
         "artifacts/proof/current",
         "external_reference",
+        ".kilo/plans",
+        ".kilo/worktrees",
+        "FINAL_RELEASE_HANDOFF.md",
+        "CURRENT_PROOF.md",
+        "REPAIR_REPORT.md",
+        "docs/CURRENT_ALPHA_STATUS.md",
     }
 
     for path in root.rglob("*.md"):
