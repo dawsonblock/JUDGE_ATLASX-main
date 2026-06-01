@@ -284,7 +284,7 @@ CANONICAL_ROOT_NAME = "JUDGE_ATLAS-main"
 
 
 def validate_referenced_proof_logs(root: Path) -> list[str]:
-    """Check that every log_path referenced in release_gate.json exists inside the extracted root."""
+    """Check that every referenced proof log exists and matches manifest metadata."""
     gate_json = root / "artifacts" / "proof" / "current" / "release_gate.json"
     if not gate_json.exists():
         return ["referenced_proof_logs_check_skipped:release_gate.json_missing"]
@@ -294,20 +294,69 @@ def validate_referenced_proof_logs(root: Path) -> list[str]:
     except Exception as e:
         return [f"referenced_proof_logs_check_failed:json_parse_error:{e}"]
 
+    manifest_path = root / "artifacts" / "proof" / "current" / "proof_manifest.json"
+    manifest_map: dict[str, dict[str, Any]] = {}
+    if manifest_path.exists():
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            if isinstance(manifest, dict):
+                proof_commands = manifest.get("proof_commands")
+                if isinstance(proof_commands, list):
+                    for entry in proof_commands:
+                        if not isinstance(entry, dict):
+                            continue
+                        rel = entry.get("path") or entry.get("log_path")
+                        if isinstance(rel, str) and rel:
+                            manifest_map[rel.replace("\\", "/")] = entry
+        except Exception as e:
+            return [f"referenced_proof_logs_check_failed:manifest_parse_error:{e}"]
+
     referenced: set[str] = set()
     for check in gate.get("checks", []):
         lp = check.get("log_path")
-        if lp:
-            referenced.add(lp)
+        if isinstance(lp, str) and lp.startswith("artifacts/proof/current/"):
+            referenced.add(lp.replace("\\", "/"))
     for val in gate.get("logs", {}).values():
-        if isinstance(val, str) and val:
-            referenced.add(val)
+        if isinstance(val, str) and val.startswith("artifacts/proof/current/"):
+            referenced.add(val.replace("\\", "/"))
 
-    missing = []
+    errors: list[str] = []
     for rel_path in sorted(referenced):
-        if not (root / rel_path).exists():
-            missing.append(f"missing_referenced_log:{rel_path}")
-    return missing
+        target = root / rel_path
+        if not target.is_file():
+            errors.append(f"missing_referenced_log:{rel_path}")
+            continue
+
+        file_size = target.stat().st_size
+        if file_size <= 0:
+            errors.append(f"empty_referenced_log:{rel_path}")
+            continue
+
+        if not rel_path.endswith(".log"):
+            continue
+
+        entry = manifest_map.get(rel_path)
+        if entry is None:
+            errors.append(f"missing_manifest_entry_for_referenced_log:{rel_path}")
+            continue
+
+        expected_size = entry.get("size_bytes")
+        if isinstance(expected_size, int) and expected_size != file_size:
+            errors.append(
+                f"referenced_log_size_mismatch:{rel_path}:"
+                f"expected={expected_size}:actual={file_size}"
+            )
+
+        expected_hash = entry.get("sha256") or entry.get("log_sha256")
+        if isinstance(expected_hash, str) and expected_hash:
+            actual_hash = _sha256_file(target)
+            if actual_hash != expected_hash:
+                errors.append(
+                    f"referenced_log_hash_mismatch:{rel_path}:"
+                    f"expected={expected_hash}:actual={actual_hash}"
+                )
+
+    return errors
 
 
 def _load_json_dict(path: Path, label: str) -> tuple[dict[str, Any] | None, list[str]]:

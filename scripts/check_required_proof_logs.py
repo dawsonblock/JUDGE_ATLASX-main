@@ -83,6 +83,10 @@ PACKAGED_ARCHIVE_OPTIONAL_REQUIRED_LOGS = {
 PROOF_INCOMPLETE_PREFIX = "PROOF_INCOMPLETE:"
 
 
+def _is_packaged_optional_log(rel_path: str) -> bool:
+    return rel_path in PACKAGED_ARCHIVE_OPTIONAL_REQUIRED_LOGS
+
+
 def _parse_iso8601_to_epoch(value: object) -> float | None:
     if not isinstance(value, str) or not value.strip():
         return None
@@ -161,6 +165,8 @@ def _check_required_proof_logs_detailed(
         log_path = entry.get("log_path")
         if not log_path or not isinstance(log_path, str):
             continue
+        if packaged_archive and _is_packaged_optional_log(log_path):
+            continue
         if log_path in seen:
             continue
         seen.add(log_path)
@@ -193,6 +199,8 @@ def _check_required_proof_logs_detailed(
     # Secondary source: top-level logs map
     for _check_name, log_path in payload.get("logs", {}).items():
         if not log_path or not isinstance(log_path, str):
+            continue
+        if packaged_archive and _is_packaged_optional_log(log_path):
             continue
         if log_path in seen:
             continue
@@ -255,12 +263,19 @@ def check_required_proof_logs(
         packaged_archive=packaged_archive,
     )
     missing, _empty_logs, _stale_logs, referenced_total, present_total = result
-    false_exists_required_index = _required_log_index_false_exists(repo_root)
     # When there are no referenced logs at all, the proof is incomplete:
     # return all known required logs as missing.
     if referenced_total == 0:
-        missing = list(DEFAULT_REQUIRED_PROOF_LOGS)
+        missing = [
+            rel
+            for rel in DEFAULT_REQUIRED_PROOF_LOGS
+            if not (packaged_archive and _is_packaged_optional_log(rel))
+        ]
     # Add any entries from required_log_index.json that falsely claim to exist.
+    false_exists_required_index = _required_log_index_false_exists(
+        repo_root,
+        packaged_archive=packaged_archive,
+    )
     missing.extend(false_exists_required_index)
     return missing, referenced_total, present_total
 
@@ -285,7 +300,11 @@ def _missing_required_proof_logs(
     return sorted(missing)
 
 
-def _required_log_index_false_exists(repo_root: Path) -> list[str]:
+def _required_log_index_false_exists(
+    repo_root: Path,
+    *,
+    packaged_archive: bool = False,
+) -> list[str]:
     index_path = repo_root / "artifacts/proof/current/required_log_index.json"
     if not index_path.exists():
         return ["artifacts/proof/current/required_log_index.json"]
@@ -303,12 +322,18 @@ def _required_log_index_false_exists(repo_root: Path) -> list[str]:
         rel = entry.get("path")
         if not isinstance(rel, str) or not rel:
             continue
+        if packaged_archive and _is_packaged_optional_log(rel):
+            continue
         if entry.get("exists") is True and not (repo_root / rel).is_file():
             bad.append(rel)
     return sorted(set(bad))
 
 
-def _required_log_index_truth_issues(repo_root: Path) -> list[str]:
+def _required_log_index_truth_issues(
+    repo_root: Path,
+    *,
+    packaged_archive: bool = False,
+) -> list[str]:
     index_path = repo_root / "artifacts/proof/current/required_log_index.json"
     if not index_path.exists():
         return ["required_log_index:missing"]
@@ -326,6 +351,8 @@ def _required_log_index_truth_issues(repo_root: Path) -> list[str]:
             continue
         rel = entry.get("path")
         if not isinstance(rel, str) or not rel:
+            continue
+        if packaged_archive and _is_packaged_optional_log(rel):
             continue
 
         target = repo_root / rel
@@ -366,7 +393,11 @@ def _required_log_index_truth_issues(repo_root: Path) -> list[str]:
     return sorted(set(issues))
 
 
-def _missing_manifest_referenced_files(repo_root: Path) -> list[str]:
+def _missing_manifest_referenced_files(
+    repo_root: Path,
+    *,
+    packaged_archive: bool = False,
+) -> list[str]:
     manifest_path = repo_root / "artifacts/proof/current/proof_manifest.json"
     if not manifest_path.exists():
         return ["proof_manifest:missing"]
@@ -394,6 +425,8 @@ def _missing_manifest_referenced_files(repo_root: Path) -> list[str]:
 
     missing: list[str] = []
     for rel in sorted(referenced):
+        if packaged_archive and _is_packaged_optional_log(rel):
+            continue
         if not (repo_root / rel).exists():
             missing.append(f"manifest_reference_missing:{rel}")
     return missing
@@ -521,9 +554,18 @@ def main() -> int:
             repo_root,
             packaged_archive=args.packaged_archive,
         )
-        false_exists_required_index = _required_log_index_false_exists(repo_root)
-        required_index_truth_issues = _required_log_index_truth_issues(repo_root)
-        manifest_reference_missing = _missing_manifest_referenced_files(repo_root)
+        false_exists_required_index = _required_log_index_false_exists(
+            repo_root,
+            packaged_archive=args.packaged_archive,
+        )
+        required_index_truth_issues = _required_log_index_truth_issues(
+            repo_root,
+            packaged_archive=args.packaged_archive,
+        )
+        manifest_reference_missing = _missing_manifest_referenced_files(
+            repo_root,
+            packaged_archive=args.packaged_archive,
+        )
 
     if (
         missing
