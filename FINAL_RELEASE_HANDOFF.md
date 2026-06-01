@@ -6,7 +6,7 @@ Manual edits are not authoritative.
 
 ## Authoritative Archive
 - Path: dist/JUDGE_ATLAS-main-final.zip
-- SHA-256: 258a9d4afccf6a5f4f3f1308ff3233302dedda6d46d8da7b7579c2cec15f48c3
+- SHA-256: 71ffdd99b8636e7e71490d5bc5549dc9a33729e74ccd4686a2d68c431fb62967
 
 ## Proof Anchors
 - release_gate_path: artifacts/proof/current/release_gate.json
@@ -22,25 +22,22 @@ Manual edits are not authoritative.
 - release_candidate: false
 - production_ready: false
 - proof_complete: false
-- blocked_release_checks:
-  - backend_pytest (2 test failures: infrastructure tests)
-  - docker_runtime_preflight (Docker daemon unavailable on this machine)
-  - docker_smoke (Docker daemon unavailable)
-  - postgis_proof (PostGIS not available)
+- blocked_release_checks: ["backend_pytest", "docker_runtime_preflight", "docker_smoke", "postgis_proof", "archive_validation", "required_proof_logs", "validation_summary_missing"]
 
 ## Build Metadata
-- created_at_utc: 2026-05-31T23:41:00.000000+00:00
-- generated_at_utc: 2026-05-31T23:41:00.000000+00:00
+- created_at_utc: 2026-06-01T06:24:53.098791+00:00
+- generated_at_utc: 2026-06-01T06:24:53.098791+00:00
 - git_commit: unknown
-- python: 3.11.9
-- node: v22.22.3
-- npm: 10.9.8
+- python: unknown
+- node: unknown
+- npm: unknown
 
 ## Notes
-- This is a proof-blocked alpha proof snapshot, NOT a release candidate.
-- Docker daemon is unavailable on this machine; Docker-related gates are honestly marked as blocked.
-- Backend tests: 3482/3484 pass; 2 remaining failures are infrastructure tests (not functional).
+- This is a proof-blocked alpha proof snapshot.
 - It is not ready for production deployment.
 - Ship only the archive listed above.
-- Validation must run against a fresh extraction of that archive.
-- `release_gate.json` is only valid as a proof artifact when every log path it references exists inside `artifacts/proof/current/` at packaging time. Do not ship manually zipped working trees.
+- Validation must run against a fresh extraction
+  of that archive.
+- `release_gate.json` is only valid as a proof artifact when every
+  log path it references exists inside `artifacts/proof/current/`
+  at packaging time. Do not ship manually zipped working trees.

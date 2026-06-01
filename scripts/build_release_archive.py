@@ -99,12 +99,12 @@ EXCLUDED_SUFFIXES = (
     ".db",
     ".sqlite",
     ".sqlite3",
-    ".log",
     ".tmp",
     ".swp",
     ".pem",
     ".key",
     ".tsbuildinfo",
+    ".log",
 )
 EXCLUDED_FILE_NAMES = {
     ".env",
@@ -178,7 +178,7 @@ def _normalize(path: Path) -> str:
     return path.as_posix()
 
 
-def _is_excluded(rel_path: str, include_external: bool, include_proof_archive: bool) -> bool:
+def _is_excluded(rel_path: str, include_external: bool, include_proof_archive: bool, packaged_proof_paths: set[str] | None = None) -> bool:
     # Normalise first path component (strip + casefold) so case/whitespace
     # variants like "Research /" or "External/" are caught by EXCLUDED_PREFIXES.
     _parts = Path(rel_path).parts
@@ -207,8 +207,6 @@ def _is_excluded(rel_path: str, include_external: bool, include_proof_archive: b
         return True
     if any(_is_macos_sidecar(part) for part in parts):
         return True
-    if any(part.lower().endswith(".egg-info") for part in parts):
-        return True
 
     name = Path(rel_path).name
     lower_name = name.lower()
@@ -218,6 +216,9 @@ def _is_excluded(rel_path: str, include_external: bool, include_proof_archive: b
         return True
     if lower_name.startswith(".env."):
         return True
+    # Allow packaged proof log files even if they have .log suffix
+    if packaged_proof_paths is not None and rel_path in packaged_proof_paths:
+        return False
     if lower_name.endswith(EXCLUDED_SUFFIXES):
         return True
     return False
@@ -469,7 +470,7 @@ def _collect_files(
                     rel_path = _normalize(file_path.relative_to(repo_root))
                 except FileNotFoundError:
                     continue
-                if _is_excluded(rel_path, include_external, include_proof_archive):
+                if _is_excluded(rel_path, include_external, include_proof_archive, packaged_proof_paths):
                     excluded_top_level.add(rel_path.split("/", 1)[0])
                     continue
                 included.add(file_path)
@@ -479,7 +480,7 @@ def _collect_files(
         path = repo_root / rel
         if path.is_file():
             rel_path = _normalize(path.relative_to(repo_root))
-            if _is_excluded(rel_path, include_external, include_proof_archive):
+            if _is_excluded(rel_path, include_external, include_proof_archive, packaged_proof_paths):
                 excluded_top_level.add(rel_path.split("/", 1)[0])
                 continue
             included.add(path)
@@ -489,7 +490,7 @@ def _collect_files(
         path = repo_root / rel
         if path.is_file():
             rel_path = _normalize(path.relative_to(repo_root))
-            if _is_excluded(rel_path, include_external, include_proof_archive):
+            if _is_excluded(rel_path, include_external, include_proof_archive, packaged_proof_paths):
                 excluded_top_level.add(rel_path.split("/", 1)[0])
                 continue
             included.add(path)
@@ -505,7 +506,7 @@ def _collect_files(
     for compose_file in repo_root.glob("docker-compose*.yml"):
         if compose_file.is_file():
             rel_path = _normalize(compose_file.relative_to(repo_root))
-            if _is_excluded(rel_path, include_external, include_proof_archive):
+            if _is_excluded(rel_path, include_external, include_proof_archive, packaged_proof_paths):
                 excluded_top_level.add(rel_path.split("/", 1)[0])
                 continue
             included.add(compose_file)
@@ -514,7 +515,7 @@ def _collect_files(
     for compose_file in repo_root.glob("docker-compose*.yaml"):
         if compose_file.is_file():
             rel_path = _normalize(compose_file.relative_to(repo_root))
-            if _is_excluded(rel_path, include_external, include_proof_archive):
+            if _is_excluded(rel_path, include_external, include_proof_archive, packaged_proof_paths):
                 excluded_top_level.add(rel_path.split("/", 1)[0])
                 continue
             included.add(compose_file)
@@ -523,7 +524,7 @@ def _collect_files(
     for candidate in repo_root.iterdir():
         if not candidate.exists():
             continue
-        if _is_excluded(candidate.name + ("/" if candidate.is_dir() else ""), include_external, include_proof_archive):
+        if _is_excluded(candidate.name + ("/" if candidate.is_dir() else ""), include_external, include_proof_archive, packaged_proof_paths):
             excluded_top_level.add(candidate.name)
 
     return sorted(included), included_top_level, excluded_top_level

@@ -105,10 +105,10 @@ def find_forbidden_paths(extract_dir: Path) -> list[str]:
         "artifacts/proof/archive/",
         "artifacts/proof/backend/",
         "artifacts/proof/frontend/",
-        ".gitignore",
+        "*.egg-info/",
     }
     
-    forbidden_extensions = {".pyc", ".egg-info", ".pyo"}
+    forbidden_extensions = {".pyc", ".pyo"}
     forbidden_files = {
         ".DS_Store",
         ".ds_store",
@@ -134,11 +134,22 @@ def find_forbidden_paths(extract_dir: Path) -> list[str]:
                     found.append(path_str)
                     break
             else:
-                if path_str == pattern or path_str.startswith(f"{pattern}/"):
+                # Handle wildcard patterns like *.egg-info
+                if pattern.endswith("*"):
+                    import fnmatch
+                    for part in Path(path_str).parts:
+                        if fnmatch.fnmatch(part, pattern):
+                            found.append(path_str)
+                            break
+                    else:
+                        if path_str.startswith(f"{pattern[:-1]}"):
+                            found.append(path_str)
+                            break
+                elif path_str == pattern or path_str.startswith(f"{pattern}/"):
                     found.append(path_str)
                     break
         
-        # Check extensions
+        # Check extensions (including .egg-info as directory)
         if path.suffix in forbidden_extensions:
             found.append(path_str)
         
