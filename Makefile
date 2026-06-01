@@ -1,4 +1,4 @@
-.PHONY: backend-install backend-test frontend-install frontend-check frontend-typecheck verify docker-smoke proof release-proof backend-proof frontend-build bootstrap-backend bootstrap-frontend bootstrap truth-check full-proof clean-clone-proof release-proof-local release-package-proof-local nox test check-generated dev stop setup release-zip build-clean-release validate-release-zip proof-static validate-archive-freshness validate-handoff-consistency saskatoon-staging-proof canlii-staging-contract statscan-boundary-proof validate-smoke-workspace validate-full-workspace validate-docker-workspace check-route-contract check-local-env check-config-docs
+.PHONY: backend-install backend-test frontend-install frontend-check frontend-typecheck verify verify-runtime doctor-macos docker-smoke proof release-proof backend-proof frontend-build bootstrap-backend bootstrap-frontend bootstrap truth-check full-proof clean-clone-proof release-proof-local release-package-proof-local nox test check-generated dev stop setup release-zip build-clean-release validate-release-zip proof-static validate-archive-freshness validate-handoff-consistency saskatoon-staging-proof canlii-staging-contract statscan-boundary-proof validate-smoke-workspace validate-full-workspace validate-docker-workspace check-route-contract check-local-env check-config-docs test-backend-unit test-backend-integration test-backend-db test-backend-auth test-backend-ingestion test-backend-proof test-frontend typecheck-frontend build-frontend lint-frontend
 
 backend-install:
 	cd backend && python -m pip install -e ".[test]"
@@ -32,6 +32,56 @@ frontend-typecheck:
 		[ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh"; \
 		nvm use 22.22.3 >/dev/null 2>&1 || { echo "BLOCKED_NODE_VERSION: nvm use 22.22.3 failed -- install Node 22.22.3 via: nvm install 22.22.3"; exit 1; }; \
 		npm run typecheck --prefix frontend'
+
+test-backend-unit:
+	@mkdir -p artifacts/proof/current
+	@python3 -m pytest backend/app/tests -m unit -q 2>&1 | tee artifacts/proof/current/backend_unit_pytest.log
+
+test-backend-integration:
+	@mkdir -p artifacts/proof/current
+	@python3 -m pytest backend/app/tests -m integration -q 2>&1 | tee artifacts/proof/current/backend_integration_pytest.log
+
+test-backend-db:
+	@mkdir -p artifacts/proof/current
+	@python3 -m pytest backend/app/tests -m db -q 2>&1 | tee artifacts/proof/current/backend_db_pytest.log
+
+test-backend-auth:
+	@mkdir -p artifacts/proof/current
+	@python3 -m pytest backend/app/tests -m auth -q 2>&1 | tee artifacts/proof/current/backend_auth_pytest.log
+
+test-backend-ingestion:
+	@mkdir -p artifacts/proof/current
+	@python3 -m pytest backend/app/tests -m ingestion -q 2>&1 | tee artifacts/proof/current/backend_ingestion_pytest.log
+
+test-backend-proof: test-backend-unit test-backend-integration test-backend-db test-backend-auth test-backend-ingestion
+
+test-frontend:
+	@mkdir -p artifacts/proof/current
+	@bash -lc 'NVM_DIR="$${NVM_DIR:-$$HOME/.nvm}"; \
+		[ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh"; \
+		nvm use 22.22.3 >/dev/null 2>&1 || { echo "BLOCKED_NODE_VERSION: nvm use 22.22.3 failed -- install Node 22.22.3 via: nvm install 22.22.3"; exit 1; }; \
+		npm run test --prefix frontend 2>&1 | tee artifacts/proof/current/frontend_test.log'
+
+typecheck-frontend:
+	@mkdir -p artifacts/proof/current
+	@bash -lc 'NVM_DIR="$${NVM_DIR:-$$HOME/.nvm}"; \
+		[ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh"; \
+		nvm use 22.22.3 >/dev/null 2>&1 || { echo "BLOCKED_NODE_VERSION: nvm use 22.22.3 failed -- install Node 22.22.3 via: nvm install 22.22.3"; exit 1; }; \
+		npm run typecheck --prefix frontend 2>&1 | tee artifacts/proof/current/frontend_typecheck.log'
+
+build-frontend:
+	@mkdir -p artifacts/proof/current
+	@bash -lc 'NVM_DIR="$${NVM_DIR:-$$HOME/.nvm}"; \
+		[ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh"; \
+		nvm use 22.22.3 >/dev/null 2>&1 || { echo "BLOCKED_NODE_VERSION: nvm use 22.22.3 failed -- install Node 22.22.3 via: nvm install 22.22.3"; exit 1; }; \
+		npm run build --prefix frontend 2>&1 | tee artifacts/proof/current/frontend_build.log'
+
+lint-frontend:
+	@mkdir -p artifacts/proof/current
+	@bash -lc 'NVM_DIR="$${NVM_DIR:-$$HOME/.nvm}"; \
+		[ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh"; \
+		nvm use 22.22.3 >/dev/null 2>&1 || { echo "BLOCKED_NODE_VERSION: nvm use 22.22.3 failed -- install Node 22.22.3 via: nvm install 22.22.3"; exit 1; }; \
+		npm run lint --prefix frontend 2>&1 | tee artifacts/proof/current/frontend_lint.log'
 
 bootstrap-backend:
 	bash scripts/bootstrap_backend.sh
@@ -71,6 +121,12 @@ truth-check:
 check-local-env:
 	python3 scripts/check_local_dev_environment.py
 
+verify-runtime:
+	python3 scripts/check_runtime_versions.py --root .
+
+doctor-macos:
+	bash scripts/dev_doctor_macos.sh
+
 check-config-docs:
 	python3 scripts/check_config_docs_consistency.py --root .
 
@@ -103,7 +159,7 @@ backend-proof:
 test: backend-test
 
 # verify runs the full quality gate (no Docker)
-verify: check-generated truth-check backend-install backend-test frontend-install frontend-check
+verify: verify-runtime check-generated truth-check backend-install backend-test frontend-install frontend-check
 
 docker-smoke:
 	docker compose up -d --build
@@ -113,6 +169,7 @@ docker-smoke:
 
 proof:
 	@echo "=== Running canonical proof generation ==="
+	@python3 scripts/check_runtime_versions.py --root .
 	@python3 scripts/check_toolchain_versions.py --root .
 	@$(MAKE) release-proof-local
 	@python3 scripts/check_single_proof_authority.py
@@ -125,6 +182,7 @@ proof:
 	@echo "Canonical proof: artifacts/proof/current/release_gate.json"
 
 release-proof:
+	@python3 scripts/check_runtime_versions.py --root .
 	@python3 scripts/check_toolchain_versions.py --root .
 	@python3 scripts/check_node_policy.py
 	@python3 scripts/check_frontend_node_gate.py --expected-major 22

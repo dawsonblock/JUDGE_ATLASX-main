@@ -68,6 +68,20 @@ filterwarnings = [
   "ignore:'crypt' is deprecated and slated for removal in Python 3.13:DeprecationWarning",
   "ignore:Please use `import python_multipart` instead.:PendingDeprecationWarning",
 ]
+markers = [
+  "unit: fast isolated unit tests",
+  "integration: cross-component integration tests",
+  "contract: API and contract conformance tests",
+  "db: database and migration related tests",
+  "auth: authentication and RBAC tests",
+  "ingestion: source ingestion and parsing tests",
+  "source_registry: source registry policy and consistency tests",
+  "evidence: evidence snapshot and publication gate tests",
+  "audit_chain: append-only audit chain integrity tests",
+  "api: route and API behavior tests",
+  "slow: long-running tests",
+  "network_optional: tests that can use external network when enabled",
+]
 
 [tool.ruff]
 line-length = 100
