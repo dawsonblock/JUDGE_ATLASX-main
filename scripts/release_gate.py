@@ -3185,17 +3185,6 @@ def main() -> int:
         static_guards_rel=static_guards_rel,
     )
 
-    required_proof_logs_step = _run(
-        repo_root,
-        out_dir,
-        _required_proof_logs_spec.name,
-        _required_proof_logs_spec.log_name,
-        list(_required_proof_logs_spec.command),
-        timeout_seconds=_required_proof_logs_spec.timeout_seconds,
-        required=_required_proof_logs_spec.required,
-    )
-    results.append(required_proof_logs_step)
-
     check_proof_manifest_step = _run(
         repo_root,
         out_dir,
@@ -3230,6 +3219,17 @@ def main() -> int:
         required=_check_proof_consistency_spec.required,
     )
     results.append(check_proof_consistency_step)
+
+    required_proof_logs_step = _run(
+        repo_root,
+        out_dir,
+        _required_proof_logs_spec.name,
+        _required_proof_logs_spec.log_name,
+        list(_required_proof_logs_spec.command),
+        timeout_seconds=_required_proof_logs_spec.timeout_seconds,
+        required=_required_proof_logs_spec.required,
+    )
+    results.append(required_proof_logs_step)
 
     validation_summary = _validation_summary_gate(repo_root)
     blockers_raw = validation_summary.get("blockers", [])

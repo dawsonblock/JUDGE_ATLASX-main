@@ -72,6 +72,11 @@ DEFAULT_REQUIRED_PROOF_LOGS = (
     "artifacts/proof/current/archive_validation.log",
 )
 PACKAGED_ARCHIVE_OPTIONAL_REQUIRED_LOGS = {
+    # These checks run after archive extraction validation starts and therefore
+    # are not guaranteed to be pre-baked inside the packaged archive itself.
+    "artifacts/proof/current/check_no_local_paths_in_release_proof.log",
+    "artifacts/proof/current/check_proof_consistency.log",
+    "artifacts/proof/current/check_proof_manifest.log",
     "artifacts/proof/current/archive_validation.log",
     "artifacts/proof/current/required_proof_logs.log",
 }
@@ -171,18 +176,19 @@ def _check_required_proof_logs_detailed(
             if started_epoch is not None and abs_path.stat().st_mtime + 1.0 < started_epoch:
                 stale_logs.append(log_path)
                 continue
-        entry = proof_entry_map.get(log_path)
-        if entry is None:
-            manifest_missing.append(log_path)
-            continue
-        expected_size = entry.get("size_bytes")
-        if isinstance(expected_size, int) and expected_size != abs_path.stat().st_size:
-            size_mismatches.append(log_path)
-        expected_hash = entry.get("sha256") or entry.get("log_sha256")
-        if isinstance(expected_hash, str) and expected_hash:
-            actual_hash = _sha256_path(abs_path)
-            if actual_hash != expected_hash:
-                hash_mismatches.append(log_path)
+        if _requires_manifest_coverage(log_path):
+            entry = proof_entry_map.get(log_path)
+            if entry is None:
+                manifest_missing.append(log_path)
+                continue
+            expected_size = entry.get("size_bytes")
+            if isinstance(expected_size, int) and expected_size != abs_path.stat().st_size:
+                size_mismatches.append(log_path)
+            expected_hash = entry.get("sha256") or entry.get("log_sha256")
+            if isinstance(expected_hash, str) and expected_hash:
+                actual_hash = _sha256_path(abs_path)
+                if actual_hash != expected_hash:
+                    hash_mismatches.append(log_path)
 
     # Secondary source: top-level logs map
     for _check_name, log_path in payload.get("logs", {}).items():
@@ -207,18 +213,19 @@ def _check_required_proof_logs_detailed(
             if started_epoch is not None and abs_path.stat().st_mtime + 1.0 < started_epoch:
                 stale_logs.append(log_path)
                 continue
-        entry = proof_entry_map.get(log_path)
-        if entry is None:
-            manifest_missing.append(log_path)
-            continue
-        expected_size = entry.get("size_bytes")
-        if isinstance(expected_size, int) and expected_size != abs_path.stat().st_size:
-            size_mismatches.append(log_path)
-        expected_hash = entry.get("sha256") or entry.get("log_sha256")
-        if isinstance(expected_hash, str) and expected_hash:
-            actual_hash = _sha256_path(abs_path)
-            if actual_hash != expected_hash:
-                hash_mismatches.append(log_path)
+        if _requires_manifest_coverage(log_path):
+            entry = proof_entry_map.get(log_path)
+            if entry is None:
+                manifest_missing.append(log_path)
+                continue
+            expected_size = entry.get("size_bytes")
+            if isinstance(expected_size, int) and expected_size != abs_path.stat().st_size:
+                size_mismatches.append(log_path)
+            expected_hash = entry.get("sha256") or entry.get("log_sha256")
+            if isinstance(expected_hash, str) and expected_hash:
+                actual_hash = _sha256_path(abs_path)
+                if actual_hash != expected_hash:
+                    hash_mismatches.append(log_path)
 
     if manifest_missing or hash_mismatches or size_mismatches:
         missing.extend(manifest_missing)
@@ -408,6 +415,13 @@ def _entry_path(entry: dict) -> str | None:
     if isinstance(log_path, str) and log_path:
         return log_path
     return None
+
+
+def _requires_manifest_coverage(rel_path: str) -> bool:
+    # proof_manifest proof_commands tracks executable proof command artifacts
+    # (logs). Non-log artifacts may appear in release_gate logs map and are
+    # validated for existence, but are not manifest-hash contract items.
+    return rel_path.endswith(".log")
 
 
 def _proof_entry_map(manifest: dict) -> dict[str, dict]:

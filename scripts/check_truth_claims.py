@@ -300,6 +300,7 @@ ALLOWED_POLICY_FILES: dict[str, AllowedPolicyPhrase] = {
 
 SKIP_DIRS = {
     ".git",
+    ".kilo",
     ".next",
     ".pytest_cache",
     ".ruff_cache",

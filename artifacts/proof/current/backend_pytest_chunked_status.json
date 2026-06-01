@@ -1,15 +1,15 @@
 {
-  "started_at": "2026-06-01T20:39:09.250312+00:00",
-  "finished_at": "2026-06-01T20:39:38.718209+00:00",
+  "started_at": "2026-06-01T20:57:19.888829+00:00",
+  "finished_at": "2026-06-01T20:58:27.365992+00:00",
   "collect_exit_code": 0,
-  "batch_exit_code": 1,
+  "batch_exit_code": 0,
   "batch_size": 40,
   "discovered_files": 298,
   "batches": [
     {
       "index": 1,
-      "started_at": "2026-06-01T20:39:13.335776+00:00",
-      "finished_at": "2026-06-01T20:39:30.827517+00:00",
+      "started_at": "2026-06-01T20:57:22.835227+00:00",
+      "finished_at": "2026-06-01T20:57:34.571094+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/ingestion/test_ckan_adapter.py",
@@ -17,13 +17,67 @@
     },
     {
       "index": 2,
-      "started_at": "2026-06-01T20:39:30.827648+00:00",
-      "finished_at": "2026-06-01T20:39:38.718054+00:00",
-      "exit_code": 1,
+      "started_at": "2026-06-01T20:57:34.571199+00:00",
+      "finished_at": "2026-06-01T20:57:49.103636+00:00",
+      "exit_code": 0,
       "file_count": 40,
       "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_auto_review.py",
       "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_crawlee_safety.py"
+    },
+    {
+      "index": 3,
+      "started_at": "2026-06-01T20:57:49.103703+00:00",
+      "finished_at": "2026-06-01T20:57:53.823165+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_crime_source_ingestion.py",
+      "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_ingestion_identity_uniqueness.py"
+    },
+    {
+      "index": 4,
+      "started_at": "2026-06-01T20:57:53.823238+00:00",
+      "finished_at": "2026-06-01T20:57:59.088377+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_ingestion_pipeline.py",
+      "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_memory_graph_bridge.py"
+    },
+    {
+      "index": 5,
+      "started_at": "2026-06-01T20:57:59.088449+00:00",
+      "finished_at": "2026-06-01T20:58:09.252903+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_memory_invalidation.py",
+      "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_public_graph_api_safety.py"
+    },
+    {
+      "index": 6,
+      "started_at": "2026-06-01T20:58:09.252994+00:00",
+      "finished_at": "2026-06-01T20:58:14.150898+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_public_map_reviewed_only.py",
+      "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_saskatoon_ingest_endpoint.py"
+    },
+    {
+      "index": 7,
+      "started_at": "2026-06-01T20:58:14.150974+00:00",
+      "finished_at": "2026-06-01T20:58:22.308078+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_saskatoon_open_data_staging.py",
+      "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_source_visibility_endpoints.py"
+    },
+    {
+      "index": 8,
+      "started_at": "2026-06-01T20:58:22.308186+00:00",
+      "finished_at": "2026-06-01T20:58:27.365940+00:00",
+      "exit_code": 0,
+      "file_count": 18,
+      "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_statscan.py",
+      "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_workflow_admin_security.py"
     }
   ],
-  "status": "FAIL"
+  "status": "PASS"
 }

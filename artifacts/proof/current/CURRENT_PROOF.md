@@ -1,7 +1,7 @@
 # CURRENT_PROOF
 
-- generated_at_utc: 2026-06-01T20:44:55.976113+00:00
-- commit_hash: eae0e122efe16d716bf3764bd1ba217b5d850e9e
+- generated_at_utc: 2026-06-01T21:00:59.702070+00:00
+- commit_hash: 95b4d8eab70b708bbfc38f414a271a114ca447b0
 - alpha_gate_status: BLOCKED
 - alpha_gate_passed: false
 - release_gate_check_count: 52
@@ -10,8 +10,8 @@
 - egress_proxy_proof_result: PASS
 - demo_proof_result: PASS
 - proof_freshness_result: PASS
-- archive_validation_result: FAIL
-- proof_input_tree_hash: 0e3b21728142fe30f3b67729c9850ff5fefa8d18a1e45b6a12093a6108d66b90
+- archive_validation_result: PASS
+- proof_input_tree_hash: 05aea7c85a2fca351862470604a1c7de1f5209aec044bb4fff8662715d1bb88e
 - proof_input_file_count: 1109
 - egress_proxy_proof_log: artifacts/proof/current/egress_proxy_proof.log
 - demo_proof_log: artifacts/proof/current/demo_proof.log
@@ -46,7 +46,7 @@
 - Dedicated egress proxy proof passed in the current release gate.
 - Dedicated synthetic demo proof passed in the current release gate.
 - Proof freshness passed against the stored proof-input file list and tree hash.
-- Archive validation has not yet been recorded for this run.
+- Archive validation passed against the final distributable archive shape.
 - archive_validation_log: artifacts/proof/current/archive_validation.log
 - archive_validation_supported_shapes:
   - JUDGE-main/
@@ -73,10 +73,6 @@
 
 ## Failed Checks
 
-- check_false_claims
-- backend_pytest
-- check_npm_audit_triage
-- archive_validation
 - required_proof_logs
 - validation_summary_missing
 

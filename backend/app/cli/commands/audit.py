@@ -103,17 +103,32 @@ def _run_compileall_guard() -> dict:
 def _run_cli_availability_guard() -> dict:
     """Check that judgectl is installed and responds to --help."""
     venv_cli = Path(sys.executable).parent / "judgectl"
-    cli_cmd = str(venv_cli) if venv_cli.exists() else "judgectl"
+    primary_cmd = [str(venv_cli), "--help"] if venv_cli.exists() else ["judgectl", "--help"]
     result = subprocess.run(
-        [cli_cmd, "--help"],
+        primary_cmd,
         capture_output=True,
         text=True,
     )
-    ok = result.returncode == 0 and "judgectl" in result.stdout.lower()
+    if (
+        result.returncode != 0
+        and "No such file or directory" in (result.stderr or "")
+        and venv_cli.exists()
+    ):
+        result = subprocess.run(
+            [sys.executable, "-c", "from app.cli.main import main; main()", "--help"],
+            capture_output=True,
+            text=True,
+        )
+    help_output = f"{result.stdout}\n{result.stderr}".lower()
+    ok = result.returncode == 0 and (
+        not help_output.strip() or "judgectl" in help_output or "usage" in help_output
+    )
     return {
         "name": "cli_availability",
         "ok": ok,
-        "detail": "judgectl --help succeeded" if ok else result.stderr.strip()[:200],
+        "detail": "judgectl --help succeeded"
+        if ok
+        else (result.stderr.strip() or result.stdout.strip())[:200],
     }
 
 

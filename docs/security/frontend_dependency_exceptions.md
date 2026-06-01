@@ -47,3 +47,12 @@ Each package entry must include:
 - **Mitigation**: Maintain gateway/auth boundary controls and upgrade to patched Next.js version in beta hardening window.
 - **Expiry date**: 2026-07-31
 - **Owner**: security-review-alpha
+
+### `vitest`
+- **Package**: vitest
+- **Version**: repository pinned dev dependency in frontend/package.json
+- **Vulnerability ID**: GHSA-9crc-q9x8-hgqq
+- **Reason it is not exploitable**: vitest is only executed in local/CI test workflows and is not part of runtime request handling or deployed production serving paths.
+- **Mitigation**: keep test execution in trusted CI contexts, block untrusted test input sources, and upgrade to patched vitest release once validated against frontend contract tests.
+- **Expiry date**: 2026-07-31
+- **Owner**: security-review-alpha
