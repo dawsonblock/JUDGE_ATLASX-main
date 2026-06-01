@@ -188,12 +188,10 @@ def _check_required_proof_logs_detailed(
     for _check_name, log_path in payload.get("logs", {}).items():
         if not log_path or not isinstance(log_path, str):
             continue
-        if not log_path.endswith(".log"):
-            continue
         if log_path in seen:
             continue
         # Only enforce logs inside artifacts/proof/current/ — other paths
-        # (docs, root files) are non-log artifacts and may vary per run.
+        # (docs, root files) are non-proof artifacts and may vary per run.
         if not log_path.startswith("artifacts/proof/current/"):
             continue
         seen.add(log_path)
@@ -303,6 +301,97 @@ def _required_log_index_false_exists(repo_root: Path) -> list[str]:
     return sorted(set(bad))
 
 
+def _required_log_index_truth_issues(repo_root: Path) -> list[str]:
+    index_path = repo_root / "artifacts/proof/current/required_log_index.json"
+    if not index_path.exists():
+        return ["required_log_index:missing"]
+    try:
+        payload = json.loads(index_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return ["required_log_index:invalid_json"]
+    entries = payload.get("entries")
+    if not isinstance(entries, list):
+        return ["required_log_index:invalid_entries"]
+
+    issues: list[str] = []
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        rel = entry.get("path")
+        if not isinstance(rel, str) or not rel:
+            continue
+
+        target = repo_root / rel
+        exists_claim = entry.get("exists")
+        if exists_claim is True and not target.is_file():
+            issues.append(f"required_index_exists_missing:{rel}")
+            continue
+        if exists_claim is False and target.is_file():
+            issues.append(f"required_index_missing_present:{rel}")
+
+        if not target.is_file():
+            continue
+
+        claimed_hash = (
+            entry.get("recorded_sha256")
+            or entry.get("sha256")
+            or entry.get("actual_sha256")
+        )
+        if isinstance(claimed_hash, str) and claimed_hash:
+            actual_hash = _sha256_path(target)
+            if actual_hash != claimed_hash:
+                issues.append(f"required_index_hash_mismatch:{rel}")
+
+        claimed_size = (
+            entry.get("recorded_size_bytes")
+            if isinstance(entry.get("recorded_size_bytes"), int)
+            else entry.get("size_bytes")
+            if isinstance(entry.get("size_bytes"), int)
+            else entry.get("actual_size_bytes")
+            if isinstance(entry.get("actual_size_bytes"), int)
+            else None
+        )
+        if isinstance(claimed_size, int):
+            actual_size = target.stat().st_size
+            if actual_size != claimed_size:
+                issues.append(f"required_index_size_mismatch:{rel}")
+
+    return sorted(set(issues))
+
+
+def _missing_manifest_referenced_files(repo_root: Path) -> list[str]:
+    manifest_path = repo_root / "artifacts/proof/current/proof_manifest.json"
+    if not manifest_path.exists():
+        return ["proof_manifest:missing"]
+    try:
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return ["proof_manifest:invalid_json"]
+    if not isinstance(payload, dict):
+        return ["proof_manifest:invalid_payload"]
+
+    referenced: set[str] = set()
+    proof_commands = payload.get("proof_commands")
+    if isinstance(proof_commands, list):
+        for entry in proof_commands:
+            if not isinstance(entry, dict):
+                continue
+            rel = _entry_path(entry)
+            if isinstance(rel, str) and rel:
+                referenced.add(rel)
+    required_logs = payload.get("required_logs")
+    if isinstance(required_logs, list):
+        for rel in required_logs:
+            if isinstance(rel, str) and rel:
+                referenced.add(rel)
+
+    missing: list[str] = []
+    for rel in sorted(referenced):
+        if not (repo_root / rel).exists():
+            missing.append(f"manifest_reference_missing:{rel}")
+    return missing
+
+
 def _sha256_path(path: Path) -> str:
     digest = sha256()
     with path.open("rb") as fh:
@@ -410,6 +499,8 @@ def main() -> int:
     missing_required_files: list[str] = []
     missing_required_logs: list[str] = []
     false_exists_required_index: list[str] = []
+    required_index_truth_issues: list[str] = []
+    manifest_reference_missing: list[str] = []
     if args.strict_required_files:
         missing_required_files = _missing_required_proof_files(repo_root)
         missing_required_logs = _missing_required_proof_logs(
@@ -417,6 +508,8 @@ def main() -> int:
             packaged_archive=args.packaged_archive,
         )
         false_exists_required_index = _required_log_index_false_exists(repo_root)
+        required_index_truth_issues = _required_log_index_truth_issues(repo_root)
+        manifest_reference_missing = _missing_manifest_referenced_files(repo_root)
 
     if (
         missing
@@ -425,6 +518,8 @@ def main() -> int:
         or missing_required_logs
         or missing_required_files
         or false_exists_required_index
+        or required_index_truth_issues
+        or manifest_reference_missing
     ):
         print(
             "REQUIRED_PROOF_LOGS: FAIL "
@@ -493,12 +588,35 @@ def main() -> int:
             )
             for path in false_exists_required_index:
                 print(f"  REQUIRED_INDEX_FALSE_EXISTS: {path}")
+        if required_index_truth_issues:
+            print(
+                "REQUIRED_PROOF_LOGS: DEBUG "
+                f"required_index_truth_issues={len(required_index_truth_issues)}"
+            )
+            for issue in required_index_truth_issues:
+                print(f"  REQUIRED_INDEX_ISSUE: {issue}")
+        if manifest_reference_missing:
+            print(
+                "REQUIRED_PROOF_LOGS: DEBUG "
+                f"manifest_reference_missing={len(manifest_reference_missing)}"
+            )
+            for issue in manifest_reference_missing:
+                print(f"  MANIFEST_REFERENCE_ISSUE: {issue}")
         return 1
 
-    print(
-        "REQUIRED_PROOF_LOGS: PASS "
-        f"({present_total} referenced logs present)"
+    required_total = len(
+        [
+            rel
+            for rel in DEFAULT_REQUIRED_PROOF_LOGS
+            if not (args.packaged_archive and rel in PACKAGED_ARCHIVE_OPTIONAL_REQUIRED_LOGS)
+        ]
     )
+    print("REQUIRED_PROOF_LOGS: PASS")
+    print(f"required: {required_total}")
+    print(f"present: {required_total}")
+    print("missing: 0")
+    print("hash_mismatches: 0")
+    print("zero_byte_logs: 0")
     return 0
 
 

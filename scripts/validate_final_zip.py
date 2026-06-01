@@ -38,6 +38,14 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(65536), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def compute_sha256(zip_path: Path) -> str:
     """Compute SHA-256 hash of ZIP file."""
     digest = hashlib.sha256()
@@ -100,6 +108,7 @@ def find_forbidden_paths(extract_dir: Path) -> list[str]:
         "venv/",
         ".venv/",
         ".git/",
+        ".kilo/",
         "artifacts/history/",
         "artifacts/proof/history/",
         "artifacts/proof/archive/",
@@ -360,8 +369,36 @@ def _collect_required_log_index_references(root: Path) -> tuple[set[str], list[s
             continue
         normalized = rel_path.replace("\\", "/")
         references.add(normalized)
-        if entry.get("exists") is True and not (root / normalized).is_file():
+        target = root / normalized
+        if entry.get("exists") is True and not target.is_file():
             errors.append(f"required_log_index_exists_but_missing:{normalized}")
+            continue
+        if entry.get("exists") is False and target.is_file():
+            errors.append(f"required_log_index_exists_false_but_present:{normalized}")
+        if not target.is_file():
+            continue
+
+        claimed_hash = (
+            entry.get("recorded_sha256")
+            or entry.get("sha256")
+            or entry.get("actual_sha256")
+        )
+        if isinstance(claimed_hash, str) and claimed_hash:
+            actual_hash = _sha256_file(target)
+            if actual_hash != claimed_hash:
+                errors.append(f"required_log_index_hash_mismatch:{normalized}")
+
+        claimed_size = (
+            entry.get("recorded_size_bytes")
+            if isinstance(entry.get("recorded_size_bytes"), int)
+            else entry.get("size_bytes")
+            if isinstance(entry.get("size_bytes"), int)
+            else entry.get("actual_size_bytes")
+            if isinstance(entry.get("actual_size_bytes"), int)
+            else None
+        )
+        if isinstance(claimed_size, int) and target.stat().st_size != claimed_size:
+            errors.append(f"required_log_index_size_mismatch:{normalized}")
     return references, errors
 
 

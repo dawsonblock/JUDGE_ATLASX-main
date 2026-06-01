@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
-"""Validate required raw proof logs listed in proof_manifest.json."""
+"""Validate proof_manifest.json against on-disk artifacts.
+
+Supports validating from a repository root or from a built archive.
+"""
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
-import sys
+import tempfile
+import zipfile
 from pathlib import Path
 
 
@@ -29,6 +34,21 @@ def _load_manifest(repo_root: Path) -> dict:
     return json.loads(manifest_path.read_text(encoding="utf-8"))
 
 
+def _load_manifest_from_root(root: Path) -> dict:
+    manifest_path = root / "artifacts" / "proof" / "current" / "proof_manifest.json"
+    if not manifest_path.exists():
+        raise FileNotFoundError(f"Missing proof manifest: {manifest_path}")
+    return json.loads(manifest_path.read_text(encoding="utf-8"))
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def _required_logs_from_manifest(manifest: dict) -> list[str]:
     required_logs = manifest.get("required_logs")
     if isinstance(required_logs, list) and required_logs:
@@ -48,27 +68,31 @@ def _entry_path(entry: dict) -> str | None:
     return None
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", default=str(REPO_ROOT), help="Repository root")
-    args = parser.parse_args()
+def _resolve_archive_root(archive: Path, extract_dir: Path) -> Path:
+    with zipfile.ZipFile(archive, "r") as zf:
+        zf.extractall(extract_dir)
+        candidates = [
+            Path(name).parts[0]
+            for name in zf.namelist()
+            if name.endswith("artifacts/proof/current/proof_manifest.json")
+        ]
 
-    repo_root = Path(args.root).resolve()
-    try:
-        manifest = _load_manifest(repo_root)
-    except FileNotFoundError as exc:
-        print(f"CHECK_PROOF_MANIFEST: FAIL\n- {exc}")
-        return 1
-    except json.JSONDecodeError as exc:
-        print(f"CHECK_PROOF_MANIFEST: FAIL\n- invalid proof_manifest.json: {exc}")
-        return 1
+    unique = sorted(set(candidates))
+    if not unique:
+        raise FileNotFoundError("archive_missing:artifacts/proof/current/proof_manifest.json")
+    if len(unique) > 1:
+        raise RuntimeError(f"archive_multiple_roots_with_manifest:{','.join(unique)}")
+    return extract_dir / unique[0]
 
+
+def _validate_manifest(root: Path, manifest: dict) -> tuple[list[str], list[str], list[str]]:
     required_logs = _required_logs_from_manifest(manifest)
     missing: list[str] = []
     empty: list[str] = []
+    bad_entries: list[str] = []
 
     for rel_path in required_logs:
-        path = repo_root / rel_path
+        path = root / rel_path
         if not path.exists():
             missing.append(rel_path)
             continue
@@ -76,7 +100,6 @@ def main() -> int:
             empty.append(rel_path)
 
     proof_commands = manifest.get("proof_commands")
-    bad_entries: list[str] = []
     if isinstance(proof_commands, list):
         for entry in proof_commands:
             if not isinstance(entry, dict):
@@ -86,21 +109,32 @@ def main() -> int:
             if not entry_path:
                 bad_entries.append(f"missing_path:{entry.get('name', 'unknown')}")
                 continue
-            file_path = repo_root / entry_path
+
+            file_path = root / entry_path
             if not file_path.exists():
                 bad_entries.append(f"missing_file:{entry_path}")
                 continue
             if file_path.stat().st_size <= 0:
                 bad_entries.append(f"empty_file:{entry_path}")
                 continue
+
             if not isinstance(entry.get("required"), bool):
                 bad_entries.append(f"missing_required_flag:{entry_path}")
-            if not isinstance(entry.get("size_bytes"), int):
+
+            expected_size = entry.get("size_bytes")
+            if not isinstance(expected_size, int):
                 bad_entries.append(f"missing_size_bytes:{entry_path}")
-            elif entry["size_bytes"] != file_path.stat().st_size:
+            elif expected_size != file_path.stat().st_size:
                 bad_entries.append(f"size_mismatch:{entry_path}")
-            if not isinstance(entry.get("sha256"), str) or not entry.get("sha256"):
+
+            expected_hash = entry.get("sha256")
+            if not isinstance(expected_hash, str) or not expected_hash:
                 bad_entries.append(f"missing_sha256:{entry_path}")
+            else:
+                actual_hash = _sha256(file_path)
+                if actual_hash != expected_hash:
+                    bad_entries.append(f"sha256_mismatch:{entry_path}")
+
             if not (
                 isinstance(entry.get("captured_at"), str)
                 and entry.get("captured_at")
@@ -109,6 +143,7 @@ def main() -> int:
                 and entry.get("created_at")
             ):
                 bad_entries.append(f"missing_timestamp:{entry_path}")
+
             if not (
                 isinstance(entry.get("command"), str)
                 and entry.get("command")
@@ -117,6 +152,45 @@ def main() -> int:
                 and entry.get("proof_source")
             ):
                 bad_entries.append(f"missing_command_or_source:{entry_path}")
+    else:
+        bad_entries.append("proof_commands_missing_or_invalid")
+
+    return missing, empty, bad_entries
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", default=str(REPO_ROOT), help="Repository root")
+    parser.add_argument(
+        "--archive",
+        default=None,
+        help="Validate proof manifest from an archive ZIP instead of the live repo tree",
+    )
+    args = parser.parse_args()
+
+    archive = Path(args.archive).resolve() if args.archive else None
+
+    try:
+        if archive is None:
+            root = Path(args.root).resolve()
+            manifest = _load_manifest_from_root(root)
+            mode = "repo"
+            missing, empty, bad_entries = _validate_manifest(root, manifest)
+        else:
+            if not archive.exists() or not archive.is_file():
+                raise FileNotFoundError(f"archive_not_found:{archive}")
+            with tempfile.TemporaryDirectory() as tmp:
+                extract_dir = Path(tmp)
+                root = _resolve_archive_root(archive, extract_dir)
+                manifest = _load_manifest_from_root(root)
+                mode = "archive"
+                missing, empty, bad_entries = _validate_manifest(root, manifest)
+    except (FileNotFoundError, RuntimeError) as exc:
+        print(f"CHECK_PROOF_MANIFEST: FAIL\n- {exc}")
+        return 1
+    except json.JSONDecodeError as exc:
+        print(f"CHECK_PROOF_MANIFEST: FAIL\n- invalid proof_manifest.json: {exc}")
+        return 1
 
     if missing or empty or bad_entries:
         print("CHECK_PROOF_MANIFEST: FAIL")
@@ -128,7 +202,8 @@ def main() -> int:
             print(f"- bad:{rel_path}")
         return 1
 
-    print("CHECK_PROOF_MANIFEST: PASS")
+    required_logs = _required_logs_from_manifest(manifest)
+    print(f"CHECK_PROOF_MANIFEST: PASS ({mode})")
     for rel_path in required_logs:
         print(f"- ok:{rel_path}")
     return 0

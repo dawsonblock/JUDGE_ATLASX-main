@@ -72,6 +72,7 @@ EXCLUDED_PREFIXES = (
     "backend/.venv/",
     "venv/",
     ".git/",
+    ".kilo/",
     ".trunk/",
     "artifacts/proof/archive/",
     "artifacts/proof/backend/",
@@ -335,7 +336,64 @@ def _collect_required_log_index_paths(repo_root: Path) -> tuple[set[str], list[s
     return referenced, sorted(set(exists_true_missing))
 
 
+def validate_required_log_index_truth(repo_root: Path) -> None:
+    index_path = repo_root / "artifacts" / "proof" / "current" / "required_log_index.json"
+    if not index_path.is_file():
+        raise SystemExit("missing required_log_index.json")
+
+    payload = _load_json_object(index_path)
+    entries = payload.get("entries")
+    if not isinstance(entries, list):
+        raise SystemExit("Invalid required_log_index.json: entries must be a list")
+
+    failures: list[str] = []
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        rel = entry.get("path")
+        if not isinstance(rel, str) or not rel:
+            continue
+
+        actual = repo_root / rel
+        exists_claim = entry.get("exists")
+        if exists_claim is True and not actual.is_file():
+            failures.append(f"required_log_index claims exists=true but missing: {rel}")
+            continue
+        if exists_claim is False and actual.is_file():
+            failures.append(f"required_log_index claims exists=false but present: {rel}")
+
+        if not actual.is_file():
+            continue
+
+        actual_hash = _sha256(actual)
+        claimed_hash = (
+            entry.get("recorded_sha256")
+            or entry.get("sha256")
+            or entry.get("actual_sha256")
+        )
+        if isinstance(claimed_hash, str) and claimed_hash and claimed_hash != actual_hash:
+            failures.append(f"hash mismatch for {rel}")
+
+        claimed_size = (
+            entry.get("recorded_size_bytes")
+            if isinstance(entry.get("recorded_size_bytes"), int)
+            else entry.get("size_bytes")
+            if isinstance(entry.get("size_bytes"), int)
+            else entry.get("actual_size_bytes")
+            if isinstance(entry.get("actual_size_bytes"), int)
+            else None
+        )
+        if isinstance(claimed_size, int):
+            actual_size = actual.stat().st_size
+            if claimed_size != actual_size:
+                failures.append(f"size mismatch for {rel}")
+
+    if failures:
+        raise SystemExit("\n".join(failures))
+
+
 def _collect_proof_preconditions(repo_root: Path) -> dict[str, object]:
+    validate_required_log_index_truth(repo_root)
     packaged_proof_paths = _load_packaged_proof_paths(repo_root)
     proof_manifest_paths = _collect_proof_manifest_paths(repo_root)
     required_log_index_paths, required_index_exists_true_missing = (
