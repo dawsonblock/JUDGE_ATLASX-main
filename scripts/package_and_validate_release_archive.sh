@@ -195,6 +195,9 @@ python scripts/build_release_archive.py \
   --output "${ARCHIVE_PATH}" \
   --root-name "${PACKAGE_ROOT_NAME}"
 
+log "Validating proof manifest in archive mode"
+python scripts/check_proof_manifest.py --archive "${ARCHIVE_PATH}"
+
 archive_sha256() {
   if command -v sha256sum >/dev/null 2>&1; then
     sha256sum "$1" | awk '{print $1}'

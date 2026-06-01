@@ -58,7 +58,7 @@ def test_required_log_integrity_detects_hash_and_size_mismatch(tmp_path):
     assert present_total == 0
 
 
-def test_required_log_integrity_ignores_non_log_payload_artifacts(tmp_path):
+def test_required_log_integrity_requires_manifest_coverage_for_payload_artifacts(tmp_path):
     module = _load_check_required_module()
     repo_root = tmp_path
     proof_dir = repo_root / "artifacts" / "proof" / "current"
@@ -104,8 +104,8 @@ def test_required_log_integrity_ignores_non_log_payload_artifacts(tmp_path):
 
     missing, referenced_total, present_total = module.check_required_proof_logs(repo_root)
 
-    assert missing == []
-    assert referenced_total == 1
+    assert "artifacts/proof/current/CURRENT_PROOF.md" in missing
+    assert referenced_total == 2
     assert present_total == 1
 
 

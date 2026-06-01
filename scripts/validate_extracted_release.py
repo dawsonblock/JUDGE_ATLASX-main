@@ -99,6 +99,16 @@ def _build_checks(
             runtime_root,
         ),
         (
+            "check_proof_manifest",
+            [
+                "python3",
+                "scripts/check_proof_manifest.py",
+                "--archive",
+                str(archive_path),
+            ],
+            runtime_root,
+        ),
+        (
             "check_required_proof_logs",
             [
                 "python3",

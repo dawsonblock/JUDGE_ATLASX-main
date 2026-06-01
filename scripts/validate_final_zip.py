@@ -378,12 +378,20 @@ def _collect_required_log_index_references(root: Path) -> tuple[set[str], list[s
         if not target.is_file():
             continue
 
+        exists_claim = entry.get("exists")
+
         claimed_hash = (
             entry.get("recorded_sha256")
             or entry.get("sha256")
             or entry.get("actual_sha256")
         )
-        if isinstance(claimed_hash, str) and claimed_hash:
+        if exists_claim is True and not (
+            isinstance(claimed_hash, str) and claimed_hash
+        ):
+            errors.append(
+                f"required_log_index_exists_missing_recorded_sha256:{normalized}"
+            )
+        elif isinstance(claimed_hash, str) and claimed_hash:
             actual_hash = _sha256_file(target)
             if actual_hash != claimed_hash:
                 errors.append(f"required_log_index_hash_mismatch:{normalized}")
@@ -397,7 +405,11 @@ def _collect_required_log_index_references(root: Path) -> tuple[set[str], list[s
             if isinstance(entry.get("actual_size_bytes"), int)
             else None
         )
-        if isinstance(claimed_size, int) and target.stat().st_size != claimed_size:
+        if exists_claim is True and not isinstance(claimed_size, int):
+            errors.append(
+                f"required_log_index_exists_missing_recorded_size_bytes:{normalized}"
+            )
+        elif isinstance(claimed_size, int) and target.stat().st_size != claimed_size:
             errors.append(f"required_log_index_size_mismatch:{normalized}")
     return references, errors
 

@@ -510,11 +510,17 @@ def check_required_index_consistency(
             continue
 
         recorded_sha = entry.get("recorded_sha256")
+        if not isinstance(recorded_sha, str) or not recorded_sha:
+            errors.append(
+                f"required_log_index_exists_missing_recorded_sha256:{path}"
+            )
+            continue
+
         actual_sha, hash_error = _safe_sha256(abs_path)
         if hash_error is not None or actual_sha is None:
             errors.append(f"required_log_index_unreadable_file_hash:{path}:{hash_error}")
             continue
-        if isinstance(recorded_sha, str) and recorded_sha and recorded_sha != actual_sha:
+        if recorded_sha != actual_sha:
             errors.append(f"required_log_index_recorded_sha_mismatch:{path}")
 
         manifest_sha = manifest_entry.get("sha256") or manifest_entry.get("log_sha256")
@@ -522,6 +528,12 @@ def check_required_index_consistency(
             errors.append(f"required_log_index_manifest_sha_mismatch:{path}")
 
         recorded_size = entry.get("recorded_size_bytes")
+        if not isinstance(recorded_size, int):
+            errors.append(
+                f"required_log_index_exists_missing_recorded_size_bytes:{path}"
+            )
+            continue
+
         actual_size, size_error = _safe_size(abs_path)
         if size_error is not None or actual_size is None:
             errors.append(f"required_log_index_unreadable_file_size:{path}:{size_error}")
@@ -529,7 +541,7 @@ def check_required_index_consistency(
         if actual_size <= 0:
             errors.append(f"required_log_index_empty_log:{path}")
             continue
-        if isinstance(recorded_size, int) and recorded_size != actual_size:
+        if recorded_size != actual_size:
             errors.append(f"required_log_index_recorded_size_mismatch:{path}")
 
         manifest_size = manifest_entry.get("size_bytes")
