@@ -12,8 +12,8 @@
       "finished_at": "2026-06-01T20:39:30.827517+00:00",
       "exit_code": 0,
       "file_count": 40,
-      "first_file": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main 2/backend/app/tests/ingestion/test_ckan_adapter.py",
-      "last_file": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main 2/backend/app/tests/test_auth_sessions.py"
+      "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/ingestion/test_ckan_adapter.py",
+      "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_auth_sessions.py"
     },
     {
       "index": 2,
@@ -21,8 +21,8 @@
       "finished_at": "2026-06-01T20:39:38.718054+00:00",
       "exit_code": 1,
       "file_count": 40,
-      "first_file": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main 2/backend/app/tests/test_auto_review.py",
-      "last_file": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main 2/backend/app/tests/test_crawlee_safety.py"
+      "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_auto_review.py",
+      "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_crawlee_safety.py"
     }
   ],
   "status": "FAIL"

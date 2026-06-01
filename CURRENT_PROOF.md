@@ -1,17 +1,17 @@
 # CURRENT_PROOF
 
-- generated_at_utc: 2026-05-31T23:38:06.992298+00:00
-- commit_hash: 6a5fd6d4830ac85d675ffd70c38dfef047bca4bd
+- generated_at_utc: 2026-06-01T20:44:55.976113+00:00
+- commit_hash: eae0e122efe16d716bf3764bd1ba217b5d850e9e
 - alpha_gate_status: BLOCKED
 - alpha_gate_passed: false
 - release_gate_check_count: 52
-- docker_available: false
-- postgis_proof_result: BLOCKED
+- docker_available: true
+- postgis_proof_result: PASS
 - egress_proxy_proof_result: PASS
 - demo_proof_result: PASS
 - proof_freshness_result: PASS
 - archive_validation_result: FAIL
-- proof_input_tree_hash: 7a3c7e0315f77df846d8b9a47914a889b5ef53b47638a7adb43fbc560584f030
+- proof_input_tree_hash: 0e3b21728142fe30f3b67729c9850ff5fefa8d18a1e45b6a12093a6108d66b90
 - proof_input_file_count: 1109
 - egress_proxy_proof_log: artifacts/proof/current/egress_proxy_proof.log
 - demo_proof_log: artifacts/proof/current/demo_proof.log
@@ -42,7 +42,7 @@
 - make verify = local no-Docker quality checks.
 - make release-proof-local = Docker/PostGIS alpha release gate.
 - Current alpha release is blocked if Docker/PostGIS proof fails.
-- Docker/PostGIS proof did not pass in the current release gate.
+- Docker/PostGIS proof passed in the current release gate.
 - Dedicated egress proxy proof passed in the current release gate.
 - Dedicated synthetic demo proof passed in the current release gate.
 - Proof freshness passed against the stored proof-input file list and tree hash.
@@ -63,8 +63,8 @@
 - backend import proof: PASS (112 routes)
 - frontend contracts: 51 passed
 - public API boundary: 55 passed
-- Docker runtime preflight: FAIL
-- PostGIS proof: BLOCKED
+- Docker runtime preflight: PASS
+- PostGIS proof: PASS
 - egress proxy proof: PASS
 - demo proof: PASS
 - CanLII staging proof: PASS
@@ -73,18 +73,12 @@
 
 ## Failed Checks
 
+- check_false_claims
 - backend_pytest
-- docker_runtime_preflight
-- docker_smoke
-- postgis_proof
+- check_npm_audit_triage
 - archive_validation
 - required_proof_logs
 - validation_summary_missing
-
-## Blocked Checks
-
-- docker_smoke: docker_runtime_preflight failed
-- postgis_proof: docker_runtime_preflight failed
 
 ## Egress Proxy Coverage
 

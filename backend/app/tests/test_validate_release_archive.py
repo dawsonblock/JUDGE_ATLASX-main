@@ -55,7 +55,7 @@ def _valid_files(root: str = "JUDGE_ATLAS-main") -> dict[str, str]:
         ),
         prefix + "artifacts/proof/current/release_gate.log": "gate log\n",
         prefix + "artifacts/proof/current/release_readiness.md": "current readiness\n",
-        prefix + "artifacts/proof/current/required_log_index.json": "{}\n",
+        prefix + "artifacts/proof/current/required_log_index.json": '{"entries": []}\n',
         prefix + "artifacts/proof/current/source_registry_status.json": "{}\n",
         prefix + "README.md": "repo readme\n",
         prefix + "STATUS.md": "Production ready: FALSE\n",
@@ -296,6 +296,65 @@ def test_validate_release_archive_marks_proof_count_mismatch_as_error(
 
     assert report["valid"] is False
     assert any(error.startswith("proof_count_mismatch:") for error in report["errors"])
+
+
+def test_validate_release_archive_requires_recorded_hash_and_size_for_exists_true(
+    tmp_path: Path,
+) -> None:
+    module = _load_module()
+    archive = tmp_path / "required-log-index-missing-recorded.zip"
+    files = _valid_files()
+    files["JUDGE_ATLAS-main/artifacts/proof/current/required_log_index.json"] = (
+        "{\n"
+        '  "entries": [\n'
+        '    {"path": "artifacts/proof/current/release_gate.log", "exists": true}\n'
+        "  ]\n"
+        "}\n"
+    )
+    _write_zip(archive, files)
+
+    report = module.inspect_archive(archive, expected_root="JUDGE_ATLAS-main")
+
+    assert report["valid"] is False
+    assert (
+        "required_log_index_exists_missing_recorded_sha256:"
+        "artifacts/proof/current/release_gate.log"
+    ) in report["errors"]
+    assert (
+        "required_log_index_exists_missing_recorded_size_bytes:"
+        "artifacts/proof/current/release_gate.log"
+    ) in report["errors"]
+
+
+def test_validate_release_archive_rejects_required_log_index_hash_size_mismatch(
+    tmp_path: Path,
+) -> None:
+    module = _load_module()
+    archive = tmp_path / "required-log-index-mismatch.zip"
+    files = _valid_files()
+    files["JUDGE_ATLAS-main/artifacts/proof/current/required_log_index.json"] = (
+        "{\n"
+        '  "entries": [\n'
+        '    {\n'
+        '      "path": "artifacts/proof/current/release_gate.log",\n'
+        '      "exists": true,\n'
+        '      "recorded_sha256": "0000000000000000000000000000000000000000000000000000000000000000",\n'
+        '      "recorded_size_bytes": 999\n'
+        "    }\n"
+        "  ]\n"
+        "}\n"
+    )
+    _write_zip(archive, files)
+
+    report = module.inspect_archive(archive, expected_root="JUDGE_ATLAS-main")
+
+    assert report["valid"] is False
+    assert (
+        "required_log_index_hash_mismatch:artifacts/proof/current/release_gate.log"
+    ) in report["errors"]
+    assert (
+        "required_log_index_size_mismatch:artifacts/proof/current/release_gate.log"
+    ) in report["errors"]
 
 
 def test_validate_release_archive_main_prints_proof_incomplete_summary(

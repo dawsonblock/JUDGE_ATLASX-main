@@ -127,6 +127,16 @@ def _compute_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _compute_member_sha256(zf: zipfile.ZipFile, member_name: str) -> str:
+    import hashlib
+
+    digest = hashlib.sha256()
+    with zf.open(member_name, "r") as handle:
+        for chunk in iter(lambda: handle.read(65536), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def _top_level_roots(names: list[str]) -> list[str]:
     roots = sorted({name.split("/", 1)[0] for name in names if name and "/" in name})
     return [root for root in roots if root]
@@ -212,8 +222,12 @@ def inspect_archive(
 
             release_gate_name = f"{root}/artifacts/proof/current/release_gate.json"
             proof_manifest_name = f"{root}/artifacts/proof/current/proof_manifest.json"
+            required_log_index_name = (
+                f"{root}/artifacts/proof/current/required_log_index.json"
+            )
             release_gate_data: dict | None = None
             proof_manifest_data: dict | None = None
+            required_log_index_data: dict | None = None
             if release_gate_name in name_set:
                 release_gate_text = _read_text_member(zf, release_gate_name)
                 if release_gate_text:
@@ -229,6 +243,14 @@ def inspect_archive(
                         proof_manifest_data = json.loads(proof_manifest_text)
                     except json.JSONDecodeError:
                         report["errors"].append("invalid_proof_manifest_json")
+
+            if required_log_index_name in name_set:
+                required_log_index_text = _read_text_member(zf, required_log_index_name)
+                if required_log_index_text:
+                    try:
+                        required_log_index_data = json.loads(required_log_index_text)
+                    except json.JSONDecodeError:
+                        report["errors"].append("invalid_required_log_index_json")
 
             if release_gate_data is not None:
                 alpha_gate_passed = release_gate_data.get("alpha_gate_passed")
@@ -303,6 +325,73 @@ def inspect_archive(
                             continue
                         if info.file_size <= 0:
                             report["errors"].append(f"empty_required_log_from_manifest:{entry}")
+
+            if required_log_index_data is not None:
+                entries = required_log_index_data.get("entries")
+                if not isinstance(entries, list):
+                    report["errors"].append("invalid_required_log_index_entries")
+                else:
+                    info_by_name = {info.filename: info for info in infos}
+                    for entry in entries:
+                        if not isinstance(entry, dict):
+                            continue
+                        rel_path = entry.get("path")
+                        if not isinstance(rel_path, str) or not rel_path:
+                            continue
+                        normalized = rel_path.replace("\\", "/")
+                        archive_name = f"{root}/{normalized}"
+                        info = info_by_name.get(archive_name)
+
+                        exists_claim = entry.get("exists")
+                        if exists_claim is True and info is None:
+                            report["errors"].append(
+                                f"required_log_index_exists_but_missing:{normalized}"
+                            )
+                            continue
+                        if exists_claim is False and info is not None:
+                            report["errors"].append(
+                                f"required_log_index_exists_false_but_present:{normalized}"
+                            )
+                        if info is None:
+                            continue
+
+                        claimed_hash = (
+                            entry.get("recorded_sha256")
+                            or entry.get("sha256")
+                            or entry.get("actual_sha256")
+                        )
+                        if exists_claim is True and not (
+                            isinstance(claimed_hash, str) and claimed_hash
+                        ):
+                            report["errors"].append(
+                                "required_log_index_exists_missing_recorded_sha256:"
+                                f"{normalized}"
+                            )
+                        elif isinstance(claimed_hash, str) and claimed_hash:
+                            actual_hash = _compute_member_sha256(zf, archive_name)
+                            if actual_hash != claimed_hash:
+                                report["errors"].append(
+                                    f"required_log_index_hash_mismatch:{normalized}"
+                                )
+
+                        claimed_size = (
+                            entry.get("recorded_size_bytes")
+                            if isinstance(entry.get("recorded_size_bytes"), int)
+                            else entry.get("size_bytes")
+                            if isinstance(entry.get("size_bytes"), int)
+                            else entry.get("actual_size_bytes")
+                            if isinstance(entry.get("actual_size_bytes"), int)
+                            else None
+                        )
+                        if exists_claim is True and not isinstance(claimed_size, int):
+                            report["errors"].append(
+                                "required_log_index_exists_missing_recorded_size_bytes:"
+                                f"{normalized}"
+                            )
+                        elif isinstance(claimed_size, int) and info.file_size != claimed_size:
+                            report["errors"].append(
+                                f"required_log_index_size_mismatch:{normalized}"
+                            )
 
             for info in infos:
                 parts = Path(info.filename).parts
