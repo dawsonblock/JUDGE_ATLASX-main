@@ -1,22 +1,22 @@
 # CURRENT_PROOF
 
-- generated_at_utc: 2026-06-01T21:15:01.088540+00:00
-- commit_hash: a184d39f8a93747bdb8fa20b2216f7a01ff0912c
-- alpha_gate_status: PASS
-- alpha_candidate: true
-- self_verifying_alpha: true
+- generated_at_utc: 2026-06-01T22:15:25.225308+00:00
+- commit_hash: 5760eeb3641b1d4b057a37610304c8461e3432c1
+- alpha_gate_status: BLOCKED
+- alpha_candidate: false
+- self_verifying_alpha: false
 - production_release_candidate: false
 - production_ready: false
 - public_release_safe: false
-- release_gate_check_count: 52
+- release_gate_check_count: 53
 - docker_available: true
 - postgis_proof_result: PASS
 - egress_proxy_proof_result: PASS
 - demo_proof_result: PASS
 - proof_freshness_result: PASS
 - archive_validation_result: PASS
-- proof_input_tree_hash: 9238c27f9d5bbd94434d022eecd33e3e5223d86a0a1011271343b19e571954b6
-- proof_input_file_count: 1109
+- proof_input_tree_hash: 3597cc1587cb3ac5b2bf7ff423ba59094aece44e97f9b3297c9981dc8c5bddbf
+- proof_input_file_count: 1113
 - egress_proxy_proof_log: artifacts/proof/current/egress_proxy_proof.log
 - demo_proof_log: artifacts/proof/current/demo_proof.log
 
@@ -75,6 +75,11 @@
 - mutation fail-closed coverage: PASS
 - Alembic migrations: 72
 
+## Failed Checks
+
+- backend_pytest
+- proof_consistency_pytest
+
 ## Egress Proxy Coverage
 
 - Dedicated gate artifact: artifacts/proof/current/egress_proxy_proof.log.
@@ -105,6 +110,7 @@
 - artifacts/proof/current/frontend_build.log
 - artifacts/proof/current/check_api_contracts.log
 - artifacts/proof/current/frontend_backend_route_contract.log
+- artifacts/proof/current/frontend_route_smoke.log
 - artifacts/proof/current/static_guards.log
 - artifacts/proof/current/map_route_check.log
 - artifacts/proof/current/public_api_boundary.log

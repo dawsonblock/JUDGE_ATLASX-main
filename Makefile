@@ -1,4 +1,4 @@
-.PHONY: backend-install backend-test frontend-install frontend-check frontend-typecheck verify verify-runtime doctor-macos docker-smoke proof release-proof backend-proof frontend-build bootstrap-backend bootstrap-frontend bootstrap truth-check full-proof clean-clone-proof release-proof-local release-package-proof-local nox test check-generated dev stop setup release-zip build-clean-release validate-release-zip proof-static validate-archive-freshness validate-handoff-consistency saskatoon-staging-proof canlii-staging-contract statscan-boundary-proof validate-smoke-workspace validate-full-workspace validate-docker-workspace check-route-contract check-local-env check-config-docs test-backend-unit test-backend-integration test-backend-db test-backend-auth test-backend-ingestion test-backend-proof test-frontend typecheck-frontend build-frontend lint-frontend
+.PHONY: backend-install backend-test frontend-install frontend-check frontend-typecheck verify verify-runtime doctor-macos docker-smoke proof release-proof backend-proof frontend-build bootstrap-backend bootstrap-frontend bootstrap truth-check full-proof clean-clone-proof release-proof-local release-package-proof-local nox test check-generated dev stop setup release-zip build-clean-release validate-release-zip proof-static validate-archive-freshness validate-handoff-consistency saskatoon-staging-proof canlii-staging-contract statscan-boundary-proof validate-smoke-workspace validate-full-workspace validate-docker-workspace check-route-contract check-local-env check-config-docs test-backend-unit test-backend-integration test-backend-db test-backend-auth test-backend-ingestion test-backend-proof test-frontend typecheck-frontend build-frontend lint-frontend frontend-route-smoke test-frontend-proof
 
 backend-install:
 	cd backend && python -m pip install -e ".[test]"
@@ -82,6 +82,12 @@ lint-frontend:
 		[ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh"; \
 		nvm use 22.22.3 >/dev/null 2>&1 || { echo "BLOCKED_NODE_VERSION: nvm use 22.22.3 failed -- install Node 22.22.3 via: nvm install 22.22.3"; exit 1; }; \
 		npm run lint --prefix frontend 2>&1 | tee artifacts/proof/current/frontend_lint.log'
+
+frontend-route-smoke:
+	@mkdir -p artifacts/proof/current
+	@python3 scripts/frontend_route_smoke.py 2>&1 | tee artifacts/proof/current/frontend_route_smoke.log
+
+test-frontend-proof: test-frontend typecheck-frontend build-frontend lint-frontend frontend-route-smoke
 
 bootstrap-backend:
 	bash scripts/bootstrap_backend.sh
@@ -171,6 +177,7 @@ proof:
 	@echo "=== Running canonical proof generation ==="
 	@python3 scripts/check_runtime_versions.py --root .
 	@python3 scripts/check_toolchain_versions.py --root .
+	@$(MAKE) test-backend-proof test-frontend-proof
 	@$(MAKE) release-proof-local
 	@python3 scripts/check_single_proof_authority.py
 	@python3 scripts/check_status_truth_consistency.py --root .

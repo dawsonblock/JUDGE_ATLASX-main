@@ -54,6 +54,7 @@ DEFAULT_REQUIRED_PROOF_LOGS = (
     "artifacts/proof/current/frontend_build.log",
     "artifacts/proof/current/frontend_node_gate.log",
     "artifacts/proof/current/check_api_contracts.log",
+    "artifacts/proof/current/frontend_route_smoke.log",
     "artifacts/proof/current/public_api_boundary.log",
     "artifacts/proof/current/mutation_fail_closed_coverage.log",
     "artifacts/proof/current/docker_runtime_preflight.log",

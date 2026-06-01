@@ -48,9 +48,19 @@ def _load_json(path: Path) -> dict:
 def _release_classification(release_gate: dict) -> str:
     if bool(release_gate.get("production_release_candidate", False)):
         return "production release candidate"
-    if bool(release_gate.get("self_verifying_alpha", False)):
+    if bool(
+        release_gate.get(
+            "self_verifying_alpha",
+            release_gate.get("alpha_gate_passed", False),
+        )
+    ):
         return "self-verifying alpha"
-    if bool(release_gate.get("alpha_candidate", False)):
+    if bool(
+        release_gate.get(
+            "alpha_candidate",
+            release_gate.get("alpha_gate_passed", False),
+        )
+    ):
         return "alpha candidate (not self-verifying)"
     return "proof-blocked alpha proof snapshot"
 

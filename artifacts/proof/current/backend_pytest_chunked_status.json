@@ -1,83 +1,65 @@
 {
-  "started_at": "2026-06-01T21:11:37.126400+00:00",
-  "finished_at": "2026-06-01T21:12:43.279401+00:00",
+  "started_at": "2026-06-01T22:23:13.234383+00:00",
+  "finished_at": "2026-06-01T22:24:35.771958+00:00",
   "collect_exit_code": 0,
-  "batch_exit_code": 0,
+  "batch_exit_code": 1,
   "batch_size": 40,
   "discovered_files": 298,
   "batches": [
     {
       "index": 1,
-      "started_at": "2026-06-01T21:11:40.051246+00:00",
-      "finished_at": "2026-06-01T21:11:51.765517+00:00",
+      "started_at": "2026-06-01T22:23:18.751143+00:00",
+      "finished_at": "2026-06-01T22:23:50.625846+00:00",
       "exit_code": 0,
       "file_count": 40,
-      "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/ingestion/test_ckan_adapter.py",
-      "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_auth_sessions.py"
+      "first_file": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main 2/backend/app/tests/ingestion/test_ckan_adapter.py",
+      "last_file": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main 2/backend/app/tests/test_auth_sessions.py"
     },
     {
       "index": 2,
-      "started_at": "2026-06-01T21:11:51.765600+00:00",
-      "finished_at": "2026-06-01T21:12:06.464499+00:00",
+      "started_at": "2026-06-01T22:23:50.625941+00:00",
+      "finished_at": "2026-06-01T22:24:09.495433+00:00",
       "exit_code": 0,
       "file_count": 40,
-      "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_auto_review.py",
-      "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_crawlee_safety.py"
+      "first_file": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main 2/backend/app/tests/test_auto_review.py",
+      "last_file": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main 2/backend/app/tests/test_crawlee_safety.py"
     },
     {
       "index": 3,
-      "started_at": "2026-06-01T21:12:06.464601+00:00",
-      "finished_at": "2026-06-01T21:12:11.316931+00:00",
+      "started_at": "2026-06-01T22:24:09.495588+00:00",
+      "finished_at": "2026-06-01T22:24:15.018483+00:00",
       "exit_code": 0,
       "file_count": 40,
-      "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_crime_source_ingestion.py",
-      "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_ingestion_identity_uniqueness.py"
+      "first_file": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main 2/backend/app/tests/test_crime_source_ingestion.py",
+      "last_file": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main 2/backend/app/tests/test_ingestion_identity_uniqueness.py"
     },
     {
       "index": 4,
-      "started_at": "2026-06-01T21:12:11.317005+00:00",
-      "finished_at": "2026-06-01T21:12:15.170819+00:00",
+      "started_at": "2026-06-01T22:24:15.018564+00:00",
+      "finished_at": "2026-06-01T22:24:19.547376+00:00",
       "exit_code": 0,
       "file_count": 40,
-      "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_ingestion_pipeline.py",
-      "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_memory_graph_bridge.py"
+      "first_file": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main 2/backend/app/tests/test_ingestion_pipeline.py",
+      "last_file": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main 2/backend/app/tests/test_memory_graph_bridge.py"
     },
     {
       "index": 5,
-      "started_at": "2026-06-01T21:12:15.170870+00:00",
-      "finished_at": "2026-06-01T21:12:25.522488+00:00",
+      "started_at": "2026-06-01T22:24:19.547446+00:00",
+      "finished_at": "2026-06-01T22:24:31.158967+00:00",
       "exit_code": 0,
       "file_count": 40,
-      "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_memory_invalidation.py",
-      "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_public_graph_api_safety.py"
+      "first_file": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main 2/backend/app/tests/test_memory_invalidation.py",
+      "last_file": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main 2/backend/app/tests/test_public_graph_api_safety.py"
     },
     {
       "index": 6,
-      "started_at": "2026-06-01T21:12:25.522581+00:00",
-      "finished_at": "2026-06-01T21:12:30.360212+00:00",
-      "exit_code": 0,
+      "started_at": "2026-06-01T22:24:31.159043+00:00",
+      "finished_at": "2026-06-01T22:24:35.771918+00:00",
+      "exit_code": 1,
       "file_count": 40,
-      "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_public_map_reviewed_only.py",
-      "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_saskatoon_ingest_endpoint.py"
-    },
-    {
-      "index": 7,
-      "started_at": "2026-06-01T21:12:30.360304+00:00",
-      "finished_at": "2026-06-01T21:12:38.114096+00:00",
-      "exit_code": 0,
-      "file_count": 40,
-      "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_saskatoon_open_data_staging.py",
-      "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_source_visibility_endpoints.py"
-    },
-    {
-      "index": 8,
-      "started_at": "2026-06-01T21:12:38.114172+00:00",
-      "finished_at": "2026-06-01T21:12:43.279339+00:00",
-      "exit_code": 0,
-      "file_count": 18,
-      "first_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_statscan.py",
-      "last_file": "[REDACTED_LOCAL_PATH]/backend/app/tests/test_workflow_admin_security.py"
+      "first_file": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main 2/backend/app/tests/test_public_map_reviewed_only.py",
+      "last_file": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main 2/backend/app/tests/test_saskatoon_ingest_endpoint.py"
     }
   ],
-  "status": "PASS"
+  "status": "FAIL"
 }

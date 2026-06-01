@@ -1,12 +1,15 @@
 # CURRENT_ALPHA_STATUS
 
-- generated_at_utc: 2026-06-01T21:15:01.088540+00:00
-- commit_hash: a184d39f8a93747bdb8fa20b2216f7a01ff0912c
+- generated_at_utc: 2026-06-01T22:15:25.225308+00:00
+- commit_hash: 5760eeb3641b1d4b057a37610304c8461e3432c1
 - operational_posture: alpha
+- alpha_candidate: false
+- self_verifying_alpha: false
+- production_release_candidate: false
 - production_ready: false
-- alpha_gate_passed: true
+- public_release_safe: false
 - proof_freshness_result: PASS
-- release_gate_check_count: 52
+- release_gate_check_count: 53
 - postgis_proof_result: PASS
 - egress_proxy_proof_result: PASS
 - demo_proof_result: PASS
@@ -19,4 +22,5 @@
 
 ## Current Blockers
 
-- none
+- backend_pytest
+- proof_consistency_pytest
