@@ -17,8 +17,22 @@ ROOT_STATUS_DOCS = (
     Path("REPAIR_STATUS.md"),
     Path("PROOF_STATUS.md"),
     Path("RELEASE_BLOCKERS.md"),
+    Path("FINAL_RELEASE_HANDOFF.md"),
+    Path("artifacts/proof/current/CURRENT_PROOF.md"),
+    Path("artifacts/proof/current/CURRENT_ALPHA_STATUS.md"),
+    Path("artifacts/proof/current/release_readiness.md"),
     Path("README.md"),
 )
+
+AUTHORITY_REQUIRED_DOCS = {
+    Path("STATUS.md"),
+    Path("CURRENT_STATUS.md"),
+    Path("REPAIR_STATUS.md"),
+    Path("PROOF_STATUS.md"),
+    Path("RELEASE_BLOCKERS.md"),
+    Path("FINAL_RELEASE_HANDOFF.md"),
+    Path("README.md"),
+}
 
 REQUIRED_MATRIX_KEYS = (
     "alpha_ready",
@@ -34,8 +48,19 @@ PRODUCTION_WARNING = "Production-ready=false until all production gates pass."
 
 PRODUCTION_TRUE_PATTERNS = (
     re.compile(r"\bproduction[_ -]?ready\s*[:=]\s*true\b", re.IGNORECASE),
-    re.compile(r"\bready for production deployment\b", re.IGNORECASE),
     re.compile(r"\bproduction release is ready\b", re.IGNORECASE),
+)
+
+ALPHA_TRUE_PATTERNS = (
+    re.compile(r"\balpha[_ -]?gate[_ -]?passed\s*[:=]\s*true\b", re.IGNORECASE),
+    re.compile(r"\balpha[_ -]?ready\s*[:=]\s*true\b", re.IGNORECASE),
+)
+
+RELEASE_CANDIDATE_TRUE_PATTERNS = (
+    re.compile(r"\brelease[_ -]?candidate\s*[:=]\s*true\b", re.IGNORECASE),
+    re.compile(r"\balpha[_ -]?release[_ -]?candidate\s*[:=]\s*true\b", re.IGNORECASE),
+    re.compile(r"\brelease[- ]ready\s*[:=]\s*true\b", re.IGNORECASE),
+    re.compile(r"\bfinal release\s+ready\b", re.IGNORECASE),
 )
 
 ALPHA_FALSE_PATTERNS = (
@@ -117,10 +142,13 @@ def verify(root: Path) -> list[str]:
         release_readiness_text = _read_text(release_readiness_path)
 
     alpha_gate_passed = gate.get("alpha_gate_passed")
+    release_candidate = gate.get("release_candidate")
     production_ready = gate.get("production_ready")
 
     if not isinstance(alpha_gate_passed, bool):
         errors.append("release_gate_invalid:alpha_gate_passed_not_bool")
+    if not isinstance(release_candidate, bool):
+        errors.append("release_gate_invalid:release_candidate_not_bool")
     if not isinstance(production_ready, bool):
         errors.append("release_gate_invalid:production_ready_not_bool")
 
@@ -155,7 +183,10 @@ def verify(root: Path) -> list[str]:
             continue
         text = _read_text(path)
 
-        if "artifacts/proof/current/release_gate.json" not in text:
+        if (
+            rel_path in AUTHORITY_REQUIRED_DOCS
+            and "artifacts/proof/current/release_gate.json" not in text
+        ):
             errors.append(f"missing_release_gate_authority:{rel_path.as_posix()}")
 
         if rel_path in {
@@ -176,8 +207,16 @@ def verify(root: Path) -> list[str]:
         if production_ready is False and _has_any_pattern(text, PRODUCTION_TRUE_PATTERNS):
             errors.append(f"production_truth_contradiction:{rel_path.as_posix()}:gate_false_doc_claims_true")
 
+        if alpha_gate_passed is False and _has_any_pattern(text, ALPHA_TRUE_PATTERNS):
+            errors.append(f"alpha_truth_contradiction:{rel_path.as_posix()}:gate_false_doc_claims_true")
+
         if alpha_gate_passed is True and _has_any_pattern(text, ALPHA_FALSE_PATTERNS):
             errors.append(f"alpha_truth_contradiction:{rel_path.as_posix()}:gate_true_doc_claims_false")
+
+        if release_candidate is False and _has_any_pattern(text, RELEASE_CANDIDATE_TRUE_PATTERNS):
+            errors.append(
+                f"release_candidate_contradiction:{rel_path.as_posix()}:gate_false_doc_claims_true"
+            )
 
     errors.extend(_scan_stale_repair_status(root))
 

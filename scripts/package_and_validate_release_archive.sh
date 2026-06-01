@@ -113,6 +113,8 @@ ARCHIVE_VALIDATION_LOG="${ROOT_DIR}/artifacts/proof/current/archive_validation.l
 
 ARCHIVE_PATH="${ROOT_DIR}/dist/JUDGE_ATLAS-main-final.zip"
 PACKAGE_ROOT_NAME="JUDGE_ATLAS-main"
+CANONICAL_ARCHIVE_BASENAME="JUDGE_ATLAS-main-final.zip"
+CANONICAL_ROOT_NAME="JUDGE_ATLAS-main"
 SKIP_RELEASE_GATE=false
 SKIP_HANDOFF_CHECK=false
 SKIP_EXTRACTED_VALIDATION=false
@@ -145,6 +147,18 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+if [[ "$(basename "${ARCHIVE_PATH}")" != "${CANONICAL_ARCHIVE_BASENAME}" ]]; then
+  echo "ERROR: non-canonical archive name requested: ${ARCHIVE_PATH}"
+  echo "ERROR: canonical release archive must be dist/${CANONICAL_ARCHIVE_BASENAME}"
+  exit 2
+fi
+
+if [[ "${PACKAGE_ROOT_NAME}" != "${CANONICAL_ROOT_NAME}" ]]; then
+  echo "ERROR: non-canonical package root requested: ${PACKAGE_ROOT_NAME}"
+  echo "ERROR: canonical package root must be ${CANONICAL_ROOT_NAME}"
+  exit 2
+fi
 
 log() {
   echo "[release_package] $*"
