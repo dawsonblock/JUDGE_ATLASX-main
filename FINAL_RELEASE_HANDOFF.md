@@ -27,12 +27,13 @@ Manual edits are not authoritative.
 - blocked_release_checks: []
 
 ## Build Metadata
-- created_at_utc: 2026-06-02T01:01:27.698679+00:00
-- generated_at_utc: 2026-06-02T01:01:27.698679+00:00
-- git_commit: unknown
-- python: unknown
-- node: unknown
-- npm: unknown
+- created_at_utc: 2026-06-02T04:45:23.800361+00:00
+- generated_at_utc: 2026-06-02T04:45:23.800361+00:00
+- git_commit: f2376b6958df606bdd3a351934682bfa088a7092
+- platform: macOS-26.2-arm64-arm-64bit
+- python: 3.11.9
+- node: v22.22.3
+- npm: 10.9.8
 
 ## Notes
 - This is a self-verifying alpha.
@@ -40,6 +41,7 @@ Manual edits are not authoritative.
 - Ship only the archive listed above.
 - Validation must run against a fresh extraction
   of that archive.
-- `release_gate.json` is only valid as a proof artifact when every
-  log path it references exists inside `artifacts/proof/current/`
+- `release_gate.json` is only valid as a proof artifact when
+  every log path it references exists inside
+  `artifacts/proof/current/`
   at packaging time. Do not ship manually zipped working trees.

@@ -114,6 +114,13 @@ def _missing_required_proof_files(repo_root: Path) -> list[str]:
     )
 
 
+def _first_nonempty_str(*values: object) -> str | None:
+    for value in values:
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return None
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=".", help="Repository root")
@@ -132,7 +139,8 @@ def main() -> int:
         action="store_true",
         help=(
             "Allow generating handoff when self_verifying_alpha is false. "
-            "Without this flag, handoff generation requires self_verifying_alpha=true."
+            "Without this flag, handoff generation requires "
+            "self_verifying_alpha=true."
         ),
     )
     args = parser.parse_args()
@@ -152,14 +160,20 @@ def main() -> int:
         repo_root / "artifacts" / "proof" / "current" / "proof_manifest.json"
     )
     required_log_index_path = (
-        repo_root / "artifacts" / "proof" / "current" / "required_log_index.json"
+        repo_root
+        / "artifacts"
+        / "proof"
+        / "current"
+        / "required_log_index.json"
     )
     if not release_gate_path.exists():
         raise SystemExit(f"release_gate_not_found:{release_gate_path}")
     if not proof_manifest_path.exists():
         raise SystemExit(f"proof_manifest_not_found:{proof_manifest_path}")
     if not required_log_index_path.exists():
-        raise SystemExit(f"required_log_index_not_found:{required_log_index_path}")
+        raise SystemExit(
+            f"required_log_index_not_found:{required_log_index_path}"
+        )
 
     release_gate = _load_json(release_gate_path)
     _load_json(proof_manifest_path)
@@ -191,10 +205,16 @@ def main() -> int:
     required_log_index_hash = _sha256(required_log_index_path)
 
     alpha_candidate = bool(
-        release_gate.get("alpha_candidate", release_gate.get("alpha_gate_passed", False))
+        release_gate.get(
+            "alpha_candidate",
+            release_gate.get("alpha_gate_passed", False),
+        )
     )
     self_verifying_alpha = bool(
-        release_gate.get("self_verifying_alpha", release_gate.get("alpha_gate_passed", False))
+        release_gate.get(
+            "self_verifying_alpha",
+            release_gate.get("alpha_gate_passed", False),
+        )
     )
     production_release_candidate = bool(
         release_gate.get("production_release_candidate", False)
@@ -204,14 +224,33 @@ def main() -> int:
     proof_complete = bool(self_verifying_alpha)
     if not self_verifying_alpha and not args.allow_blocked_snapshot:
         raise SystemExit(
-            "self_verifying_alpha_false: refusing handoff generation without --allow-blocked-snapshot"
+            "self_verifying_alpha_false: refusing handoff generation "
+            "without --allow-blocked-snapshot"
         )
     runtime = release_gate.get("runtime", {})
     if not isinstance(runtime, dict):
         runtime = {}
-    runtime_python = runtime.get("python", "unknown")
-    runtime_node = runtime.get("node_version", "unknown")
-    runtime_npm = runtime.get("npm_version", "unknown")
+    runtime_python = _first_nonempty_str(
+        release_gate.get("gate_runner_python_version"),
+        release_gate.get("python_version"),
+        runtime.get("python_version"),
+        runtime.get("python"),
+    ) or "unknown"
+    runtime_node = _first_nonempty_str(
+        release_gate.get("node_version"),
+        release_gate.get("gate_runner_node_version"),
+        runtime.get("node_version"),
+        runtime.get("node"),
+    ) or "unknown"
+    runtime_npm = _first_nonempty_str(
+        release_gate.get("npm_version"),
+        runtime.get("npm_version"),
+        runtime.get("npm"),
+    ) or "unknown"
+    runtime_platform = _first_nonempty_str(
+        release_gate.get("platform"),
+        runtime.get("platform"),
+    ) or "unknown"
     blockers = release_gate.get("release_blockers_remaining")
     if blockers is None:
         blockers = release_gate.get("blocked_release_checks")
@@ -222,7 +261,14 @@ def main() -> int:
     release_classification = _release_classification(release_gate)
 
     generated_at = datetime.now(timezone.utc).isoformat()
-    commit = "unknown"
+    commit = (
+        _first_nonempty_str(
+            release_gate.get("commit_hash"),
+            release_gate.get("git_commit"),
+            release_gate.get("commit"),
+        )
+        or "unknown"
+    )
 
     markdown = "\n".join(
         [
@@ -254,7 +300,10 @@ def main() -> int:
             f"- release_classification: {release_classification}",
             f"- alpha_candidate: {str(alpha_candidate).lower()}",
             f"- self_verifying_alpha: {str(self_verifying_alpha).lower()}",
-            f"- production_release_candidate: {str(production_release_candidate).lower()}",
+            (
+                "- production_release_candidate: "
+                f"{str(production_release_candidate).lower()}"
+            ),
             f"- production_ready: {str(production_ready).lower()}",
             f"- public_release_safe: {str(public_release_safe).lower()}",
             f"- proof_complete: {str(proof_complete).lower()}",
@@ -264,6 +313,7 @@ def main() -> int:
             f"- created_at_utc: {generated_at}",
             f"- generated_at_utc: {generated_at}",
             f"- git_commit: {commit}",
+            f"- platform: {runtime_platform}",
             (
                 f"- python: "
                 f"{runtime_python}"
@@ -277,8 +327,9 @@ def main() -> int:
             "- Ship only the archive listed above.",
             "- Validation must run against a fresh extraction",
             "  of that archive.",
-            "- `release_gate.json` is only valid as a proof artifact when every",
-            "  log path it references exists inside `artifacts/proof/current/`",
+            "- `release_gate.json` is only valid as a proof artifact when",
+            "  every log path it references exists inside",
+            "  `artifacts/proof/current/`",
             "  at packaging time. Do not ship manually zipped working trees.",
             "",
         ]

@@ -14,6 +14,7 @@ import importlib
 import os
 import sys
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -106,20 +107,46 @@ def _secret_is_configured(secret_name: str | None) -> bool:
     return bool(os.getenv(secret_name))
 
 
-def _can_enable(source_row: dict) -> tuple[bool, str | None]:
-    if source_row["source_class"] != "machine_ingest":
-        return False, "source_class_not_machine_ingest"
-    if source_row["automation_status"] not in ENABLEABLE_STATUSES:
-        return False, "automation_status_not_enableable"
-    if not source_row["adapter_exists"]:
-        return False, "adapter_missing"
-    if not source_row["required_secret_configured"]:
-        return False, "missing_secret"
-    if not source_row["parser_version"]:
-        return False, "missing_parser_version"
-    if not source_row["allowed_domains"]:
-        return False, "missing_allowed_domains"
-    return True, None
+def _evaluate_source_state(source_row: dict) -> tuple[bool, bool, str | None]:
+    source_class = source_row.get("source_class")
+    lifecycle_state = source_row.get("lifecycle_state")
+    automation_status = source_row.get("automation_status")
+    adapter_exists = source_row.get("adapter_exists")
+
+    if lifecycle_state == "deprecated":
+        return False, False, "deprecated_source"
+
+    runnable_now = (
+        source_class == "machine_ingest"
+        and lifecycle_state == "runnable"
+        and automation_status == "machine_ready_enabled"
+        and adapter_exists is True
+    )
+
+    enable_ready = (
+        source_class == "machine_ingest"
+        and lifecycle_state == "runnable_disabled"
+        and bool(source_row.get("parser"))
+        and bool(source_row.get("parser_version"))
+        and bool(source_row.get("base_url"))
+        and automation_status in ENABLEABLE_STATUSES
+        and adapter_exists is not False
+    )
+
+    if runnable_now:
+        return True, enable_ready, None
+    if enable_ready:
+        return False, True, None
+
+    if source_class != "machine_ingest":
+        return False, False, "source_class_not_machine_ingest"
+    if lifecycle_state != "runnable":
+        return False, False, f"lifecycle_state={lifecycle_state}"
+    if automation_status not in RUNNABLE_STATUSES:
+        return False, False, "automation_status_not_runnable"
+    if adapter_exists is False:
+        return False, False, "adapter_missing"
+    return False, False, "not_runnable"
 
 
 def _source_row(source: dict) -> dict:
@@ -147,11 +174,14 @@ def _source_row(source: dict) -> dict:
             source_key,
             source.get("config_json"),
         ),
+        "lifecycle_state": source.get("lifecycle_state")
+        or _canonical_status(source_key, source.get("config_json")),
         "parser": parser_key,
         "parser_version": source.get("parser_version"),
         "allowed_domains": _parse_json_list(source.get("allowed_domains")),
         "creates": _parse_json_list(source.get("creates")),
         "automation_status": automation_status,
+        "base_url": source.get("base_url"),
         "enabled": bool(source.get("enabled_default", False)),
         "is_machine_ingest": source_class == "machine_ingest",
         "adapter_name": adapter_name,
@@ -170,8 +200,11 @@ def _source_row(source: dict) -> dict:
             ),
         },
     }
-    can_enable, reason = _can_enable(source_row)
-    source_row["can_enable"] = can_enable
+    runnable_now, enable_ready, reason = _evaluate_source_state(source_row)
+    source_row["can_enable"] = enable_ready
+    # Canonical contract fields consumed by check_source_registry_docs.py.
+    source_row["runnable_now"] = runnable_now
+    source_row["enable_ready"] = enable_ready
     source_row["cannot_enable_reason"] = reason
     return source_row
 
@@ -192,7 +225,9 @@ def main(argv: list[str] | None = None) -> int:
         / "current"
         / "SOURCE_REGISTRY_STATUS.md"
     )
-    docs_markdown_output_path = REPO_ROOT / "docs" / "SOURCE_REGISTRY_STATUS.md"
+    docs_markdown_output_path = (
+        REPO_ROOT / "docs" / "SOURCE_REGISTRY_STATUS.md"
+    )
     if "--output" in args:
         output_path = Path(args[args.index("--output") + 1]).resolve()
     if "--markdown-output" in args:
@@ -222,8 +257,23 @@ def main(argv: list[str] | None = None) -> int:
     machine_ingest = [
         source for source in sources if source["is_machine_ingest"]
     ]
-    runnable = [source for source in sources if source["can_run_when_active"]]
-    enableable = [source for source in sources if source["can_enable"]]
+    runnable = [source for source in sources if source["runnable_now"]]
+    enableable = [source for source in sources if source["enable_ready"]]
+    deprecated = [
+        source
+        for source in sources
+        if source.get("lifecycle_state") == "deprecated"
+    ]
+    machine_ready_disabled = [
+        source
+        for source in sources
+        if source.get("automation_status") == "machine_ready_disabled"
+    ]
+    adapter_missing = [
+        source
+        for source in sources
+        if source.get("automation_status") == "adapter_missing"
+    ]
     sources_requiring_secrets = [
         source for source in sources if source["requires_secret"]
     ]
@@ -234,12 +284,20 @@ def main(argv: list[str] | None = None) -> int:
     ]
 
     payload = {
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "total_sources": len(sources),
         "summary": {
             "total_sources": len(sources),
             "machine_ingest_sources": len(machine_ingest),
+            "runnable_now": len(runnable),
+            "enable_ready": len(enableable),
+            "deprecated": len(deprecated),
+            "machine_ready_disabled": len(machine_ready_disabled),
+            "adapter_missing": len(adapter_missing),
+            "sources_requiring_secrets": len(sources_requiring_secrets),
+            # Backward-compatible aliases retained for legacy docs/readers.
             "runnable_when_active_sources": len(runnable),
             "enableable_sources": len(enableable),
-            "sources_requiring_secrets": len(sources_requiring_secrets),
         },
         "counts_by_source_class": dict(sorted(source_class_counts.items())),
         "counts_by_automation_status": dict(sorted(automation_counts.items())),
@@ -277,12 +335,21 @@ def main(argv: list[str] | None = None) -> int:
         "",
         f"- total_sources: {len(sources)}",
         f"- machine_ingest_sources: {len(machine_ingest)}",
-        f"- runnable_when_active_sources: {len(runnable)}",
-        f"- enableable_sources: {len(enableable)}",
+        f"- runnable_now: {len(runnable)}",
+        f"- enable_ready: {len(enableable)}",
+        f"- deprecated: {len(deprecated)}",
+        f"- machine_ready_disabled: {len(machine_ready_disabled)}",
+        f"- adapter_missing: {len(adapter_missing)}",
         f"- sources_requiring_secrets: {len(sources_requiring_secrets)}",
         "",
-        "| source key | source name | jurisdiction | source class/type | automation status | adapter key | adapter exists | required secrets | required secrets present during proof | enabled by default | can be enabled by admin | can run now | reason if not runnable | review required before public visibility | public exposure allowed before review | current alpha status |",
-        "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|",
+        "| source key | source name | jurisdiction | source class/type | "
+        "lifecycle state | automation status | adapter state | adapter exists "
+        "| runnable now | enable ready | review required | required secrets "
+        "| required secrets present during proof | enabled by default | "
+        "reason if not runnable | public exposure allowed before review | "
+        "current alpha status |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"
+        "---|",
     ]
 
     rows: list[str] = []
@@ -296,17 +363,16 @@ def main(argv: list[str] | None = None) -> int:
             else "no"
         )
         public_before_review = "no"
-        can_enable = "yes" if source.get("can_enable") else "no"
-        can_run_now = (
-            "yes"
-            if source.get("can_run_when_active") and source.get("is_machine_ingest")
-            else "no"
-        )
+        can_enable = "true" if source.get("enable_ready") else "false"
+        can_run_now = "true" if source.get("runnable_now") else "false"
         reason_not_runnable = source.get("cannot_enable_reason") or "none"
         alpha_status = (
             "runnable-alpha-source"
-            if can_run_now == "yes"
+            if can_run_now == "true"
             else "limited-alpha-source"
+        )
+        adapter_state = (
+            "present" if source.get("adapter_exists") else "missing"
         )
         rows.append(
             "| "
@@ -315,17 +381,25 @@ def main(argv: list[str] | None = None) -> int:
                     str(source.get("source_key", "")),
                     _source_display_name(source),
                     str(source.get("jurisdiction", "unknown")),
-                    f"{source.get('source_class', 'unknown')}/{source.get('source_type', 'unknown')}",
+                    (
+                        f"{source.get('source_class', 'unknown')}/"
+                        f"{source.get('source_type', 'unknown')}"
+                    ),
+                    str(source.get("lifecycle_state", "unknown")),
                     str(source.get("automation_status", "unknown")),
-                    str(source.get("parser", "none")),
-                    "yes" if source.get("adapter_exists") else "no",
-                    required_secret,
-                    "yes" if source.get("required_secret_configured") else "no",
-                    "yes" if source.get("enabled") else "no",
-                    can_enable,
+                    adapter_state,
+                    "true" if source.get("adapter_exists") else "false",
                     can_run_now,
-                    reason_not_runnable,
+                    can_enable,
                     review_required,
+                    required_secret,
+                    (
+                        "true"
+                        if source.get("required_secret_configured")
+                        else "false"
+                    ),
+                    "true" if source.get("enabled") else "false",
+                    reason_not_runnable,
                     public_before_review,
                     alpha_status,
                 ]
