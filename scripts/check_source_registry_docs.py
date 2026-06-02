@@ -119,6 +119,24 @@ def _load_source_truth() -> tuple[dict[str, int], set[str], set[str], dict[str, 
     return summary_counts, enable_ready_ids, runnable_ids, source_truth_by_key
 
 
+def _validate_source_truth_payload(payload_path: Path) -> list[str]:
+    errors: list[str] = []
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        return [f"{payload_path.relative_to(REPO_ROOT)}:invalid_json_object"]
+
+    status = payload.get("status")
+    sources = payload.get("sources")
+    if isinstance(status, str) and status.strip().lower() == "in_progress":
+        errors.append(
+            f"{payload_path.relative_to(REPO_ROOT)}:placeholder_status_in_progress"
+        )
+    if not isinstance(sources, list) or not sources:
+        errors.append(f"{payload_path.relative_to(REPO_ROOT)}:sources_missing_or_empty")
+
+    return errors
+
+
 def _collect_doc_texts() -> list[tuple[Path, str]]:
     paths = [REPO_ROOT / "README.md"]
     for path in REPO_ROOT.glob("*.md"):
@@ -320,6 +338,30 @@ def _validate_governance_docs(
     return errors
 
 
+def _validate_coverage_matrix(summary_counts: dict[str, int]) -> list[str]:
+    coverage_doc = REPO_ROOT / "docs" / "source-governance" / "COVERAGE_MATRIX.md"
+    if not coverage_doc.exists():
+        return [f"{coverage_doc.relative_to(REPO_ROOT)}:missing"]
+
+    text = coverage_doc.read_text(encoding="utf-8", errors="ignore")
+    rel = coverage_doc.relative_to(REPO_ROOT)
+    errors: list[str] = []
+    for metric in REQUIRED_SUMMARY_METRICS:
+        expected = summary_counts.get(metric)
+        if expected is None:
+            errors.append(
+                "artifacts/proof/current/source_registry_status.json"
+                f":missing_summary_metric:{metric}"
+            )
+            continue
+        observed = _extract_metric_value(text, metric)
+        if observed is None:
+            errors.append(f"{rel}:metric_missing:{metric}")
+        elif observed != expected:
+            errors.append(f"{rel}:metric_mismatch:{metric}:{observed}!={expected}")
+    return errors
+
+
 def _validate_source_registry_row(
     source_key: str,
     cells: list[str],
@@ -478,6 +520,8 @@ def main() -> int:
     warnings: list[str] = []
 
     sources = _load_yaml_sources()
+    truth_path = REPO_ROOT / "artifacts" / "proof" / "current" / "source_registry_status.json"
+    errors.extend(_validate_source_truth_payload(truth_path))
     truth_summary, truth_enable_ready_ids, truth_runnable_ids, truth_sources_by_key = _load_source_truth()
     sources_by_key = {str(source.get("source_key")): source for source in sources}
 
@@ -512,6 +556,7 @@ def main() -> int:
         errors.append("backend/app/ingestion/source_adapters/laws_justice_xml.py:missing")
 
     errors.extend(_validate_source_registry_status_doc(sources, truth_sources_by_key))
+    errors.extend(_validate_coverage_matrix(summary_counts=truth_summary))
     errors.extend(
         _validate_governance_docs(
             summary_counts=truth_summary,

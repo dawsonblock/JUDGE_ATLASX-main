@@ -1,14 +1,14 @@
 # Source Coverage Matrix
 
 Generated from artifacts/proof/current/source_registry_status.json.
-Generated at: 2026-05-26T04:59:12.396532+00:00
+Generated at: 2026-06-02T00:28:47.902033+00:00
 
 ## Summary
 
 - total_sources: 26
 - machine_ingest_sources: 8
 - runnable_now: 2
-- enable_ready: 6
+- enable_ready: 5
 - deprecated: 3
 
 ## Sources
@@ -29,7 +29,7 @@ Generated at: 2026-05-26T04:59:12.396532+00:00
 | saskatchewan_legislation | CA-SK | portal_reference | portal_reference | adapter_missing | false | false |  | missing_parser | Evaluate whether an RSS/XML feed can be configured; otherwise keep as portal_reference. |
 | saskatoon_open_data_crime | Saskatoon, Saskatchewan, Canada | portal_reference | portal_reference | adapter_missing | false | false | saskatoon_csv | found | Check data.saskatoon.ca for updated CSV/JSON endpoint; write adapter if machine-readable. |
 | saskatoon_open_data_portal | Saskatoon, Saskatchewan, Canada | portal_reference | portal_reference | adapter_missing | false | false | ckan_api | found | Prefer specific source_key entries per dataset. |
-| saskatoon_open_data_public_safety | CA-SK-Saskatoon | machine_ingest | runnable_disabled | machine_ready_disabled | false | true | ckan_api | found | Run fixture proof target, confirm review-only payloads, then enable only after legal and data-quality verification. |
+| saskatoon_open_data_public_safety | CA-SK-Saskatoon | machine_ingest | runnable | machine_ready_enabled | true | false | ckan_api | found | Run fixture proof target, confirm review-only payloads, then enable only after legal and data-quality verification. |
 | saskatoon_police_open_data | Saskatoon, Saskatchewan, Canada | portal_reference | portal_reference | adapter_missing | false | false | saskatoon_police_csv | found | Monitor Saskatoon Police data portal for a machine-readable feed. |
 | scc_decisions | Canada | machine_ingest | runnable_disabled | machine_ready_disabled | false | true | scc_lexum_api | found | Confirm base_url is reachable and terms permit ingest, then /enable via admin panel. |
 | scc_judgments | Canada | machine_ingest | deprecated | deprecated | false | false | scc_lexum_api | found | Migrate any references from scc_judgments to scc_decisions and remove this entry. |

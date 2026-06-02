@@ -2309,6 +2309,18 @@ def main() -> int:
             ],
         ),
         GateStepSpec(
+            "generate_coverage_matrix",
+            "generate_coverage_matrix.log",
+            [
+                python_exe,
+                "scripts/generate_coverage_matrix.py",
+                "--registry",
+                str(out_dir / "source_registry_status.json"),
+                "--output",
+                str(repo_root / "docs" / "source-governance" / "COVERAGE_MATRIX.md"),
+            ],
+        ),
+        GateStepSpec(
             "check_source_registry_docs",
             "check_source_registry_docs.log",
             [python_exe, "scripts/check_source_registry_docs.py"],

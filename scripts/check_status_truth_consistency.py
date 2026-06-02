@@ -167,11 +167,11 @@ def verify(root: Path) -> list[str]:
         readiness_status_line = _parse_readiness_overall_status(release_readiness_text)
         if readiness_status_line is None:
             errors.append("release_readiness_missing:overall_status")
-        elif alpha_gate_passed and "pass" not in readiness_status_line:
+        elif alpha_gate_passed and not _is_alpha_pass_status(readiness_status_line):
             errors.append(
                 "release_readiness_contradiction:overall_status_not_pass_while_alpha_passed"
             )
-        elif (not alpha_gate_passed) and "pass" in readiness_status_line:
+        elif (not alpha_gate_passed) and _is_alpha_pass_status(readiness_status_line):
             errors.append(
                 "release_readiness_contradiction:overall_status_pass_while_alpha_failed"
             )
@@ -228,6 +228,18 @@ def _parse_readiness_overall_status(text: str) -> str | None:
     if not match:
         return None
     return match.group(1).strip().lower()
+
+
+def _is_alpha_pass_status(value: str) -> bool:
+    normalized = value.strip().lower()
+    return normalized in {
+        "pass",
+        "passed",
+        "alpha-pass",
+        "alpha_pass",
+        "self-verifying-alpha",
+        "self_verifying_alpha",
+    }
 
 
 def main() -> int:
