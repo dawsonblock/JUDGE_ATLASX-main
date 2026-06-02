@@ -1,10 +1,11 @@
 # CURRENT_PROOF
 
-- generated_at_utc: 2026-06-01T22:15:25.225308+00:00
-- commit_hash: 5760eeb3641b1d4b057a37610304c8461e3432c1
-- alpha_gate_status: BLOCKED
-- alpha_candidate: false
-- self_verifying_alpha: false
+- generated_at_utc: 2026-06-01T23:23:37.668766+00:00
+- commit_hash: 8e6c4db0ee87392167736f75135725da0bf06704
+- alpha_gate_passed: true
+- alpha_gate_status: PASS
+- alpha_candidate: true
+- self_verifying_alpha: true
 - production_release_candidate: false
 - production_ready: false
 - public_release_safe: false
@@ -15,7 +16,7 @@
 - demo_proof_result: PASS
 - proof_freshness_result: PASS
 - archive_validation_result: PASS
-- proof_input_tree_hash: 3597cc1587cb3ac5b2bf7ff423ba59094aece44e97f9b3297c9981dc8c5bddbf
+- proof_input_tree_hash: cdfaadac712970c34223a4d9d2a69ef332018398f25890d3ecf4b5174cc0b89e
 - proof_input_file_count: 1113
 - egress_proxy_proof_log: artifacts/proof/current/egress_proxy_proof.log
 - demo_proof_log: artifacts/proof/current/demo_proof.log
@@ -74,11 +75,6 @@
 - CanLII staging proof: PASS
 - mutation fail-closed coverage: PASS
 - Alembic migrations: 72
-
-## Failed Checks
-
-- backend_pytest
-- proof_consistency_pytest
 
 ## Egress Proxy Coverage
 

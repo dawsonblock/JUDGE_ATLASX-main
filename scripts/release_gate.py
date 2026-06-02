@@ -629,7 +629,7 @@ def _refresh_release_payload_schema(
     payload["production_ready"] = False
     payload["public_release_safe"] = False
     # Legacy compatibility key retained for downstream scripts during migration.
-    payload["release_candidate"] = False
+    payload["release_candidate"] = alpha_gate_passed
     payload["checks_summary"] = _canonical_checks_summary(results)
 
 
@@ -1497,6 +1497,7 @@ def _write_fix_verification_report_md(
         "",
         f"- generated_at_utc: {payload.get('timestamp_utc', 'unknown')}",
         f"- commit_hash: {payload.get('commit_hash', 'unknown')}",
+        f"- alpha_gate_passed: {str(payload.get('alpha_gate_passed', False)).lower()}",
         f"- alpha_candidate: {str(payload.get('alpha_candidate', False)).lower()}",
         f"- self_verifying_alpha: {str(payload.get('self_verifying_alpha', False)).lower()}",
         f"- production_release_candidate: {str(payload.get('production_release_candidate', False)).lower()}",
@@ -1658,6 +1659,7 @@ def _write_current_proof_md(
         "",
         f"- generated_at_utc: {payload.get('timestamp_utc', 'unknown')}",
         f"- commit_hash: {payload.get('commit_hash', 'unknown')}",
+        f"- alpha_gate_passed: {str(payload.get('alpha_gate_passed', False)).lower()}",
         f"- alpha_gate_status: {status}",
         f"- alpha_candidate: {str(payload.get('alpha_candidate', False)).lower()}",
         f"- self_verifying_alpha: {str(payload.get('self_verifying_alpha', False)).lower()}",

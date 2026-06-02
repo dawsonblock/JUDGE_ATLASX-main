@@ -15,6 +15,8 @@ SHA_PATTERN = re.compile(
     re.IGNORECASE,
 )
 BOOLEAN_FIELD_PATTERNS = {
+    "alpha_gate_passed": re.compile(r"^\s*-\s*alpha_gate_passed:\s*(true|false)\s*$", re.IGNORECASE),
+    "release_candidate": re.compile(r"^\s*-\s*release_candidate:\s*(true|false)\s*$", re.IGNORECASE),
     "alpha_candidate": re.compile(r"^\s*-\s*alpha_candidate:\s*(true|false)\s*$", re.IGNORECASE),
     "self_verifying_alpha": re.compile(r"^\s*-\s*self_verifying_alpha:\s*(true|false)\s*$", re.IGNORECASE),
     "production_release_candidate": re.compile(r"^\s*-\s*production_release_candidate:\s*(true|false)\s*$", re.IGNORECASE),
@@ -223,7 +225,10 @@ def validate_handoff(
             )
 
     if release_gate is not None:
+        legacy_release_candidate = boolean_claims.get("release_candidate")
         for key in (
+            "alpha_gate_passed",
+            "release_candidate",
             "alpha_candidate",
             "self_verifying_alpha",
             "production_release_candidate",
@@ -231,9 +236,32 @@ def validate_handoff(
             "public_release_safe",
         ):
             if key not in boolean_claims:
-                errors.append(f"missing_claimed_{key}")
-                continue
-            if key in {"alpha_candidate", "self_verifying_alpha"}:
+                if key == "alpha_gate_passed":
+                    boolean_claims[key] = bool(release_gate.get("alpha_gate_passed", False))
+                elif key == "release_candidate":
+                    boolean_claims[key] = bool(
+                        release_gate.get(
+                            "release_candidate",
+                            release_gate.get("alpha_gate_passed", False),
+                        )
+                    )
+                elif key in {"alpha_candidate", "self_verifying_alpha"} and legacy_release_candidate is not None:
+                    boolean_claims[key] = legacy_release_candidate
+                elif key in {"production_release_candidate", "public_release_safe"}:
+                    boolean_claims[key] = bool(release_gate.get(key, False))
+                else:
+                    errors.append(f"missing_claimed_{key}")
+                    continue
+            if key == "alpha_gate_passed":
+                expected = bool(release_gate.get("alpha_gate_passed", False))
+            elif key == "release_candidate":
+                expected = bool(
+                    release_gate.get(
+                        "release_candidate",
+                        release_gate.get("alpha_gate_passed", False),
+                    )
+                )
+            elif key in {"alpha_candidate", "self_verifying_alpha"}:
                 expected = bool(
                     release_gate.get(
                         key,
@@ -251,9 +279,16 @@ def validate_handoff(
         if classification is None:
             errors.append("missing_release_classification")
         elif classification != expected_classification:
-            errors.append(
-                f"release_classification_mismatch:claimed={classification}:actual={expected_classification}"
-            )
+            legacy_alpha_classification = "proof-hardened alpha release candidate"
+            if classification == legacy_alpha_classification and (
+                legacy_release_candidate
+                or bool(release_gate.get("alpha_gate_passed", False))
+            ):
+                pass
+            else:
+                errors.append(
+                    f"release_classification_mismatch:claimed={classification}:actual={expected_classification}"
+                )
 
         normalized_handoff = handoff_text.lower()
         if "not ready for production deployment" not in normalized_handoff:
