@@ -7,6 +7,7 @@ import argparse
 import json
 import math
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -17,7 +18,26 @@ def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _run(cmd: list[str], cwd: Path, env: dict[str, str]) -> subprocess.CompletedProcess[str]:
+LOCAL_PATH_PATTERNS = (
+    re.compile(r"/Users/[^\s\"'`]+"),
+    re.compile(r"/home/[^\s\"'`]+"),
+    re.compile(r"/private/[^\s\"'`]+"),
+    re.compile(r"[A-Za-z]:\\[^\s\"'`]+"),
+)
+
+
+def _redact_local_paths_in_text(text: str) -> str:
+    redacted = text
+    for pattern in LOCAL_PATH_PATTERNS:
+        redacted = pattern.sub("[REDACTED_LOCAL_PATH]", redacted)
+    return redacted
+
+
+def _run(
+    cmd: list[str],
+    cwd: Path,
+    env: dict[str, str],
+) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         cmd,
         cwd=str(cwd),
@@ -33,9 +53,12 @@ def _write(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def _list_tests(tests_root: Path) -> list[str]:
+def _list_tests(tests_root: Path, repo_root: Path) -> list[str]:
     files = sorted(tests_root.rglob("test_*.py"))
-    return [str(path).replace("\\", "/") for path in files]
+    return [
+        str(path.relative_to(repo_root)).replace("\\", "/")
+        for path in files
+    ]
 
 
 def main() -> int:
@@ -82,8 +105,15 @@ def main() -> int:
         print("ERROR: --batch-size must be > 0")
         return 2
 
-    ignored = {str((repo_root / item).resolve()).replace("\\", "/") for item in args.ignore}
-    test_files = [p for p in _list_tests(tests_root) if p not in ignored]
+    ignored = {
+        str((repo_root / item).resolve().relative_to(repo_root)).replace(
+            "\\", "/"
+        )
+        for item in args.ignore
+    }
+    test_files = [
+        p for p in _list_tests(tests_root, repo_root) if p not in ignored
+    ]
 
     env = os.environ.copy()
 
@@ -91,7 +121,7 @@ def main() -> int:
         sys.executable,
         "-m",
         "pytest",
-        str(tests_root),
+        args.tests_root,
         "--collect-only",
         "--import-mode=importlib",
         "-q",
@@ -99,11 +129,13 @@ def main() -> int:
     collect_started = _utc_now()
     collect_result = _run(collect_cmd, repo_root, env)
     collect_finished = _utc_now()
+    collect_stdout = _redact_local_paths_in_text(collect_result.stdout)
+    collect_stderr = _redact_local_paths_in_text(collect_result.stderr)
     collect_text = (
         f"[backend_pytest_collect] started_at={collect_started}\n"
         f"[backend_pytest_collect] command={' '.join(collect_cmd)}\n"
-        f"{collect_result.stdout}"
-        f"{collect_result.stderr}"
+        f"{collect_stdout}"
+        f"{collect_stderr}"
         f"\n[backend_pytest_collect] finished_at={collect_finished}\n"
         f"[backend_pytest_collect] exit_code={collect_result.returncode}\n"
     )
@@ -185,11 +217,18 @@ def main() -> int:
         )
 
         merged_lines.append(
-            f"===== BATCH {idx + 1}/{total_batches} files={len(batch_files)} exit={result.returncode} ====="
+            "===== BATCH "
+            f"{idx + 1}/{total_batches} "
+            f"files={len(batch_files)} "
+            f"exit={result.returncode} ====="
         )
         merged_lines.append("COMMAND: " + " ".join(cmd))
-        merged_lines.append(result.stdout.rstrip())
-        merged_lines.append(result.stderr.rstrip())
+        merged_lines.append(
+            _redact_local_paths_in_text(result.stdout).rstrip()
+        )
+        merged_lines.append(
+            _redact_local_paths_in_text(result.stderr).rstrip()
+        )
         merged_lines.append("")
 
         if result.returncode != 0:
@@ -208,8 +247,14 @@ def main() -> int:
     }
     _write(status_json, json.dumps(status_payload, indent=2) + "\n")
 
-    print("[backend_pytest_chunked] collect_log=" + str(collect_log.relative_to(repo_root)))
-    print("[backend_pytest_chunked] status_json=" + str(status_json.relative_to(repo_root)))
+    print(
+        "[backend_pytest_chunked] collect_log="
+        + str(collect_log.relative_to(repo_root))
+    )
+    print(
+        "[backend_pytest_chunked] status_json="
+        + str(status_json.relative_to(repo_root))
+    )
     print("\n".join(merged_lines).rstrip())
 
     return batch_exit_code
