@@ -3,6 +3,8 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TMP_DIR="$(mktemp -d)"
+LOCK_DIR="${ROOT_DIR}/artifacts/.release_package.lock"
+LOCK_ACQUIRED=false
 
 sanitize_archive_validation_artifacts() {
   python3 - <<'PY' || true
@@ -105,9 +107,19 @@ PY
 
 cleanup() {
   sanitize_archive_validation_artifacts
+  if [[ "${LOCK_ACQUIRED}" == "true" ]]; then
+    rm -rf "${LOCK_DIR}" || true
+  fi
   rm -rf "${TMP_DIR}"
 }
 trap cleanup EXIT INT TERM
+
+if ! mkdir "${LOCK_DIR}" 2>/dev/null; then
+  echo "ERROR: release package lock is already held: ${LOCK_DIR}"
+  echo "ERROR: another packaging/proof mutation run is active"
+  exit 2
+fi
+LOCK_ACQUIRED=true
 
 ARCHIVE_VALIDATION_LOG="${ROOT_DIR}/artifacts/proof/current/archive_validation.log"
 
@@ -175,7 +187,7 @@ if [[ "${SKIP_RELEASE_GATE}" != "true" ]]; then
 fi
 
 log "Synchronizing status docs from canonical gate truth"
-python3 scripts/sync_status_docs_from_gate.py --root .
+python3 scripts/render_proof_status_docs.py --root . --skip-handoff
 
 log "Validating local proof freshness"
 python scripts/check_proof_freshness.py

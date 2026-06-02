@@ -25,6 +25,32 @@ CHECKS = (
 )
 
 
+def _dynamic_checks(
+    repo_root: Path,
+    *,
+    include_handoff_consistency: bool,
+) -> tuple[tuple[str, list[str]], ...]:
+    checks: list[tuple[str, list[str]]] = list(CHECKS)
+    canonical_archive = repo_root / "dist" / "JUDGE_ATLAS-main-final.zip"
+    if include_handoff_consistency and canonical_archive.is_file():
+        checks.append(
+            (
+                "check_release_handoff_consistency",
+                [
+                    "python3",
+                    "scripts/check_release_handoff_consistency.py",
+                    "--root",
+                    ".",
+                    "--handoff",
+                    "FINAL_RELEASE_HANDOFF.md",
+                    "--archive",
+                    str(canonical_archive),
+                ],
+            )
+        )
+    return tuple(checks)
+
+
 def _run(cmd: list[str], cwd: Path) -> tuple[int, str]:
     cp = subprocess.run(
         cmd,
@@ -42,12 +68,23 @@ def _run(cmd: list[str], cwd: Path) -> tuple[int, str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=".", help="Repository root")
+    parser.add_argument(
+        "--check-handoff-consistency",
+        action="store_true",
+        help=(
+            "Include FINAL_RELEASE_HANDOFF vs canonical archive consistency "
+            "check when dist/JUDGE_ATLAS-main-final.zip exists"
+        ),
+    )
     args = parser.parse_args()
 
     repo_root = Path(args.root).resolve()
     failures: list[tuple[str, int, str]] = []
 
-    for name, cmd in CHECKS:
+    for name, cmd in _dynamic_checks(
+        repo_root,
+        include_handoff_consistency=args.check_handoff_consistency,
+    ):
         rc, output = _run(cmd, cwd=repo_root)
         if rc != 0:
             failures.append((name, rc, output))

@@ -125,6 +125,36 @@ def _sync_repair_status_md(repo_root: Path, gate: dict) -> bool:
     return False
 
 
+def _sync_proof_status_md(repo_root: Path, gate: dict) -> bool:
+    path = repo_root / "PROOF_STATUS.md"
+    if not path.exists():
+        return False
+    text = path.read_text(encoding="utf-8")
+    alpha_candidate = str(bool(gate.get("alpha_candidate", gate.get("alpha_gate_passed", False)))).lower()
+    self_verifying_alpha = str(bool(gate.get("self_verifying_alpha", gate.get("alpha_gate_passed", False)))).lower()
+    production_release_candidate = str(bool(gate.get("production_release_candidate", False))).lower()
+    production_ready = str(bool(gate.get("production_ready", False))).lower()
+    public_release_safe = str(bool(gate.get("public_release_safe", False))).lower()
+
+    updated = text
+    updated = _replace_line(updated, r"^\s*-\s*\*\*alpha_candidate\*\*\s*:\s*.*$", f"- **alpha_candidate**: {alpha_candidate}")
+    updated = _replace_line(updated, r"^\s*-\s*\*\*self_verifying_alpha\*\*\s*:\s*.*$", f"- **self_verifying_alpha**: {self_verifying_alpha}")
+    updated = _replace_line(updated, r"^\s*-\s*\*\*production_release_candidate\*\*\s*:\s*.*$", f"- **production_release_candidate**: {production_release_candidate}")
+    updated = _replace_line(updated, r"^\s*-\s*\*\*production_ready\*\*\s*:\s*.*$", f"- **production_ready**: {production_ready}")
+    updated = _replace_line(updated, r"^\s*-\s*\*\*public_release_safe\*\*\s*:\s*.*$", f"- **public_release_safe**: {public_release_safe}")
+
+    updated = _replace_line(updated, r"^\s*-\s*alpha_candidate\s*:\s*.*$", f"- alpha_candidate: {alpha_candidate}")
+    updated = _replace_line(updated, r"^\s*-\s*self_verifying_alpha\s*:\s*.*$", f"- self_verifying_alpha: {self_verifying_alpha}")
+    updated = _replace_line(updated, r"^\s*-\s*production_release_candidate\s*:\s*.*$", f"- production_release_candidate: {production_release_candidate}")
+    updated = _replace_line(updated, r"^\s*-\s*production_ready\s*:\s*.*$", f"- production_ready: {production_ready}")
+    updated = _replace_line(updated, r"^\s*-\s*public_release_safe\s*:\s*.*$", f"- public_release_safe: {public_release_safe}")
+
+    if updated != text:
+        path.write_text(updated, encoding="utf-8")
+        return True
+    return False
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=".", help="Repository root")
@@ -141,6 +171,7 @@ def main() -> int:
     changed |= _sync_current_status_md(repo_root, gate)
     changed |= _sync_release_blockers_md(repo_root, gate)
     changed |= _sync_repair_status_md(repo_root, gate)
+    changed |= _sync_proof_status_md(repo_root, gate)
 
     print("SYNC_STATUS_DOCS: PASS")
     print(f"changed={str(changed).lower()}")

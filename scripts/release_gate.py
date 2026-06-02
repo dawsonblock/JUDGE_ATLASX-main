@@ -11,11 +11,13 @@ from __future__ import annotations
 import json
 import os
 import re
+import fcntl
 import signal
 import sqlite3
 import subprocess
 import sys
 import time
+import atexit
 import platform
 import hashlib
 from dataclasses import asdict, dataclass
@@ -264,6 +266,53 @@ REQUIRED_PROOF_FILES = (
     "artifacts/proof/current/release_readiness.md",
     "artifacts/proof/current/PROOF_POLICY.md",
 )
+
+
+def _acquire_release_lock(repo_root: Path):
+    """Prevent concurrent release gate runs from corrupting canonical proof artifacts."""
+    lock_path = repo_root / "artifacts" / ".release_lock"
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    lock_file = lock_path.open("w", encoding="utf-8")
+    try:
+        fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError as exc:
+        lock_file.close()
+        raise RuntimeError(f"release_lock_held:{lock_path}") from exc
+
+    lock_file.seek(0)
+    lock_file.truncate(0)
+    lock_file.write(
+        json.dumps(
+            {
+                "pid": os.getpid(),
+                "started_at_utc": datetime.now(timezone.utc).isoformat(),
+            },
+            indent=2,
+        )
+        + "\n"
+    )
+    lock_file.flush()
+    try:
+        setattr(lock_file, "_lock_path", lock_path)
+    except Exception:
+        pass
+    return lock_file
+
+
+def _release_release_lock(lock_file) -> None:
+    lock_path = getattr(lock_file, "_lock_path", None)
+    try:
+        lock_file.seek(0)
+        lock_file.truncate(0)
+        lock_file.flush()
+        fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+    finally:
+        lock_file.close()
+    if isinstance(lock_path, Path):
+        try:
+            lock_path.unlink(missing_ok=True)
+        except OSError:
+            pass
 
 
 @dataclass
@@ -2066,6 +2115,13 @@ def _sync_release_artifacts(
 
 def main() -> int:
     repo_root = Path(__file__).resolve().parents[1]
+    try:
+        lock_file = _acquire_release_lock(repo_root)
+    except RuntimeError as exc:
+        print(f"BLOCKED_RELEASE_LOCK: {exc}", file=sys.stderr)
+        return 2
+    atexit.register(_release_release_lock, lock_file)
+
     out_dir = repo_root / "artifacts" / "proof" / "current"
     out_dir.mkdir(parents=True, exist_ok=True)
     proof_db_url = f"sqlite:///{(out_dir / 'proof.db').resolve()}"
