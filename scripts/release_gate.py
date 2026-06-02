@@ -3164,6 +3164,15 @@ def main() -> int:
         ensure_readiness_step=True,
     )
 
+    # Final validation: ensure source_registry_status.json was properly
+    # generated. This catches cases where the gate was interrupted before
+    # the step ran.
+    source_registry_valid, source_registry_error = (
+        _validate_source_registry_status(out_dir)
+    )
+    if not source_registry_valid:
+        blocked_checks["source_registry_status_final"] = source_registry_error
+
     missing_logs = _missing_logs(repo_root, results)
     remaining_required_steps = {
         "required_proof_logs",

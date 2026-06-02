@@ -1,15 +1,15 @@
 {
-  "started_at": "2026-06-02T21:02:18.782525+00:00",
-  "finished_at": "2026-06-02T21:03:18.803222+00:00",
+  "started_at": "2026-06-02T21:45:08.085559+00:00",
+  "finished_at": "2026-06-02T21:46:16.265523+00:00",
   "collect_exit_code": 0,
-  "batch_exit_code": 1,
+  "batch_exit_code": 0,
   "batch_size": 40,
   "discovered_files": 298,
   "batches": [
     {
       "index": 1,
-      "started_at": "2026-06-02T21:02:22.207327+00:00",
-      "finished_at": "2026-06-02T21:02:35.231393+00:00",
+      "started_at": "2026-06-02T21:45:11.214008+00:00",
+      "finished_at": "2026-06-02T21:45:23.822170+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/ingestion/test_ckan_adapter.py",
@@ -17,8 +17,8 @@
     },
     {
       "index": 2,
-      "started_at": "2026-06-02T21:02:35.231581+00:00",
-      "finished_at": "2026-06-02T21:02:51.037432+00:00",
+      "started_at": "2026-06-02T21:45:23.822335+00:00",
+      "finished_at": "2026-06-02T21:45:39.145348+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_auto_review.py",
@@ -26,8 +26,8 @@
     },
     {
       "index": 3,
-      "started_at": "2026-06-02T21:02:51.037551+00:00",
-      "finished_at": "2026-06-02T21:02:55.819581+00:00",
+      "started_at": "2026-06-02T21:45:39.145494+00:00",
+      "finished_at": "2026-06-02T21:45:43.921404+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_crime_source_ingestion.py",
@@ -35,8 +35,8 @@
     },
     {
       "index": 4,
-      "started_at": "2026-06-02T21:02:55.819701+00:00",
-      "finished_at": "2026-06-02T21:02:59.772489+00:00",
+      "started_at": "2026-06-02T21:45:43.921488+00:00",
+      "finished_at": "2026-06-02T21:45:48.038837+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_ingestion_pipeline.py",
@@ -44,8 +44,8 @@
     },
     {
       "index": 5,
-      "started_at": "2026-06-02T21:02:59.772562+00:00",
-      "finished_at": "2026-06-02T21:03:10.270051+00:00",
+      "started_at": "2026-06-02T21:45:48.038914+00:00",
+      "finished_at": "2026-06-02T21:45:58.421819+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_memory_invalidation.py",
@@ -53,8 +53,8 @@
     },
     {
       "index": 6,
-      "started_at": "2026-06-02T21:03:10.270144+00:00",
-      "finished_at": "2026-06-02T21:03:15.229425+00:00",
+      "started_at": "2026-06-02T21:45:58.421931+00:00",
+      "finished_at": "2026-06-02T21:46:03.240351+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_public_map_reviewed_only.py",
@@ -62,13 +62,22 @@
     },
     {
       "index": 7,
-      "started_at": "2026-06-02T21:03:15.229511+00:00",
-      "finished_at": "2026-06-02T21:03:18.803151+00:00",
-      "exit_code": 1,
+      "started_at": "2026-06-02T21:46:03.240424+00:00",
+      "finished_at": "2026-06-02T21:46:11.159923+00:00",
+      "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_saskatoon_open_data_staging.py",
       "last_file": "backend/app/tests/test_source_visibility_endpoints.py"
+    },
+    {
+      "index": 8,
+      "started_at": "2026-06-02T21:46:11.160004+00:00",
+      "finished_at": "2026-06-02T21:46:16.265440+00:00",
+      "exit_code": 0,
+      "file_count": 18,
+      "first_file": "backend/app/tests/test_statscan.py",
+      "last_file": "backend/app/tests/test_workflow_admin_security.py"
     }
   ],
-  "status": "FAIL"
+  "status": "PASS"
 }
