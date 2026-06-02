@@ -629,7 +629,7 @@ def _refresh_release_payload_schema(
     payload["production_ready"] = False
     payload["public_release_safe"] = False
     # Legacy compatibility key retained for downstream scripts during migration.
-    payload["release_candidate"] = alpha_gate_passed
+    payload["release_candidate"] = False
     payload["checks_summary"] = _canonical_checks_summary(results)
 
 

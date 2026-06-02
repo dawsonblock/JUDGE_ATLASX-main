@@ -25,7 +25,7 @@ def test_release_candidate_requires_alpha_gate_pass():
     assert payload["release_candidate"] is False
 
 
-def test_release_candidate_is_true_when_alpha_gate_passes_even_before_archive_result_is_final():
+def test_release_candidate_stays_false_even_when_alpha_gate_passes():
     module = _load_release_gate_module()
     payload = {
         "alpha_gate_passed": True,
@@ -34,4 +34,4 @@ def test_release_candidate_is_true_when_alpha_gate_passes_even_before_archive_re
 
     module._refresh_release_payload_schema(payload, [])
 
-    assert payload["release_candidate"] is True
+    assert payload["release_candidate"] is False

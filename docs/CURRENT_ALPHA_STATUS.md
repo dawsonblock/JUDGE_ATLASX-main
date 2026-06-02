@@ -1,10 +1,10 @@
 # CURRENT_ALPHA_STATUS
 
-- generated_at_utc: 2026-06-02T00:38:56.891644+00:00
-- commit_hash: 33c92f0f4e0ea111f2466e052ab51cad5da4a514
+- generated_at_utc: 2026-06-02T00:45:24.146514+00:00
+- commit_hash: b09e58a005cc71461740a646adce634ec8472d5a
 - operational_posture: alpha
-- alpha_candidate: false
-- self_verifying_alpha: false
+- alpha_candidate: true
+- self_verifying_alpha: true
 - production_release_candidate: false
 - production_ready: false
 - public_release_safe: false
@@ -22,4 +22,4 @@
 
 ## Current Blockers
 
-- backend_pytest
+- none
