@@ -1,11 +1,11 @@
 # CURRENT_PROOF
 
-- generated_at_utc: 2026-06-02T21:44:34.852470+00:00
-- commit_hash: 31117111b167a431a3c143b2b2a18d8ebfb0a212
-- alpha_gate_passed: false
-- alpha_gate_status: BLOCKED
-- alpha_candidate: false
-- self_verifying_alpha: false
+- generated_at_utc: 2026-06-02T21:48:48.251886+00:00
+- commit_hash: dc3b80d8fbd4902097d51b03f4c6c443d5533d72
+- alpha_gate_passed: true
+- alpha_gate_status: PASS
+- alpha_candidate: true
+- self_verifying_alpha: true
 - production_release_candidate: false
 - production_ready: false
 - public_release_safe: false
@@ -75,10 +75,6 @@
 - CanLII staging proof: PASS
 - mutation fail-closed coverage: PASS
 - Alembic migrations: 72
-
-## Failed Checks
-
-- backend_pytest
 
 ## Egress Proxy Coverage
 
