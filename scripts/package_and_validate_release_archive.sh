@@ -174,6 +174,9 @@ if [[ "${SKIP_RELEASE_GATE}" != "true" ]]; then
   make release-proof-local
 fi
 
+log "Synchronizing status docs from canonical gate truth"
+python3 scripts/sync_status_docs_from_gate.py --root .
+
 log "Validating local proof freshness"
 python scripts/check_proof_freshness.py
 python scripts/check_proof_freshness.py --strict-extra-files

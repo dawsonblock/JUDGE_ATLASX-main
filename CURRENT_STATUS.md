@@ -46,7 +46,7 @@
 ## Status Matrix
 
 - authority: artifacts/proof/current/release_gate.json
-- alpha_ready: derive from artifacts/proof/current/release_gate.json
+- alpha_ready: true
 - production_ready: false
 - public_release_safe: false
 - ingestion_coverage: 2/26 runnable sources (from canonical source-registry proof)

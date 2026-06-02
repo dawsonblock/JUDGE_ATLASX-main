@@ -8,6 +8,7 @@ import hashlib
 import json
 import pathlib
 import re
+from datetime import datetime, timezone
 
 PATH_PATTERN = re.compile(r"^\s*-\s*Path:\s*(.+?)\s*$", re.IGNORECASE)
 SHA_PATTERN = re.compile(
@@ -52,6 +53,25 @@ PROOF_ANCHOR_SHA_PATTERNS = {
         re.IGNORECASE,
     ),
 }
+GENERATED_AT_UTC_PATTERN = re.compile(
+    r"^\s*-\s*generated_at_utc:\s*(.+?)\s*$",
+    re.IGNORECASE,
+)
+
+
+def _parse_iso8601(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    text = value.strip()
+    if text.endswith("Z"):
+        text = text[:-1] + "+00:00"
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
 
 
 def _compute_sha256(path: pathlib.Path) -> str:
@@ -71,12 +91,14 @@ def _extract_claims(
     str | None,
     dict[str, str],
     dict[str, str],
+    str | None,
     str,
 ]:
     claimed_path: str | None = None
     claimed_sha: str | None = None
     boolean_claims: dict[str, bool] = {}
     classification: str | None = None
+    generated_at_utc: str | None = None
     anchor_paths: dict[str, str] = {}
     anchor_shas: dict[str, str] = {}
     content = handoff_path.read_text(encoding="utf-8", errors="ignore")
@@ -93,6 +115,10 @@ def _extract_claims(
             match = CLASSIFICATION_PATTERN.match(line)
             if match:
                 classification = match.group(1).strip()
+        if generated_at_utc is None:
+            match = GENERATED_AT_UTC_PATTERN.match(line)
+            if match:
+                generated_at_utc = match.group(1).strip()
         for key, pattern in BOOLEAN_FIELD_PATTERNS.items():
             if key in boolean_claims:
                 continue
@@ -118,6 +144,7 @@ def _extract_claims(
         classification,
         anchor_paths,
         anchor_shas,
+        generated_at_utc,
         content,
     )
 
@@ -136,6 +163,7 @@ def validate_handoff(
     repo_root: pathlib.Path,
     archive_path: pathlib.Path,
     handoff_path: pathlib.Path,
+    max_handoff_staleness_seconds: int,
 ) -> tuple[bool, list[str]]:
     errors: list[str] = []
 
@@ -162,6 +190,7 @@ def validate_handoff(
         classification,
         anchor_paths,
         anchor_shas,
+        handoff_generated_at,
         handoff_text,
     ) = _extract_claims(handoff_path)
     if not claimed_path:
@@ -225,6 +254,41 @@ def validate_handoff(
             )
 
     if release_gate is not None:
+        release_gate_time = _parse_iso8601(
+            str(
+                release_gate.get("timestamp_utc")
+                or release_gate.get("generated_at")
+                or ""
+            )
+        )
+        proof_generated_at = None
+        current_proof_path = repo_root / "artifacts" / "proof" / "current" / "CURRENT_PROOF.md"
+        if current_proof_path.exists() and current_proof_path.is_file():
+            for line in current_proof_path.read_text(encoding="utf-8", errors="ignore").splitlines():
+                if line.lower().startswith("- generated_at_utc:"):
+                    proof_generated_at = _parse_iso8601(line.split(":", 1)[1].strip())
+                    break
+
+        handoff_generated_at_dt = _parse_iso8601(handoff_generated_at)
+        if handoff_generated_at_dt is None:
+            errors.append("missing_or_invalid_handoff_generated_at_utc")
+        else:
+            if release_gate_time is not None and handoff_generated_at_dt < release_gate_time:
+                errors.append(
+                    "handoff_stale_vs_release_gate:"
+                    f"handoff={handoff_generated_at_dt.isoformat()}:"
+                    f"release_gate={release_gate_time.isoformat()}"
+                )
+            if proof_generated_at is not None and (
+                proof_generated_at - handoff_generated_at_dt
+            ).total_seconds() > max_handoff_staleness_seconds:
+                errors.append(
+                    "handoff_stale_vs_current_proof:"
+                    f"handoff={handoff_generated_at_dt.isoformat()}:"
+                    f"current_proof={proof_generated_at.isoformat()}:"
+                    f"max_seconds={max_handoff_staleness_seconds}"
+                )
+
         legacy_release_candidate = boolean_claims.get("release_candidate")
         for key in (
             "alpha_gate_passed",
@@ -320,6 +384,15 @@ def main() -> int:
         default="FINAL_RELEASE_HANDOFF.md",
         help="Path to release handoff markdown",
     )
+    parser.add_argument(
+        "--max-handoff-staleness-seconds",
+        type=int,
+        default=300,
+        help=(
+            "Maximum allowed lag where FINAL_RELEASE_HANDOFF.md may be older "
+            "than artifacts/proof/current/CURRENT_PROOF.md"
+        ),
+    )
     args = parser.parse_args()
 
     repo_root = pathlib.Path(args.root).resolve()
@@ -330,7 +403,12 @@ def main() -> int:
     if not handoff_path.is_absolute():
         handoff_path = (repo_root / handoff_path).resolve()
 
-    ok, errors = validate_handoff(repo_root, archive_path, handoff_path)
+    ok, errors = validate_handoff(
+        repo_root,
+        archive_path,
+        handoff_path,
+        args.max_handoff_staleness_seconds,
+    )
     if ok:
         try:
             handoff_display = str(handoff_path.relative_to(repo_root))

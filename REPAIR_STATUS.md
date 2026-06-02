@@ -1,7 +1,9 @@
 # JUDGE_ATLASX Repair Status
 
 > [!WARNING]
-> **WARNING:** Read the current truth from `artifacts/proof/current/release_gate.json` and `artifacts/proof/current/release_readiness.md`. Do not deploy as a production release; `production_ready` remains **false** for alpha scope.
+> Read the current truth from artifacts/proof/current/release_gate.json and artifacts/proof/current/release_readiness.md. Do not deploy as a production release.
+
+Production-ready=false until all production gates pass.
 
 ## Repair Status
 
@@ -9,31 +11,17 @@ This file is historical/contextual only.
 
 The authoritative release state is defined by:
 
-- `artifacts/proof/current/release_gate.json`
-- `artifacts/proof/current/CURRENT_PROOF.md`
-- `artifacts/proof/current/CURRENT_ALPHA_STATUS.md`
-- `artifacts/proof/current/release_readiness.md`
+- artifacts/proof/current/release_gate.json
+- artifacts/proof/current/CURRENT_PROOF.md
+- artifacts/proof/current/CURRENT_ALPHA_STATUS.md
+- artifacts/proof/current/release_readiness.md
 
-Current canonical state (from release_gate.json):
-
-```json
-{
-  "alpha_gate_passed": "derive from artifacts/proof/current/release_gate.json",
-  "release_candidate": "derive from artifacts/proof/current/release_gate.json",
-  "production_ready": false
-}
-```
-
-This project is an alpha work-in-progress. It is NOT a release candidate and is NOT production-ready.
-
-**Blockers:** Backend tests, Docker runtime unavailable, proof logs missing.
-
-Production-ready=false until all production gates pass.
+Current canonical state is derived from artifacts/proof/current/release_gate.json.
 
 ## Status Matrix
 
 - authority: artifacts/proof/current/release_gate.json
-- alpha_ready: derive from artifacts/proof/current/release_gate.json
+- alpha_ready: true
 - production_ready: false
 - public_release_safe: false
 - ingestion_coverage: 2/26 runnable sources (from canonical source-registry proof)

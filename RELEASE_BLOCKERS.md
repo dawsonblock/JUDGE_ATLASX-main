@@ -23,11 +23,11 @@ Production-ready=false until all production gates pass.
 ## Status Matrix
 
 - authority: artifacts/proof/current/release_gate.json
-- alpha_candidate: derive from artifacts/proof/current/release_gate.json
-- self_verifying_alpha: derive from artifacts/proof/current/release_gate.json
-- production_release_candidate: derive from artifacts/proof/current/release_gate.json
-- production_ready: derive from artifacts/proof/current/release_gate.json
-- public_release_safe: derive from artifacts/proof/current/release_gate.json
+- alpha_candidate: true
+- self_verifying_alpha: true
+- production_release_candidate: false
+- production_ready: false
+- public_release_safe: false
 - ingestion_coverage: 2/26 runnable sources (from canonical source-registry proof)
 - AI_answering_enabled: true (derivative, evidence-cited alpha mode)
 - workflow_admin_enabled: false (gated/experimental)
@@ -38,11 +38,11 @@ Historical repair/blocker notes were moved to docs/history/2026-05-27-repair-blo
 ## Status Assertion
 
 - release_status: derive from artifacts/proof/current/release_gate.json
-- alpha_candidate: derive from artifacts/proof/current/release_gate.json
-- self_verifying_alpha: derive from artifacts/proof/current/release_gate.json
-- production_release_candidate: derive from artifacts/proof/current/release_gate.json
-- production_ready: derive from artifacts/proof/current/release_gate.json
-- public_release_safe: derive from artifacts/proof/current/release_gate.json
+- alpha_candidate: true
+- self_verifying_alpha: true
+- production_release_candidate: false
+- production_ready: false
+- public_release_safe: false
 - operational_posture: alpha
 
 ## Interpretation
