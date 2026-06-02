@@ -9,7 +9,7 @@
 - production_ready: false
 - public_release_safe: false
 - proof_freshness_result: PASS
-- release_gate_check_count: 49
+- release_gate_check_count: 54
 - postgis_proof_result: PASS
 - egress_proxy_proof_result: PASS
 - demo_proof_result: PASS
@@ -23,7 +23,3 @@
 ## Current Blockers
 
 - backend_pytest
-- archive_validation
-- check_proof_consistency
-- check_proof_manifest
-- required_proof_logs

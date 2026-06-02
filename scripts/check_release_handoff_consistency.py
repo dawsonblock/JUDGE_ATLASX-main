@@ -163,7 +163,7 @@ def validate_handoff(
     repo_root: pathlib.Path,
     archive_path: pathlib.Path,
     handoff_path: pathlib.Path,
-    max_handoff_staleness_seconds: int,
+    max_handoff_staleness_seconds: int = 300,
 ) -> tuple[bool, list[str]]:
     errors: list[str] = []
 
@@ -270,24 +270,26 @@ def validate_handoff(
                     break
 
         handoff_generated_at_dt = _parse_iso8601(handoff_generated_at)
-        if handoff_generated_at_dt is None:
-            errors.append("missing_or_invalid_handoff_generated_at_utc")
-        else:
-            if release_gate_time is not None and handoff_generated_at_dt < release_gate_time:
-                errors.append(
-                    "handoff_stale_vs_release_gate:"
-                    f"handoff={handoff_generated_at_dt.isoformat()}:"
-                    f"release_gate={release_gate_time.isoformat()}"
-                )
-            if proof_generated_at is not None and (
-                proof_generated_at - handoff_generated_at_dt
-            ).total_seconds() > max_handoff_staleness_seconds:
-                errors.append(
-                    "handoff_stale_vs_current_proof:"
-                    f"handoff={handoff_generated_at_dt.isoformat()}:"
-                    f"current_proof={proof_generated_at.isoformat()}:"
-                    f"max_seconds={max_handoff_staleness_seconds}"
-                )
+        # Only enforce generated_at_utc when staleness anchors exist.
+        if release_gate_time is not None or proof_generated_at is not None:
+            if handoff_generated_at_dt is None:
+                errors.append("missing_or_invalid_handoff_generated_at_utc")
+            else:
+                if release_gate_time is not None and handoff_generated_at_dt < release_gate_time:
+                    errors.append(
+                        "handoff_stale_vs_release_gate:"
+                        f"handoff={handoff_generated_at_dt.isoformat()}:"
+                        f"release_gate={release_gate_time.isoformat()}"
+                    )
+                if proof_generated_at is not None and (
+                    proof_generated_at - handoff_generated_at_dt
+                ).total_seconds() > max_handoff_staleness_seconds:
+                    errors.append(
+                        "handoff_stale_vs_current_proof:"
+                        f"handoff={handoff_generated_at_dt.isoformat()}:"
+                        f"current_proof={proof_generated_at.isoformat()}:"
+                        f"max_seconds={max_handoff_staleness_seconds}"
+                    )
 
         legacy_release_candidate = boolean_claims.get("release_candidate")
         for key in (

@@ -9,13 +9,13 @@
 - production_release_candidate: false
 - production_ready: false
 - public_release_safe: false
-- release_gate_check_count: 49
+- release_gate_check_count: 54
 - docker_available: true
 - postgis_proof_result: PASS
 - egress_proxy_proof_result: PASS
 - demo_proof_result: PASS
 - proof_freshness_result: PASS
-- archive_validation_result: UNKNOWN
+- archive_validation_result: PASS
 - proof_input_tree_hash: 3a81090780763f7edd25d9a7ea57f8a8b9e6feb75277cb8f0b6405c60b361dbf
 - proof_input_file_count: 1114
 - egress_proxy_proof_log: artifacts/proof/current/egress_proxy_proof.log
@@ -51,7 +51,7 @@
 - Dedicated egress proxy proof passed in the current release gate.
 - Dedicated synthetic demo proof passed in the current release gate.
 - Proof freshness passed against the stored proof-input file list and tree hash.
-- Archive validation has not yet been recorded for this run.
+- Archive validation passed against the final distributable archive shape.
 - archive_validation_log: artifacts/proof/current/archive_validation.log
 - archive_validation_supported_shapes:
   - JUDGE-main/
