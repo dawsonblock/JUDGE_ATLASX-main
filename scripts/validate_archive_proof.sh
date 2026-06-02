@@ -122,6 +122,8 @@ if [[ -z "${ARCHIVE_PATH}" ]]; then
     --root-name "JUDGE_ATLAS-main"
 fi
 
+ARCHIVE_PATH="$(python3 -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "${ARCHIVE_PATH}")"
+
 python3 "${ROOT_DIR}/scripts/validate_release_archive.py" \
   --archive "${ARCHIVE_PATH}" \
   --expected-root "JUDGE_ATLAS-main" \

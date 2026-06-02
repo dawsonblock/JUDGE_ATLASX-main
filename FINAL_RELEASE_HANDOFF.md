@@ -6,18 +6,18 @@ Manual edits are not authoritative.
 
 ## Authoritative Archive
 - Path: dist/JUDGE_ATLAS-main-final.zip
-- SHA-256: e643a0e5d4b7c7b169b817dd2fa99ac6f1d2de6978c12ea97e3b8b223657f9b4
+- SHA-256: 06295528eb7baeb3a60d0e4a26ac535fc96c2544d4468cc2fd2478e81bf04c9a
 
 ## Proof Anchors
 - release_gate_path: artifacts/proof/current/release_gate.json
-- release_gate_sha256: 8b39c9ae6ad3fdc4af6beb60fd310fa2d287a3fb3617a14032ec298e4b02701d
+- release_gate_sha256: b6c968beead18decc822c2ca0b343075e772796c50897bf16f322a14a6a66936
 - proof_manifest_path: artifacts/proof/current/proof_manifest.json
-- proof_manifest_sha256: daad90f6259ec0bdc0d8821e3058068d9a35c20d43bf0e74575595af0c3f141c
+- proof_manifest_sha256: 093e937196ba56bb26f51cb654e82ad00bf155239797d2fd8adb4757af95ec4c
 - required_log_index_path: artifacts/proof/current/required_log_index.json
-- required_log_index_sha256: 1bfe1b071865a38a5685c3ff8aa825b1834e454e4a73345a46fb8ee9b577df1a
+- required_log_index_sha256: cc1c116c18158718d01526752e1bdfcfc64e262a48039b40cab9c6870723bf42
 
 ## Release Status
-- release_classification: proof-blocked alpha proof snapshot
+- release_classification: self-verifying alpha
 - alpha_candidate: true
 - self_verifying_alpha: true
 - production_release_candidate: false
@@ -27,15 +27,15 @@ Manual edits are not authoritative.
 - blocked_release_checks: []
 
 ## Build Metadata
-- created_at_utc: 2026-06-01T21:51:13.749783+00:00
-- generated_at_utc: 2026-06-01T21:51:13.749783+00:00
+- created_at_utc: 2026-06-02T01:01:27.698679+00:00
+- generated_at_utc: 2026-06-02T01:01:27.698679+00:00
 - git_commit: unknown
 - python: unknown
 - node: unknown
 - npm: unknown
 
 ## Notes
-- This is a proof-blocked alpha proof snapshot.
+- This is a self-verifying alpha.
 - It is not ready for production deployment.
 - Ship only the archive listed above.
 - Validation must run against a fresh extraction

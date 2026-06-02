@@ -221,6 +221,16 @@ printf '%s  %s\n' "${ARCHIVE_SHA256}" "${ARCHIVE_BASENAME}" > "${ARCHIVE_SHA256_
 log "Built archive filename=${ARCHIVE_BASENAME} sha256=${ARCHIVE_SHA256}"
 log "Wrote archive digest file ${ARCHIVE_SHA256_FILE}"
 
+log "Running archive validation"
+bash scripts/validate_archive_proof.sh "${ARCHIVE_PATH}"
+
+python scripts/validate_final_zip.py "${ARCHIVE_PATH}"
+python scripts/check_release_surface.py --archive "${ARCHIVE_PATH}"
+python scripts/verify_archive_proof_freshness.py --archive "${ARCHIVE_PATH}"
+
+sanitize_archive_validation_artifacts
+refresh_archive_validation_manifest_entry
+
 log "Generating authoritative handoff from built archive"
 python3 scripts/generate_release_handoff.py \
   --root . \
@@ -234,16 +244,6 @@ if [[ "${SKIP_HANDOFF_CHECK}" != "true" ]]; then
     --handoff FINAL_RELEASE_HANDOFF.md \
     --archive "${ARCHIVE_PATH}"
 fi
-
-log "Running archive validation"
-bash scripts/validate_archive_proof.sh "${ARCHIVE_PATH}"
-
-python scripts/validate_final_zip.py "${ARCHIVE_PATH}"
-python scripts/check_release_surface.py --archive "${ARCHIVE_PATH}"
-python scripts/verify_archive_proof_freshness.py --archive "${ARCHIVE_PATH}"
-
-sanitize_archive_validation_artifacts
-refresh_archive_validation_manifest_entry
 
 if [[ "${SKIP_EXTRACTED_VALIDATION}" != "true" ]]; then
   log "Running extracted-archive release validation"
