@@ -1,6 +1,6 @@
 {
-  "started_at": "2026-06-02T06:37:05.082087+00:00",
-  "finished_at": "2026-06-02T06:38:14.341811+00:00",
+  "started_at": "2026-06-02T07:20:23.665690+00:00",
+  "finished_at": "2026-06-02T07:21:28.723807+00:00",
   "collect_exit_code": 0,
   "batch_exit_code": 0,
   "batch_size": 40,
@@ -8,8 +8,8 @@
   "batches": [
     {
       "index": 1,
-      "started_at": "2026-06-02T06:37:08.030022+00:00",
-      "finished_at": "2026-06-02T06:37:19.964393+00:00",
+      "started_at": "2026-06-02T07:20:26.546645+00:00",
+      "finished_at": "2026-06-02T07:20:38.503575+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/ingestion/test_ckan_adapter.py",
@@ -17,8 +17,8 @@
     },
     {
       "index": 2,
-      "started_at": "2026-06-02T06:37:19.964570+00:00",
-      "finished_at": "2026-06-02T06:37:35.598564+00:00",
+      "started_at": "2026-06-02T07:20:38.503747+00:00",
+      "finished_at": "2026-06-02T07:20:52.854304+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_auto_review.py",
@@ -26,8 +26,8 @@
     },
     {
       "index": 3,
-      "started_at": "2026-06-02T06:37:35.598686+00:00",
-      "finished_at": "2026-06-02T06:37:40.708697+00:00",
+      "started_at": "2026-06-02T07:20:52.854398+00:00",
+      "finished_at": "2026-06-02T07:20:57.383179+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_crime_source_ingestion.py",
@@ -35,8 +35,8 @@
     },
     {
       "index": 4,
-      "started_at": "2026-06-02T06:37:40.708817+00:00",
-      "finished_at": "2026-06-02T06:37:45.303665+00:00",
+      "started_at": "2026-06-02T07:20:57.383271+00:00",
+      "finished_at": "2026-06-02T07:21:01.264887+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_ingestion_pipeline.py",
@@ -44,8 +44,8 @@
     },
     {
       "index": 5,
-      "started_at": "2026-06-02T06:37:45.303749+00:00",
-      "finished_at": "2026-06-02T06:37:56.324798+00:00",
+      "started_at": "2026-06-02T07:21:01.264986+00:00",
+      "finished_at": "2026-06-02T07:21:11.932705+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_memory_invalidation.py",
@@ -53,8 +53,8 @@
     },
     {
       "index": 6,
-      "started_at": "2026-06-02T06:37:56.324935+00:00",
-      "finished_at": "2026-06-02T06:38:01.459043+00:00",
+      "started_at": "2026-06-02T07:21:11.932846+00:00",
+      "finished_at": "2026-06-02T07:21:16.626791+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_public_map_reviewed_only.py",
@@ -62,8 +62,8 @@
     },
     {
       "index": 7,
-      "started_at": "2026-06-02T06:38:01.459189+00:00",
-      "finished_at": "2026-06-02T06:38:09.374906+00:00",
+      "started_at": "2026-06-02T07:21:16.626870+00:00",
+      "finished_at": "2026-06-02T07:21:23.985381+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_saskatoon_open_data_staging.py",
@@ -71,8 +71,8 @@
     },
     {
       "index": 8,
-      "started_at": "2026-06-02T06:38:09.375034+00:00",
-      "finished_at": "2026-06-02T06:38:14.341684+00:00",
+      "started_at": "2026-06-02T07:21:23.985460+00:00",
+      "finished_at": "2026-06-02T07:21:28.723739+00:00",
       "exit_code": 0,
       "file_count": 18,
       "first_file": "backend/app/tests/test_statscan.py",
