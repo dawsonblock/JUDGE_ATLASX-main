@@ -1648,6 +1648,46 @@ def _ensure_required_proof_markers(
         )
 
 
+def _validate_source_registry_status(out_dir: Path) -> tuple[bool, str]:
+    """Validate that source_registry_status.json contains real data, not just a placeholder.
+    
+    Returns (is_valid, error_message).
+    """
+    status_path = out_dir / "source_registry_status.json"
+    if not status_path.exists():
+        return False, "source_registry_status.json does not exist"
+    
+    try:
+        data = json.loads(status_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return False, f"source_registry_status.json is not valid JSON: {exc}"
+    
+    # Check for placeholder pattern
+    if data.get("status") == "in_progress" and data.get("sources") == []:
+        return False, "source_registry_status.json contains placeholder data instead of real source registry"
+    
+    # Check for expected structure
+    if "sources" not in data:
+        return False, "source_registry_status.json missing 'sources' field"
+    
+    sources = data.get("sources", [])
+    if not isinstance(sources, list):
+        return False, "source_registry_status.json 'sources' field is not a list"
+    
+    if len(sources) == 0:
+        return False, "source_registry_status.json contains empty sources array"
+    
+    # Check for expected fields in at least one source
+    if sources:
+        first_source = sources[0]
+        required_fields = ["source_key", "source_name", "lifecycle_state", "automation_status"]
+        missing_fields = [f for f in required_fields if f not in first_source]
+        if missing_fields:
+            return False, f"source_registry_status.json sources missing required fields: {missing_fields}"
+    
+    return True, ""
+
+
 def _collect_proof_input_metadata(repo_root: Path, python_exe: str) -> dict:
     cmd = [
         python_exe,
@@ -2769,6 +2809,22 @@ def main() -> int:
             docker_preflight_failed = True
         if spec.name == "frontend_node_gate" and results[-1].exit_code != 0:
             frontend_node_gate_failed = True
+        
+        # Validate source_registry_status.json immediately after generation
+        if spec.name == "source_registry_status" and results[-1].exit_code == 0:
+            is_valid, error_msg = _validate_source_registry_status(out_dir)
+            if not is_valid:
+                # Mark the step as failed with the validation error
+                results[-1].status = "FAIL"
+                results[-1].exit_code = 1
+                results[-1].failure_reason = f"source_registry_validation_failed: {error_msg}"
+                # Append error to the log file
+                log_path = out_dir / spec.log_name
+                with log_path.open("a", encoding="utf-8") as log_fh:
+                    log_fh.write(
+                        f"\n[release_gate] VALIDATION ERROR: {error_msg}\n"
+                        f"[release_gate] The source_registry_status.json file was not properly generated.\n"
+                    )
 
     # -----------------------------------------------------------------------
     # Phase 1: collect final proof metadata and write preliminary JSON.
