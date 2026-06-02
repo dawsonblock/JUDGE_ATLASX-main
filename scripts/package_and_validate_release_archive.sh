@@ -189,6 +189,7 @@ python scripts/check_required_proof_logs.py --root . --strict-required-files
 python scripts/check_no_local_paths_in_release_proof.py --root .
 python scripts/verify_status_consistency.py --root .
 python scripts/check_status_truth_consistency.py --root .
+python scripts/check_status_consistency.py --root .
 
 log "Removing stale archive validation sidecars before packaging"
 rm -f artifacts/proof/current/archive_validation.log artifacts/proof/current/archive_validation.md
@@ -249,8 +250,7 @@ if [[ "${SKIP_EXTRACTED_VALIDATION}" != "true" ]]; then
   log "Running extracted-archive release validation"
   python3 scripts/validate_extracted_release.py \
     --root . \
-    --archive "${ARCHIVE_PATH}" \
-    --expected-root "${PACKAGE_ROOT_NAME}"
+    --archive "${ARCHIVE_PATH}"
 fi
 
 log "Verifying proof hash synchronization"

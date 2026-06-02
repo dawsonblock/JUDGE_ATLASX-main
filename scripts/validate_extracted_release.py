@@ -15,6 +15,9 @@ import zipfile
 from pathlib import Path
 
 
+CANONICAL_EXPECTED_ROOT = "JUDGE_ATLAS-main"
+
+
 def _run(cmd: list[str], *, cwd: Path) -> tuple[int, str]:
     cp = subprocess.run(
         cmd,
@@ -53,8 +56,11 @@ def _build_checks(
     runtime_root: Path,
     repo_root: Path,
     archive_path: Path,
-    expected_root: str,
+    expected_root: str | None = None,
 ) -> list[tuple[str, list[str], Path]]:
+    # Backward-compatible signature: expected_root is accepted but ignored.
+    # Extracted validation always enforces CANONICAL_EXPECTED_ROOT.
+    _ = expected_root
     return [
         (
             "check_no_pyc_strict_archive",
@@ -69,7 +75,7 @@ def _build_checks(
                 "--archive",
                 str(archive_path),
                 "--expected-root",
-                expected_root,
+                CANONICAL_EXPECTED_ROOT,
             ],
             repo_root,
         ),
@@ -164,8 +170,11 @@ def main() -> int:
     )
     parser.add_argument(
         "--expected-root",
-        default="JUDGE_ATLAS-main",
-        help="Expected top-level archive root",
+        default=CANONICAL_EXPECTED_ROOT,
+        help=(
+            "Backward-compatible, ignored option. Extracted validation always "
+            f"enforces {CANONICAL_EXPECTED_ROOT}."
+        ),
     )
     args = parser.parse_args()
 
@@ -191,7 +200,7 @@ def main() -> int:
             runtime_root=runtime_root,
             repo_root=repo_root,
             archive_path=archive_path,
-            expected_root=args.expected_root,
+            expected_root=CANONICAL_EXPECTED_ROOT,
         )
 
         for name, cmd, cwd in checks:

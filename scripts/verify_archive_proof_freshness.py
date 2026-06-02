@@ -22,8 +22,8 @@ Usage::
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
-import sys
 import zipfile
 from datetime import datetime
 from pathlib import Path
@@ -136,6 +136,67 @@ def _referenced_log_paths(
     return refs
 
 
+def _referenced_log_hashes(
+    release_gate: dict,
+    proof_manifest: dict | None,
+    required_log_index: dict | None,
+) -> dict[str, str]:
+    hashes: dict[str, str] = {}
+
+    checks = release_gate.get("checks", [])
+    if isinstance(checks, list):
+        for entry in checks:
+            if not isinstance(entry, dict):
+                continue
+            rel = entry.get("log_path")
+            digest = entry.get("log_sha256") or entry.get("sha256")
+            if (
+                isinstance(rel, str)
+                and rel.startswith("artifacts/proof/current/")
+                and isinstance(digest, str)
+                and digest
+            ):
+                hashes[rel] = digest
+
+    if isinstance(proof_manifest, dict):
+        proof_commands = proof_manifest.get("proof_commands", [])
+        if isinstance(proof_commands, list):
+            for entry in proof_commands:
+                if not isinstance(entry, dict):
+                    continue
+                rel = entry.get("path") or entry.get("log_path")
+                digest = entry.get("sha256") or entry.get("log_sha256")
+                if (
+                    isinstance(rel, str)
+                    and rel.startswith("artifacts/proof/current/")
+                    and isinstance(digest, str)
+                    and digest
+                ):
+                    hashes[rel] = digest
+
+    if isinstance(required_log_index, dict):
+        entries = required_log_index.get("entries", [])
+        if isinstance(entries, list):
+            for entry in entries:
+                if not isinstance(entry, dict):
+                    continue
+                rel = entry.get("path")
+                digest = (
+                    entry.get("recorded_sha256")
+                    or entry.get("sha256")
+                    or entry.get("actual_sha256")
+                )
+                if (
+                    isinstance(rel, str)
+                    and rel.startswith("artifacts/proof/current/")
+                    and isinstance(digest, str)
+                    and digest
+                ):
+                    hashes[rel] = digest
+
+    return hashes
+
+
 def verify_archive(archive_path: Path) -> list[str]:
     """Run all checks against a release archive ZIP.
 
@@ -154,7 +215,6 @@ def verify_archive(archive_path: Path) -> list[str]:
 
     with zf:
         names = zf.namelist()
-        names_set = set(names)
 
         # 1. Locate and parse embedded release_gate.json
         payload = _find_gate_json(zf)
@@ -242,6 +302,12 @@ def verify_archive(archive_path: Path) -> list[str]:
             # 3. Every referenced log_path must exist in the archive
             missing_logs: list[str] = []
             empty_logs: list[str] = []
+            hash_mismatches: list[str] = []
+            expected_hashes = _referenced_log_hashes(
+                payload,
+                manifest,
+                required_log_index,
+            )
             for log_path in sorted(
                 _referenced_log_paths(payload, manifest, required_log_index)
             ):
@@ -252,6 +318,17 @@ def verify_archive(archive_path: Path) -> list[str]:
                 info = zf.getinfo(member_name)
                 if info.file_size <= 0:
                     empty_logs.append(log_path)
+                    continue
+
+                expected_hash = expected_hashes.get(log_path)
+                if expected_hash:
+                    with zf.open(member_name) as fh:
+                        actual_hash = hashlib.sha256(fh.read()).hexdigest()
+                    if actual_hash != expected_hash:
+                        hash_mismatches.append(
+                            f"{log_path}:expected={expected_hash}:"
+                            f"actual={actual_hash}"
+                        )
             if missing_logs:
                 failures.append(
                     f"{len(missing_logs)} proof log(s) referenced in "
@@ -265,6 +342,13 @@ def verify_archive(archive_path: Path) -> list[str]:
                 )
                 for p in sorted(empty_logs):
                     failures.append(f"  empty: {p}")
+            if hash_mismatches:
+                failures.append(
+                    f"{len(hash_mismatches)} referenced proof log(s) have "
+                    "hash mismatches in the archive:"
+                )
+                for mismatch in sorted(hash_mismatches):
+                    failures.append(f"  hash_mismatch: {mismatch}")
 
         # 4. Forbidden working-tree paths must be absent
         for name in names:

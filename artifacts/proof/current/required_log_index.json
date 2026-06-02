@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T04:55:20.090767+00:00",
+  "generated_at": "2026-06-02T05:52:41.090536+00:00",
   "proof_root": "artifacts/proof/current",
   "required_logs_total": 8,
   "missing_required_logs": [],
@@ -8,20 +8,20 @@
       "path": "artifacts/proof/current/release_gate.log",
       "location_scope": "archive_internal",
       "exists": true,
-      "recorded_sha256": "ab78b515c06c31e45b9272e968fc64299c93cc06393d19daf95cabae8a9d904e",
-      "actual_sha256": "ab78b515c06c31e45b9272e968fc64299c93cc06393d19daf95cabae8a9d904e",
-      "recorded_size_bytes": 4399,
-      "actual_size_bytes": 4399,
+      "recorded_sha256": "60229c153bd6366f37edabfdbd7581e70964e1746b4e8d257445683ab2577ff2",
+      "actual_sha256": "60229c153bd6366f37edabfdbd7581e70964e1746b4e8d257445683ab2577ff2",
+      "recorded_size_bytes": 4402,
+      "actual_size_bytes": 4402,
       "status": "PASS"
     },
     {
       "path": "artifacts/proof/current/backend_pytest.log",
       "location_scope": "archive_internal",
       "exists": true,
-      "recorded_sha256": "adafdd03a22fc7147e727b17998c01eaea29553af665c670c9a32673e5673d91",
-      "actual_sha256": "adafdd03a22fc7147e727b17998c01eaea29553af665c670c9a32673e5673d91",
-      "recorded_size_bytes": 35110,
-      "actual_size_bytes": 35110,
+      "recorded_sha256": "359afba5f28973473b5d140072316575bf4ac60d52491dfc074ce1f704df1396",
+      "actual_sha256": "359afba5f28973473b5d140072316575bf4ac60d52491dfc074ce1f704df1396",
+      "recorded_size_bytes": 28589,
+      "actual_size_bytes": 28589,
       "status": "PASS"
     },
     {
@@ -58,8 +58,8 @@
       "path": "artifacts/proof/current/proof_consistency_pytest.log",
       "location_scope": "archive_internal",
       "exists": true,
-      "recorded_sha256": "71b613bcd27213dfff551d96b719001cddd9753def7294194d078f5a3c0dc56a",
-      "actual_sha256": "71b613bcd27213dfff551d96b719001cddd9753def7294194d078f5a3c0dc56a",
+      "recorded_sha256": "e229541b306ca52d9ecce9c536c76cbe3da08c272aa8fdd2458d6f31a93e9481",
+      "actual_sha256": "e229541b306ca52d9ecce9c536c76cbe3da08c272aa8fdd2458d6f31a93e9481",
       "recorded_size_bytes": 616,
       "actual_size_bytes": 616,
       "status": "PASS"
@@ -68,10 +68,10 @@
       "path": "artifacts/proof/current/docker_smoke.log",
       "location_scope": "archive_internal",
       "exists": true,
-      "recorded_sha256": "ce5b7a6fd1e46bae20b507593ec737e644ddabc60a365c46ffb907d92d73795a",
-      "actual_sha256": "ce5b7a6fd1e46bae20b507593ec737e644ddabc60a365c46ffb907d92d73795a",
-      "recorded_size_bytes": 48738,
-      "actual_size_bytes": 48738,
+      "recorded_sha256": "06ba35b1e8e7bf02d30b57919bbc23d1ddafb1082b40e999fd402467555c51c8",
+      "actual_sha256": "06ba35b1e8e7bf02d30b57919bbc23d1ddafb1082b40e999fd402467555c51c8",
+      "recorded_size_bytes": 48498,
+      "actual_size_bytes": 48498,
       "status": "PASS"
     },
     {

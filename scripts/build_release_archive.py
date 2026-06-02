@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import hashlib
 import json
 import re
@@ -134,6 +135,23 @@ LOCAL_PATH_PATTERNS = (
 )
 
 
+def _load_releaseignore_patterns(repo_root: Path) -> tuple[str, ...]:
+    releaseignore = repo_root / ".releaseignore"
+    if not releaseignore.is_file():
+        return ()
+
+    patterns: list[str] = []
+    for raw_line in releaseignore.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        patterns.append(line)
+    return tuple(patterns)
+
+
+RELEASEIGNORE_PATTERNS = _load_releaseignore_patterns(REPO_ROOT)
+
+
 def _is_macos_sidecar(name: str) -> bool:
     return name.startswith("._")
 
@@ -220,6 +238,17 @@ def _is_excluded(rel_path: str, include_external: bool, include_proof_archive: b
         return True
     if lower_name.startswith(".env."):
         return True
+    for pattern in RELEASEIGNORE_PATTERNS:
+        normalized_pattern = pattern.lstrip("/")
+        if normalized_pattern.endswith("/"):
+            prefix = normalized_pattern.rstrip("/")
+            if rel_path.startswith(prefix + "/"):
+                return True
+            continue
+        if fnmatch.fnmatch(rel_path, normalized_pattern):
+            return True
+        if rel_path == normalized_pattern:
+            return True
     # Allow packaged proof log files even if they have .log suffix
     if packaged_proof_paths is not None and rel_path in packaged_proof_paths:
         return False
