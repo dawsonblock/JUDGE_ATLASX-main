@@ -71,6 +71,7 @@ DEFAULT_REQUIRED_PROOF_LOGS = (
     "artifacts/proof/current/required_proof_logs.log",
     "artifacts/proof/current/single_proof_authority.log",
     "artifacts/proof/current/archive_validation.log",
+    "artifacts/proof/current/source_registry_proof_pytest.log",
 )
 PACKAGED_ARCHIVE_OPTIONAL_REQUIRED_LOGS = {
     # These checks run after archive extraction validation starts and therefore

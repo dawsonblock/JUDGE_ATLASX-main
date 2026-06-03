@@ -45,18 +45,15 @@ The primary ingest path is Canadian legal sources.
 |------------|-------------|--------------|
 | `justice_canada_laws_xml` | Justice Canada Consolidated Acts and Regulations XML | None (public feed) |
 
-This is the only source currently enabled and runnable in the source registry.
+This source is among the currently runnable sources. See `artifacts/proof/current/source_registry_status.json` for the authoritative list (7 runnable as of last proof run).
 
-### Enable-ready but disabled
+### Enable-ready
 
-The following sources have adapters ready and are enable-ready, but are currently disabled pending operator approval:
+There are currently 0 enable-ready sources. Sources previously in this category have either been promoted to `runnable` state or moved to `disabled_stub`. See `artifacts/proof/current/source_registry_status.json` for the current state.
 
 | Source Key | Description | API Required |
 |------------|-------------|--------------|
-| `sk_courts_ca_decisions` | Saskatchewan Court of Appeal (CanLII) | JTA_CANLII_API_KEY |
-| `federal_court_canada` | Federal Court of Canada Decisions | None (HTML scraper) |
-| `scc_decisions` | Supreme Court of Canada Decisions | None (Lexum API) |
-| `sk_legislature_hansard` | Saskatchewan Legislative Assembly Hansard | None (HTML scraper) |
+| *(none currently)* | | |
 
 ### Portal-reference only (no scraper)
 

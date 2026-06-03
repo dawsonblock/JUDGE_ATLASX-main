@@ -9,6 +9,7 @@ from typing import Optional, List
 from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 
+from app.core.task_status import TaskExecutionStatus
 from app.models.entities import CanonicalEntity
 from app.graph.graph_merge import propose_entity_merge
 
@@ -186,22 +187,28 @@ def execute_approved_merge(
             "safety": safety,
         }
 
-    # Execute merge (this would call the actual graph merge logic)
-    # For now, log the approval
-    logger.info(
-        "Merge executed: entity %d -> %d (approved_by=%s)",
+    # Graph merge logic is not yet implemented.
+    # Returning not_implemented prevents callers from treating this as success.
+    logger.warning(
+        "execute_approved_merge called but graph merge is NOT YET IMPLEMENTED "
+        "(entity %d -> %d, approved_by=%s). Returning not_implemented status.",
         entity_id_2,
         entity_id_1,
         approved_by,
     )
 
     return {
-        "status": "executed",
-        "message": "Merge completed successfully",
+        "status": TaskExecutionStatus.NOT_IMPLEMENTED,
+        "executed": False,
+        "safe_to_rely_on": False,
+        "message": (
+            "Graph merge is not yet implemented. "
+            "Approval was recorded but no merge was performed."
+        ),
         "target_entity_id": entity_id_1,
         "merged_entity_id": entity_id_2,
         "approved_by": approved_by,
-        "executed_at": datetime.now(timezone.utc).isoformat(),
+        "attempted_at": datetime.now(timezone.utc).isoformat(),
     }
 
 

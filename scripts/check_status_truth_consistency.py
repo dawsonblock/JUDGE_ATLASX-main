@@ -75,6 +75,32 @@ STALE_REPAIR_PATTERNS = (
     re.compile(r"\balpha\s+gate\s*[:=]\s*failed\b", re.IGNORECASE),
 )
 
+# Known-wrong source count phrases that must never appear in status docs.
+# Update this list whenever canonical counts change.
+STALE_COUNT_PHRASES: tuple[str, ...] = (
+    "2/26 runnable",
+    "2 actively runnable",
+    "5 enable-ready sources",
+    "5 enable-ready",
+    "3 runnable sources",
+    "4 runnable sources",
+    "5 runnable sources",
+    "6 runnable sources",
+)
+
+_STALE_COUNT_SKIP_DOCS = {
+    "docs/history",
+    "docs/proof",
+    "artifacts/history",
+    "artifacts/proof/current",
+    ".git",
+    "node_modules",
+    ".venv",
+    "external_reference",
+    ".kilo",
+    ".windsurf",
+}
+
 
 def _read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
@@ -219,7 +245,28 @@ def verify(root: Path) -> list[str]:
             )
 
     errors.extend(_scan_stale_repair_status(root))
+    errors.extend(_scan_stale_count_phrases(root))
 
+    return errors
+
+
+def _scan_stale_count_phrases(root: Path) -> list[str]:
+    """Detect known-wrong source count phrases in any doc outside history."""
+    errors: list[str] = []
+    for path in root.rglob("*.md"):
+        rel = path.relative_to(root).as_posix()
+        if any(
+            rel.startswith(skip + "/") or rel == skip
+            for skip in _STALE_COUNT_SKIP_DOCS
+        ):
+            continue
+        try:
+            text = _read_text(path)
+        except OSError:
+            continue
+        for phrase in STALE_COUNT_PHRASES:
+            if phrase.lower() in text.lower():
+                errors.append(f"stale_count_phrase:{rel}:{phrase!r}")
     return errors
 
 
