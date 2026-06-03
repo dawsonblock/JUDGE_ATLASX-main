@@ -59,10 +59,6 @@ def _docker_available() -> bool:
     return result.returncode == 0
 
 
-def _proof_tree_hash() -> str:
-    return _run(["python3", "scripts/hash_source_tree.py"]) or "unknown"
-
-
 def _load_gate_result() -> dict:
     gate_path = OUT_DIR / "release_gate.json"
     if gate_path.exists():
@@ -74,6 +70,20 @@ def _load_gate_result() -> dict:
 
 
 def _main() -> None:
+    # If release_gate.py already wrote a complete REPAIR_REPORT.md (identified
+    # by its authoritative header), do not overwrite it with this shallow
+    # backstop — doing so would invalidate the SHA-256 recorded in
+    # proof_manifest.json and lose the full phase/blocker detail.
+    out_path = OUT_DIR / "REPAIR_REPORT.md"
+    if out_path.exists():
+        existing = out_path.read_text(encoding="utf-8")
+        if existing.startswith("# REPAIR_REPORT"):
+            print(
+                f"Skipping {out_path.relative_to(REPO_ROOT)}: "
+                "authoritative report already present"
+            )
+            return
+
     gate = _load_gate_result()
     timestamp = datetime.now(timezone.utc).isoformat()
 
@@ -124,7 +134,6 @@ def _main() -> None:
     ]
 
     text = "\n".join(lines)
-    out_path = OUT_DIR / "REPAIR_REPORT.md"
     out_path.write_text(text, encoding="utf-8")
     # Also write a copy at repo root for visibility
     (REPO_ROOT / "REPAIR_REPORT.md").write_text(

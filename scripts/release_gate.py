@@ -1124,9 +1124,9 @@ def _generate_release_readiness_from_manifest(
         blockers.append("archive_validation_not_pass")
 
     if additional_blockers is not None:
-        # release_gate.json is the canonical blocker contract. Keep
-        # release_readiness.md aligned with that list to avoid divergence.
-        merged_blockers = []
+        # Merge manifest-derived blockers with the payload's pre-existing list
+        # so that newly-failed required gates are not silently dropped.
+        merged_blockers = list(blockers)
         for blocker in additional_blockers:
             if isinstance(blocker, str) and blocker and blocker not in merged_blockers:
                 merged_blockers.append(blocker)
@@ -1473,9 +1473,12 @@ def _write_repair_report_md(
         (
             "11. Derivative Memory Boundary Coverage",
             phase_status(
-                checks.get("public_api_boundary", {}).get("status") == "PASS"
+                checks.get(
+                    "check_no_direct_ingestion_network_clients", {}
+                ).get("status") == "PASS"
             ),
-            "artifacts/proof/current/public_api_boundary.log",
+            "artifacts/proof/current/"
+            "check_no_direct_ingestion_network_clients.log",
         ),
         (
             "12. Frontend Node 22 Gate",

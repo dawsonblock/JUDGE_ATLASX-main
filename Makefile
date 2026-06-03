@@ -175,8 +175,16 @@ docker-smoke:
 
 proof-evidence-verification:
 	@mkdir -p artifacts/proof/current
-	@python3 scripts/check_evidence_verification_standard.py | tee artifacts/proof/current/evidence_verification_standard.log
-	@python3 -m pytest tests/proof/test_evidence_verification_standard.py -q | tee artifacts/proof/current/evidence_verification_standard_pytest.log
+	@if [ ! -f artifacts/proof/current/evidence_verification_standard.log ]; then \
+		python3 scripts/check_evidence_verification_standard.py | tee artifacts/proof/current/evidence_verification_standard.log; \
+	else \
+		echo "Skipping evidence_verification_standard.log: already produced by release gate"; \
+	fi
+	@if [ ! -f artifacts/proof/current/evidence_verification_standard_pytest.log ]; then \
+		python3 -m pytest tests/proof/test_evidence_verification_standard.py -q | tee artifacts/proof/current/evidence_verification_standard_pytest.log; \
+	else \
+		echo "Skipping evidence_verification_standard_pytest.log: already produced by release gate"; \
+	fi
 
 proof:
 	@echo "=== Running canonical proof generation ==="

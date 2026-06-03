@@ -23,10 +23,13 @@ The standard enforces:
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
+
+_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
 class ReviewDecision(str, Enum):
@@ -129,12 +132,12 @@ def verify_evidence_record(record: EvidenceVerificationRecord) -> list[str]:
     if not record.source_url or not isinstance(record.source_url, str):
         errors.append("source_url must be a non-empty string")
 
-    if not record.original_hash or len(record.original_hash) != 64:
+    if not record.original_hash or not _SHA256_RE.match(record.original_hash):
         errors.append(
             "original_hash must be a 64-character SHA-256 hex string"
         )
 
-    if not record.final_hash or len(record.final_hash) != 64:
+    if not record.final_hash or not _SHA256_RE.match(record.final_hash):
         errors.append(
             "final_hash must be a 64-character SHA-256 hex string"
         )

@@ -81,8 +81,18 @@ class TestVerifyEvidenceRecord:
         errors = verify_evidence_record(record)
         assert any("original_hash" in e for e in errors)
 
+    def test_non_hex_original_hash(self):
+        record = _make_record(original_hash="x" * 64)
+        errors = verify_evidence_record(record)
+        assert any("original_hash" in e for e in errors)
+
     def test_short_final_hash(self):
         record = _make_record(final_hash="abc")
+        errors = verify_evidence_record(record)
+        assert any("final_hash" in e for e in errors)
+
+    def test_non_hex_final_hash(self):
+        record = _make_record(final_hash="X" * 64)
         errors = verify_evidence_record(record)
         assert any("final_hash" in e for e in errors)
 
