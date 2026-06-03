@@ -1,7 +1,7 @@
 # CURRENT_PROOF
 
-- generated_at_utc: 2026-06-03T04:18:37.332006+00:00
-- commit_hash: 13c503bd375cef49a64b0536133f7b302a6d8f02
+- generated_at_utc: 2026-06-03T04:46:38.011287+00:00
+- commit_hash: 53a4f1bc553f0b6d2e14ca4b494862b8d0f59785
 - alpha_gate_passed: true
 - alpha_gate_status: PASS
 - alpha_candidate: true
@@ -16,8 +16,8 @@
 - demo_proof_result: PASS
 - proof_freshness_result: PASS
 - archive_validation_result: PASS
-- proof_input_tree_hash: 136e807ea6090752842de03f0edd06ac42ce422d7d0cc50abe0a1b64b3dd6663
-- proof_input_file_count: 1121
+- proof_input_tree_hash: fac7e4b6b70b076edd4efb8e084ada342729cad5e9f4929177510ffd132f1e78
+- proof_input_file_count: 1122
 - egress_proxy_proof_log: artifacts/proof/current/egress_proxy_proof.log
 - demo_proof_log: artifacts/proof/current/demo_proof.log
 
