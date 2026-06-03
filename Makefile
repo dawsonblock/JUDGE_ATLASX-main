@@ -174,7 +174,9 @@ docker-smoke:
 	docker compose down -v
 
 proof-evidence-verification:
-	@python3 scripts/check_evidence_verification_standard.py
+	@mkdir -p artifacts/proof/current
+	@python3 scripts/check_evidence_verification_standard.py | tee artifacts/proof/current/evidence_verification_standard.log
+	@python3 -m pytest tests/proof/test_evidence_verification_standard.py -q | tee artifacts/proof/current/evidence_verification_standard_pytest.log
 
 proof:
 	@echo "=== Running canonical proof generation ==="

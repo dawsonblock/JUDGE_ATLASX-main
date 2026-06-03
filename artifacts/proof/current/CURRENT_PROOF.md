@@ -1,7 +1,7 @@
 # CURRENT_PROOF
 
-- generated_at_utc: 2026-06-03T02:18:32.797631+00:00
-- commit_hash: 6d724a0368959d7e7dedb42067250871d12f0046
+- generated_at_utc: 2026-06-03T03:17:45.439825+00:00
+- commit_hash: 98778ed21a662fddd3fd5093021a3dbb233a0ba3
 - alpha_gate_passed: true
 - alpha_gate_status: PASS
 - alpha_candidate: true
@@ -9,14 +9,14 @@
 - production_release_candidate: false
 - production_ready: false
 - public_release_safe: false
-- release_gate_check_count: 54
+- release_gate_check_count: 56
 - docker_available: true
 - postgis_proof_result: PASS
 - egress_proxy_proof_result: PASS
 - demo_proof_result: PASS
 - proof_freshness_result: PASS
 - archive_validation_result: PASS
-- proof_input_tree_hash: 5a93503c85e77c479010e3ec0efb8f809cfe4f641f6d96e3d9ca90cbf5f65367
+- proof_input_tree_hash: 136e807ea6090752842de03f0edd06ac42ce422d7d0cc50abe0a1b64b3dd6663
 - proof_input_file_count: 1121
 - egress_proxy_proof_log: artifacts/proof/current/egress_proxy_proof.log
 - demo_proof_log: artifacts/proof/current/demo_proof.log

@@ -217,6 +217,8 @@ REQUIRED_GATE_NAMES = {
     "check_statuses",
     "check_no_direct_ingestion_network_clients",
     "verify_evidence_store",
+    "evidence_verification_standard",
+    "evidence_verification_standard_pytest",
     "verify_audit_chain",
     "check_node_policy",
     "frontend_node_gate",
@@ -2441,6 +2443,22 @@ def main() -> int:
                     f'JTA_DATABASE_URL="{proof_db_url}" "{python_exe}" '
                     "backend/tools/verify_evidence_store.py --allow-empty"
                 ),
+            ],
+        ),
+        GateStepSpec(
+            "evidence_verification_standard",
+            "evidence_verification_standard.log",
+            [python_exe, "scripts/check_evidence_verification_standard.py"],
+        ),
+        GateStepSpec(
+            "evidence_verification_standard_pytest",
+            "evidence_verification_standard_pytest.log",
+            [
+                python_exe,
+                "-m",
+                "pytest",
+                "tests/proof/test_evidence_verification_standard.py",
+                "-q",
             ],
         ),
         GateStepSpec(

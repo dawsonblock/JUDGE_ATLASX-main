@@ -93,7 +93,17 @@ def _check_ai_derivative_default() -> list[str]:
 
 
 def _run_tests() -> tuple[bool, str]:
-    test_path = BACKEND_DIR / "app" / "tests" / "test_evidence_verification_standard.py"
+    isolated_test = (
+        REPO_ROOT / "tests" / "proof"
+        / "test_evidence_verification_standard.py"
+    )
+    legacy_test = (
+        BACKEND_DIR / "app" / "tests"
+        / "test_evidence_verification_standard.py"
+    )
+
+    # Prefer the isolated proof test that does not load backend conftest.py.
+    test_path = isolated_test if isolated_test.exists() else legacy_test
     if not test_path.exists():
         return False, "test_file_missing"
 
