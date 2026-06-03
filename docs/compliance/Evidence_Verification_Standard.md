@@ -71,5 +71,5 @@ Each entry in `processing_steps` is an ordered transformation:
 ## Implementation
 
 - `backend/app/evidence/verification_standard.py` — schema and validation
-- `tests/test_evidence_verification_standard.py` — test coverage
+- `backend/app/tests/test_evidence_verification_standard.py` — test coverage
 - `scripts/check_evidence_verification_standard.py` — proof gate check

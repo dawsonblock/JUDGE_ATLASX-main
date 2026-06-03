@@ -1,0 +1,83 @@
+{
+  "started_at": "2026-06-03T02:14:37.458592+00:00",
+  "finished_at": "2026-06-03T02:15:52.628498+00:00",
+  "collect_exit_code": 0,
+  "batch_exit_code": 0,
+  "batch_size": 40,
+  "discovered_files": 300,
+  "batches": [
+    {
+      "index": 1,
+      "started_at": "2026-06-03T02:14:41.032679+00:00",
+      "finished_at": "2026-06-03T02:14:53.971555+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "backend/app/tests/ingestion/test_ckan_adapter.py",
+      "last_file": "backend/app/tests/test_auth_sessions.py"
+    },
+    {
+      "index": 2,
+      "started_at": "2026-06-03T02:14:53.971674+00:00",
+      "finished_at": "2026-06-03T02:15:10.499793+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "backend/app/tests/test_auto_review.py",
+      "last_file": "backend/app/tests/test_crawlee_safety.py"
+    },
+    {
+      "index": 3,
+      "started_at": "2026-06-03T02:15:10.499868+00:00",
+      "finished_at": "2026-06-03T02:15:15.749289+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "backend/app/tests/test_crime_source_ingestion.py",
+      "last_file": "backend/app/tests/test_import_authority_roles.py"
+    },
+    {
+      "index": 4,
+      "started_at": "2026-06-03T02:15:15.749362+00:00",
+      "finished_at": "2026-06-03T02:15:20.156300+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "backend/app/tests/test_ingestion_identity_uniqueness.py",
+      "last_file": "backend/app/tests/test_memory_derivative_boundary.py"
+    },
+    {
+      "index": 5,
+      "started_at": "2026-06-03T02:15:20.156382+00:00",
+      "finished_at": "2026-06-03T02:15:31.926658+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "backend/app/tests/test_memory_graph_bridge.py",
+      "last_file": "backend/app/tests/test_public_api_safety.py"
+    },
+    {
+      "index": 6,
+      "started_at": "2026-06-03T02:15:31.926733+00:00",
+      "finished_at": "2026-06-03T02:15:37.599279+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "backend/app/tests/test_public_graph_api_safety.py",
+      "last_file": "backend/app/tests/test_saskatchewan_court_sources.py"
+    },
+    {
+      "index": 7,
+      "started_at": "2026-06-03T02:15:37.599353+00:00",
+      "finished_at": "2026-06-03T02:15:46.470206+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "backend/app/tests/test_saskatoon_ingest_endpoint.py",
+      "last_file": "backend/app/tests/test_source_trust_hierarchy.py"
+    },
+    {
+      "index": 8,
+      "started_at": "2026-06-03T02:15:46.470290+00:00",
+      "finished_at": "2026-06-03T02:15:52.628437+00:00",
+      "exit_code": 0,
+      "file_count": 20,
+      "first_file": "backend/app/tests/test_source_verifier.py",
+      "last_file": "backend/app/tests/test_workflow_admin_security.py"
+    }
+  ],
+  "status": "PASS"
+}

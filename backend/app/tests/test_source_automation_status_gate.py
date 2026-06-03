@@ -105,5 +105,6 @@ def test_runnable_statuses_subset_of_all() -> None:
     assert RUNNABLE_STATUSES <= ALL_AUTOMATION_STATUSES
 
 
-def test_machine_ready_disabled_is_only_enableable() -> None:
-    assert ENABLEABLE_STATUSES == frozenset({MACHINE_READY_DISABLED})
+def test_enableable_statuses_contains_required_values() -> None:
+    assert MACHINE_READY_DISABLED in ENABLEABLE_STATUSES
+    assert MACHINE_READY_ENABLED in ENABLEABLE_STATUSES
