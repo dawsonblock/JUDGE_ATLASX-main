@@ -6,15 +6,15 @@ Manual edits are not authoritative.
 
 ## Authoritative Archive
 - Path: dist/JUDGE_ATLAS-main-final.zip
-- SHA-256: 71986fe52910688675891d72b309a6c5e1cc135df940dd24042594f56f3bfda9
+- SHA-256: 1b4ec17b8dbc199931a22fed4e114a71d2c9d8b870a04da61718343ca91ed317
 
 ## Proof Anchors
 - release_gate_path: artifacts/proof/current/release_gate.json
-- release_gate_sha256: 72514966ccdc0bbe4a5da9c5849a242c2259aefc2d4bfbdb32b083a6024b0c40
+- release_gate_sha256: 325924516c164624db00a3ca4ffb171656788f09994d0edd31a453d9390d81f8
 - proof_manifest_path: artifacts/proof/current/proof_manifest.json
-- proof_manifest_sha256: 3cde3d770d141c0a99a0b35a734b361389dd48bafdd7b0898d0c37fa11815052
+- proof_manifest_sha256: 0c0f0155a08097018a501489850ba506e0290424ed9cb5f3d8825d97e7e6067b
 - required_log_index_path: artifacts/proof/current/required_log_index.json
-- required_log_index_sha256: 701963579b22621f823b81ff162f9f19eac5893b2418bcd03b95e7cf93a6b655
+- required_log_index_sha256: 94e94a2f4ef03811414782bbe7714dd284ab7b32913219bc10a7ae762a1e7245
 
 ## Release Status
 - release_classification: self-verifying alpha
@@ -27,9 +27,9 @@ Manual edits are not authoritative.
 - blocked_release_checks: []
 
 ## Build Metadata
-- created_at_utc: 2026-06-03T07:51:37.815886+00:00
-- generated_at_utc: 2026-06-03T07:51:37.815886+00:00
-- git_commit: 243d2cd475f672e3375958d126830b7fb622eb4f
+- created_at_utc: 2026-06-03T08:10:16.735275+00:00
+- generated_at_utc: 2026-06-03T08:10:16.735275+00:00
+- git_commit: cb7ab218f33c6c15a3fe6a4074b3f3dff419d478
 - platform: macOS-26.2-arm64-arm-64bit
 - python: 3.11.9
 - node: v22.22.3

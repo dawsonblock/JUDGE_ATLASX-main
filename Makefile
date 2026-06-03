@@ -192,8 +192,8 @@ proof:
 	@python3 scripts/verify_proof_hash_sync.py --root .
 	@python3 scripts/check_required_proof_logs.py --strict-required-files
 	@$(MAKE) proof-evidence-verification
-	@python3 scripts/check_release_handoff_consistency.py --archive dist/JUDGE_ATLAS-main-final.zip
 	@echo "Canonical proof: artifacts/proof/current/release_gate.json"
+	@echo "Run 'bash scripts/package_and_validate_release_archive.sh' to build archive and validate handoff"
 
 release-proof:
 	@python3 scripts/check_runtime_versions.py --root .

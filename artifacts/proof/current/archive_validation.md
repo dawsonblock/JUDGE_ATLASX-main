@@ -1,15 +1,15 @@
 # Archive Validation
 
-- validated_at_utc: 2026-06-03T07:52:20.095074+00:00
+- validated_at_utc: 2026-06-03T08:10:17.412366+00:00
 - archive: dist/JUDGE_ATLAS-main-final.zip
-- archive_sha256: 71986fe52910688675891d72b309a6c5e1cc135df940dd24042594f56f3bfda9
+- archive_sha256: 1b4ec17b8dbc199931a22fed4e114a71d2c9d8b870a04da61718343ca91ed317
 - expected_root: JUDGE_ATLAS-main
 - actual_root: JUDGE_ATLAS-main
 - top_level_roots: JUDGE_ATLAS-main
 - root_match: yes
 - valid: PASS
-- compressed_size_bytes: 2190273
-- uncompressed_size_bytes: 8560167
+- compressed_size_bytes: 2190227
+- uncompressed_size_bytes: 8560285
 
 ## Errors
 
@@ -25,12 +25,12 @@
 |---|---:|---:|
 | JUDGE_ATLAS-main/backend/uv.lock | 769811 | 238625 |
 | JUDGE_ATLAS-main/frontend/package-lock.json | 393441 | 85051 |
-| JUDGE_ATLAS-main/artifacts/proof/current/backend_pytest_collect.log | 325075 | 46000 |
+| JUDGE_ATLAS-main/artifacts/proof/current/backend_pytest_collect.log | 325075 | 45997 |
 | JUDGE_ATLAS-main/scripts/release_gate.py | 127342 | 23592 |
 | JUDGE_ATLAS-main/backend/app/models/entities.py | 101799 | 16701 |
-| JUDGE_ATLAS-main/artifacts/proof/current/release_gate.json | 97470 | 14271 |
-| JUDGE_ATLAS-main/artifacts/proof/current/proof_manifest.json | 57975 | 7820 |
-| JUDGE_ATLAS-main/artifacts/proof/current/docker_smoke.log | 48691 | 9273 |
+| JUDGE_ATLAS-main/artifacts/proof/current/release_gate.json | 97471 | 14257 |
+| JUDGE_ATLAS-main/artifacts/proof/current/proof_manifest.json | 57976 | 7798 |
+| JUDGE_ATLAS-main/artifacts/proof/current/docker_smoke.log | 48807 | 9274 |
 | JUDGE_ATLAS-main/backend/app/memory/contradiction_engine.py | 48640 | 8977 |
 | JUDGE_ATLAS-main/backend/app/ingestion/sources/canada_saskatchewan_sources.yaml | 48199 | 6787 |
 | JUDGE_ATLAS-main/backend/app/api/routes/admin_sources.py | 46299 | 9283 |
@@ -51,7 +51,7 @@
 | backend | 5589289 |
 | scripts | 905048 |
 | frontend | 873785 |
-| artifacts | 684236 |
+| artifacts | 684354 |
 | docs | 368068 |
 | .github | 50671 |
 | demo | 26537 |
