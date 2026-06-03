@@ -99,18 +99,24 @@ class TestSmallSnapshot:
 class TestOversizedWithoutEvidenceStore:
     """Oversized content without evidence store MUST raise ValueError, never create partial."""
 
+    @pytest.fixture(autouse=True)
+    def _reset_settings_cache(self):
+        """Clear the lru_cache before and after each test so env patches are visible."""
+        get_settings.cache_clear()
+        yield
+        get_settings.cache_clear()
+
     def test_oversized_without_store_raises(self, db):
         oversized = b"A" * (MAX_DB_SIZE + 1)
-        with patch.dict(os.environ, {}, clear=True):
-            # Ensure JTA_EVIDENCE_STORE_ROOT is not set
-            os.environ.pop("JTA_EVIDENCE_STORE_ROOT", None)
+        with patch("app.services.snapshot_writer.get_settings") as mock_settings:
+            mock_settings.return_value.evidence_store_root = None
             with pytest.raises(ValueError, match="MAX_DB_SIZE"):
                 write_snapshot(db, "http://example.com/big", _ts(), oversized)
 
     def test_oversized_without_store_does_not_add_to_session(self, db):
         oversized = b"B" * (MAX_DB_SIZE + 1)
-        with patch.dict(os.environ, {}, clear=True):
-            os.environ.pop("JTA_EVIDENCE_STORE_ROOT", None)
+        with patch("app.services.snapshot_writer.get_settings") as mock_settings:
+            mock_settings.return_value.evidence_store_root = None
             try:
                 write_snapshot(db, "http://example.com/big", _ts(), oversized)
             except ValueError:
@@ -128,8 +134,8 @@ class TestOversizedWithoutEvidenceStore:
     def test_one_byte_over_max_raises(self, db):
         """One byte over the limit must raise ValueError."""
         content = b"D" * (MAX_DB_SIZE + 1)
-        with patch.dict(os.environ, {}, clear=True):
-            os.environ.pop("JTA_EVIDENCE_STORE_ROOT", None)
+        with patch("app.services.snapshot_writer.get_settings") as mock_settings:
+            mock_settings.return_value.evidence_store_root = None
             with pytest.raises(ValueError):
                 write_snapshot(db, "http://example.com/", _ts(), content)
 

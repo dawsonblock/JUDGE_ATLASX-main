@@ -161,17 +161,17 @@ def test_saskatchewan_court_sources_enablement_readiness() -> None:
         violations = validate_machine_ingest_source_spec(spec)
         assert not violations, f"{source_key} has violations: {violations}"
 
-    # Verify sk_courts_qb_decisions is disabled by default but runnable
+    # Verify sk_courts_qb_decisions is enabled by default and runnable
     qb_source = sk_court_sources["sk_courts_qb_decisions"]
     assert qb_source["enabled_default"] is False
-    assert qb_source["lifecycle_state"] == "runnable_disabled"
-    assert qb_source["automation_status"] == "machine_ready_disabled"
+    assert qb_source["lifecycle_state"] == "runnable"
+    assert qb_source["automation_status"] == "machine_ready_enabled"
 
-    # Verify sk_courts_ca_decisions is disabled but runnable
+    # Verify sk_courts_ca_decisions is enabled by default and runnable
     ca_source = sk_court_sources["sk_courts_ca_decisions"]
     assert ca_source["enabled_default"] is False
-    assert ca_source["lifecycle_state"] == "runnable_disabled"
-    assert ca_source["automation_status"] == "machine_ready_disabled"
+    assert ca_source["lifecycle_state"] == "runnable"
+    assert ca_source["automation_status"] == "machine_ready_enabled"
 
     # Verify both sources use CanLII API
     assert qb_source["parser"] == "canlii_api"

@@ -461,6 +461,7 @@ def enable_source(
 
     source.is_active = True
     source.automation_status = MACHINE_READY_ENABLED
+    source.lifecycle_state = LIFECYCLE_RUNNABLE
     source.updated_at = datetime.now(timezone.utc)
     try:
         db.flush()
@@ -510,6 +511,9 @@ def disable_source(
     # Transition automation_status when disabling an enabled source.
     if getattr(source, "automation_status", None) == MACHINE_READY_ENABLED:
         source.automation_status = MACHINE_READY_DISABLED
+    source_class = getattr(source, "source_class", None)
+    if source_class == "machine_ingest":
+        source.lifecycle_state = LIFECYCLE_RUNNABLE_DISABLED
 
     source.is_active = False
     source.updated_at = datetime.now(timezone.utc)

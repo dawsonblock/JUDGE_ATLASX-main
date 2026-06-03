@@ -8,7 +8,12 @@ import click
 
 from app.cli.db import get_db_session
 from app.cli.output import emit, emit_error
-from app.ingestion.automation_statuses import MACHINE_READY_DISABLED, MACHINE_READY_ENABLED
+from app.ingestion.automation_statuses import (
+    LIFECYCLE_RUNNABLE,
+    LIFECYCLE_RUNNABLE_DISABLED,
+    MACHINE_READY_DISABLED,
+    MACHINE_READY_ENABLED,
+)
 from app.ingestion.source_registry_ctl import can_enable_source
 from app.models.entities import SourceRegistry
 
@@ -192,6 +197,7 @@ def sources_enable(ctx: click.Context, source_key: str, yes: bool) -> None:
 
         row.is_active = True
         row.automation_status = MACHINE_READY_ENABLED
+        row.lifecycle_state = LIFECYCLE_RUNNABLE
         db.commit()
     emit(
         {"source_key": source_key, "is_active": True},
@@ -222,6 +228,8 @@ def sources_disable(ctx: click.Context, source_key: str, yes: bool) -> None:
             raise SystemExit(1)
         if row.automation_status == MACHINE_READY_ENABLED:
             row.automation_status = MACHINE_READY_DISABLED
+        if row.source_class == _RUNNABLE_CLASS:
+            row.lifecycle_state = LIFECYCLE_RUNNABLE_DISABLED
         row.is_active = False
         db.commit()
     emit(

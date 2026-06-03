@@ -190,6 +190,13 @@ def test_sources_enable_machine_ingest_succeeds(runner: CliRunner) -> None:
     """machine_ingest sources can be enabled and then disabled."""
     target = "federal_court_canada"
 
+    # Disable first to ensure the source is in machine_ready_disabled state
+    disable_result = runner.invoke(
+        main, ["--json", "sources", "disable", target, "--yes"]
+    )
+    assert disable_result.exit_code == 0, disable_result.output
+    assert json.loads(disable_result.output)["data"]["is_active"] is False
+
     enable_result = runner.invoke(
         main, ["--json", "sources", "enable", target, "--yes"]
     )

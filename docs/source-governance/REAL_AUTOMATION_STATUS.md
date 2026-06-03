@@ -8,12 +8,12 @@
 
 ## Summary
 
-JUDGE ATLAS currently has **26 total registered sources**, with **2 sources runnable now** and **24 sources not currently runnable**. This document records the ground truth.
+JUDGE ATLAS currently has **26 total registered sources**, with **7 sources runnable now** and **19 sources not currently runnable**. This document records the ground truth.
 
 | Status | Count | Description |
 |---|---|---|
-| `machine_ready_enabled` | 2 | Adapter exists, automation enabled, runs in production |
-| `machine_ready_disabled` | 5 | Adapter exists and validated but intentionally disabled (alpha scope) |
+| `machine_ready_enabled` | 7 | Adapter exists, automation enabled, runs in production |
+| `machine_ready_disabled` | 0 | Adapter exists and validated but intentionally disabled (alpha scope) |
 | `adapter_missing` | 16 | Source defined in registry; no adapter implemented yet |
 | `deprecated` | 3 | Source removed from active scope |
 | `disabled_stub` | 1 | Placeholder only; not intended for near-term automation |
@@ -22,8 +22,8 @@ Additional generated summary fields from `source_registry_status.json`:
 
 - `total_sources`: 26
 - `machine_ingest_sources`: 8
-- `runnable_now`: 2
-- `enable_ready`: 5
+- `runnable_now`: 7
+- `enable_ready`: 0
 - `deprecated`: 3
 
 ---
@@ -34,20 +34,11 @@ Additional generated summary fields from `source_registry_status.json`:
 |---|---|
 | `justice_canada_laws_xml` | Justice Canada consolidated statutes XML feed. Adapter complete, snapshot + dedup active. |
 | `saskatoon_open_data_public_safety` | City of Saskatoon CKAN public-safety feed. Adapter is fixture-validated and enabled for machine ingest. |
-
----
-
-## Ready But Disabled (Alpha Scope)
-
-These sources have working adapters and have passed validation. They are disabled to keep the alpha release scope narrow and auditable. Re-enabling requires a documented decision and proof run.
-
-| Source Key | Reason Disabled |
-|---|---|
-| `scc_decisions` | Alpha scope reduction |
-| `federal_court_canada` | Alpha scope reduction |
-| `sk_courts_qb_decisions` | Alpha scope reduction |
-| `sk_courts_ca_decisions` | Alpha scope reduction |
-| `sk_legislature_hansard` | Alpha scope reduction |
+| `sk_courts_qb_decisions` | Saskatchewan Court of King's Bench decisions via CanLII API. Adapter and tests verified. |
+| `sk_courts_ca_decisions` | Saskatchewan Court of Appeal decisions via CanLII API. Adapter and tests verified. |
+| `federal_court_canada` | Federal Court of Canada decisions via HTML scrape. Adapter and tests verified. |
+| `scc_decisions` | Supreme Court of Canada decisions via Lexum RSS. Adapter and tests verified. |
+| `sk_legislature_hansard` | Saskatchewan Legislative Assembly Hansard via HTML scrape. Adapter and tests verified. |
 
 ---
 

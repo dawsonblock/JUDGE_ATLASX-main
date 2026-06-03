@@ -1,4 +1,4 @@
-.PHONY: backend-install backend-test frontend-install frontend-check frontend-typecheck verify verify-runtime doctor-macos docker-smoke proof release-proof backend-proof frontend-build bootstrap-backend bootstrap-frontend bootstrap truth-check full-proof clean-clone-proof release-proof-local release-package-proof-local nox test check-generated dev stop setup release-zip build-clean-release validate-release-zip proof-static validate-archive-freshness validate-handoff-consistency saskatoon-staging-proof canlii-staging-contract statscan-boundary-proof validate-smoke-workspace validate-full-workspace validate-docker-workspace check-route-contract check-local-env check-config-docs sync-status-docs test-backend-unit test-backend-integration test-backend-db test-backend-auth test-backend-ingestion test-backend-proof test-frontend typecheck-frontend build-frontend lint-frontend frontend-route-smoke test-frontend-proof
+.PHONY: backend-install backend-test frontend-install frontend-check frontend-typecheck verify verify-runtime doctor-macos docker-smoke proof release-proof backend-proof frontend-build bootstrap-backend bootstrap-frontend bootstrap truth-check full-proof clean-clone-proof release-proof-local release-package-proof-local nox test check-generated dev stop setup release-zip build-clean-release validate-release-zip proof-static validate-archive-freshness validate-handoff-consistency saskatoon-staging-proof canlii-staging-contract statscan-boundary-proof validate-smoke-workspace validate-full-workspace validate-docker-workspace check-route-contract check-local-env check-config-docs sync-status-docs test-backend-unit test-backend-integration test-backend-db test-backend-auth test-backend-ingestion test-backend-proof test-frontend typecheck-frontend build-frontend lint-frontend frontend-route-smoke test-frontend-proof proof-evidence-verification
 
 backend-install:
 	cd backend && python -m pip install -e ".[test]"
@@ -173,6 +173,9 @@ docker-smoke:
 	curl -f http://localhost:3000 >/dev/null
 	docker compose down -v
 
+proof-evidence-verification:
+	@python3 scripts/check_evidence_verification_standard.py
+
 proof:
 	@echo "=== Running canonical proof generation ==="
 	@python3 scripts/check_runtime_versions.py --root .
@@ -185,6 +188,7 @@ proof:
 	@python3 scripts/check_proof_freshness.py
 	@python3 scripts/verify_proof_hash_sync.py --root .
 	@python3 scripts/check_required_proof_logs.py --strict-required-files
+	@$(MAKE) proof-evidence-verification
 	@python3 scripts/check_release_handoff_consistency.py --archive dist/JUDGE_ATLAS-main-final.zip
 	@echo "Canonical proof: artifacts/proof/current/release_gate.json"
 

@@ -1,11 +1,11 @@
 # SOURCE_REGISTRY_STATUS
 
-- generated_at_utc: 2026-06-02T21:48:48.251886+00:00
-- commit_hash: dc3b80d8fbd4902097d51b03f4c6c443d5533d72
+- generated_at_utc: 2026-06-02T23:46:59.679242+00:00
+- commit_hash: 6dc750a786099ea62d30aa89bd8f8e37e76a1c53
 - total_sources: 26
 - machine_ingest_sources: 8
-- runnable_now: 2
-- enable_ready: 5
+- runnable_now: 7
+- enable_ready: 0
 - deprecated: 3
 
 | source key | source name | jurisdiction | source class/type | lifecycle state | automation status | adapter state | parser key | adapter exists | runnable now | enable ready | blockers | review required before public visibility | current alpha status |
@@ -13,7 +13,7 @@
 | canada_justice_laws | Department of Justice Canada – Justice Laws Website (Deprecated Alias) | Canada | disabled_stub/aggregate_stats | deprecated | disabled_stub | missing_parser | None | no | no | no | non_machine_ingest_source, lifecycle_state=deprecated, automation_status=disabled_stub, adapter_missing, deprecated_source_noncanonical | yes | limited-alpha-source |
 | canada_open_data_crime | Open Government Canada – Crime & Justice Datasets | Canada | portal_reference/aggregate_stats | portal_reference | adapter_missing | found | ckan_api | yes | no | no | non_machine_ingest_source, lifecycle_state=portal_reference, automation_status=adapter_missing | yes | limited-alpha-source |
 | canlii_sk | CanLII – Saskatchewan Courts | Saskatchewan, Canada | portal_reference/court_record | portal_reference | adapter_missing | found | canlii_api | yes | no | no | non_machine_ingest_source, lifecycle_state=portal_reference, automation_status=adapter_missing | yes | limited-alpha-source |
-| federal_court_canada | Federal Court of Canada – Decisions | Canada | machine_ingest/court_record | runnable_disabled | machine_ready_disabled | found | federal_court_html | yes | no | yes | lifecycle_state=runnable_disabled, automation_status=machine_ready_disabled | yes | limited-alpha-source |
+| federal_court_canada | Federal Court of Canada – Decisions | Canada | machine_ingest/court_record | runnable | machine_ready_enabled | found | federal_court_html | yes | yes | no | none | yes | runnable-alpha-source |
 | federal_court_canada_decisions | Federal Court of Canada – Decisions | Canada | portal_reference/court_record | deprecated | deprecated | found | federal_court_html | yes | no | no | non_machine_ingest_source, lifecycle_state=deprecated, automation_status=deprecated, deprecated_source_noncanonical | yes | limited-alpha-source |
 | justice_canada_laws_pit_xml | Department of Justice Canada – Point-in-Time Laws XML | Canada | disabled_stub/legislation | disabled_stub | adapter_missing | missing_parser | None | no | no | no | non_machine_ingest_source, lifecycle_state=disabled_stub, automation_status=adapter_missing, adapter_missing | yes | limited-alpha-source |
 | justice_canada_laws_xml | Justice Canada Consolidated Acts and Regulations XML | Canada | machine_ingest/legislation | runnable | machine_ready_enabled | found | laws_justice_xml | yes | yes | no | none | yes | runnable-alpha-source |
@@ -26,12 +26,12 @@
 | saskatoon_open_data_portal | City of Saskatoon – Open Data Portal | Saskatoon, Saskatchewan, Canada | portal_reference/aggregate_stats | portal_reference | adapter_missing | found | ckan_api | yes | no | no | non_machine_ingest_source, lifecycle_state=portal_reference, automation_status=adapter_missing | yes | limited-alpha-source |
 | saskatoon_open_data_public_safety | City of Saskatoon Open Data – Public Safety | CA-SK-Saskatoon | machine_ingest/aggregate_stats | runnable | machine_ready_enabled | found | ckan_api | yes | yes | no | none | yes | runnable-alpha-source |
 | saskatoon_police_open_data | Saskatoon Police Service – Open Data Portal | Saskatoon, Saskatchewan, Canada | portal_reference/crime_incident | portal_reference | adapter_missing | found | saskatoon_police_csv | yes | no | no | non_machine_ingest_source, lifecycle_state=portal_reference, automation_status=adapter_missing | yes | limited-alpha-source |
-| scc_decisions | Supreme Court of Canada – Decisions | Canada | machine_ingest/court_record | runnable_disabled | machine_ready_disabled | found | scc_lexum_api | yes | no | yes | lifecycle_state=runnable_disabled, automation_status=machine_ready_disabled | yes | limited-alpha-source |
+| scc_decisions | Supreme Court of Canada – Decisions | Canada | machine_ingest/court_record | runnable | machine_ready_enabled | found | scc_lexum_api | yes | yes | no | none | yes | runnable-alpha-source |
 | scc_judgments | Supreme Court of Canada – Judgments | Canada | machine_ingest/court_record | deprecated | deprecated | found | scc_lexum_api | yes | no | no | lifecycle_state=deprecated, automation_status=deprecated, deprecated_source_noncanonical | yes | limited-alpha-source |
-| sk_courts_ca_decisions | Saskatchewan Court of Appeal – Decisions | Saskatchewan, Canada | machine_ingest/court_record | runnable_disabled | machine_ready_disabled | found | canlii_api | yes | no | yes | lifecycle_state=runnable_disabled, automation_status=machine_ready_disabled | yes | limited-alpha-source |
-| sk_courts_qb_decisions | Saskatchewan Court of King's Bench – Decisions | Saskatchewan, Canada | machine_ingest/court_record | runnable_disabled | machine_ready_disabled | found | canlii_api | yes | no | yes | lifecycle_state=runnable_disabled, automation_status=machine_ready_disabled | yes | limited-alpha-source |
+| sk_courts_ca_decisions | Saskatchewan Court of Appeal – Decisions | Saskatchewan, Canada | machine_ingest/court_record | runnable | machine_ready_enabled | found | canlii_api | yes | yes | no | none | yes | runnable-alpha-source |
+| sk_courts_qb_decisions | Saskatchewan Court of King's Bench – Decisions | Saskatchewan, Canada | machine_ingest/court_record | runnable | machine_ready_enabled | found | canlii_api | yes | yes | no | none | yes | runnable-alpha-source |
 | sk_justice_ministry | Saskatchewan Ministry of Justice – News Releases | Saskatchewan, Canada | disabled_stub/news_monitor | disabled_stub | adapter_missing | found | crawlee_gov_news | yes | no | no | non_machine_ingest_source, lifecycle_state=disabled_stub, automation_status=adapter_missing | yes | limited-alpha-source |
-| sk_legislature_hansard | Saskatchewan Legislative Assembly – Hansard | Saskatchewan, Canada | machine_ingest/aggregate_stats | runnable_disabled | machine_ready_disabled | found | sk_legislature_html | yes | no | yes | lifecycle_state=runnable_disabled, automation_status=machine_ready_disabled | yes | limited-alpha-source |
+| sk_legislature_hansard | Saskatchewan Legislative Assembly – Hansard | Saskatchewan, Canada | machine_ingest/aggregate_stats | runnable | machine_ready_enabled | found | sk_legislature_html | yes | yes | no | none | yes | runnable-alpha-source |
 | statscan_ccjs_crime_sk | Statistics Canada – Canadian Centre for Justice Statistics (SK) | Saskatchewan, Canada | portal_reference/aggregate_stats | portal_reference | adapter_missing | found | statscan_table | yes | no | no | non_machine_ingest_source, lifecycle_state=portal_reference, automation_status=adapter_missing | yes | limited-alpha-source |
 | statscan_crime_tables | Statistics Canada – Crime and Justice Tables | Canada | portal_reference/aggregate_stats | portal_reference | adapter_missing | found | statscan_table | yes | no | no | non_machine_ingest_source, lifecycle_state=portal_reference, automation_status=adapter_missing | yes | limited-alpha-source |
 | statscan_ucr_national | Statistics Canada – Uniform Crime Reporting Survey (national) | Canada | portal_reference/aggregate_stats | portal_reference | adapter_missing | found | statscan_table | yes | no | no | non_machine_ingest_source, lifecycle_state=portal_reference, automation_status=adapter_missing | yes | limited-alpha-source |

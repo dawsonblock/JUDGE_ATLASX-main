@@ -33,12 +33,12 @@ def _entry_for(source_key: str) -> dict:
     return entry
 
 
-def test_saskatchewan_court_sources_are_staged_disabled() -> None:
+def test_saskatchewan_court_sources_are_enabled() -> None:
     for key in ("sk_courts_qb_decisions", "sk_courts_ca_decisions"):
         entry = _entry_for(key)
         assert entry["parser"] == "canlii_api"
         assert entry["source_class"] == "machine_ingest"
-        assert entry["automation_status"] == "machine_ready_disabled"
+        assert entry["automation_status"] == "machine_ready_enabled"
         assert entry["enabled_default"] is False
         assert entry["requires_manual_review"] is True
         assert entry["public_publish_default"] is False

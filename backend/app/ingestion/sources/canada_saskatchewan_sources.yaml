@@ -584,17 +584,16 @@ sources:
   precision_level: city_centroid
   priority: 2
   source_class: machine_ingest
-  automation_status: machine_ready_disabled
+  automation_status: machine_ready_enabled
   parser_version: '1.0'
   config_json: '{"databases": ["skkb"]}'
   admin_notes: 'Validated 2026-05-06: Uses CanLII API (api.canlii.org/v1). Requires
     CANLII_API_KEY env var. Database: skkb (Saskatchewan Court of King''s Bench).
     Register at https://www.canlii.org/en/info/api.html'
-  lifecycle_state: runnable_disabled
-  status_reason: Saskatchewan Court of King's Bench decisions adapter is ready; source
-    not yet enabled.
-  operator_next_step: Confirm terms of use, then enable via admin panel after clean
-    proof.
+  lifecycle_state: runnable
+  status_reason: Saskatchewan Court of King's Bench decisions adapter is ready and
+    enabled.
+  operator_next_step: Monitor ingestion runs and review queue for new snapshots.
   confidence_class: primary_official
   retention_policy: indefinite
   canonical_url: https://api.canlii.org/v1
@@ -605,7 +604,7 @@ sources:
   adapter:
     parser: canlii_api
     mode: api
-    machine_ingest_enabled: false
+    machine_ingest_enabled: true
     requires_secret: true
     rate_limit_rpm: 30
     timeout_seconds: 30
@@ -643,16 +642,15 @@ sources:
   precision_level: city_centroid
   priority: 2
   source_class: machine_ingest
-  automation_status: machine_ready_disabled
+  automation_status: machine_ready_enabled
   parser_version: '1.0'
   config_json: '{"databases": ["skca"]}'
   admin_notes: 'Validated 2026-05-06: Uses CanLII API (api.canlii.org/v1). Requires
     CANLII_API_KEY env var. Database: skca (Saskatchewan Court of Appeal). Register
     at https://www.canlii.org/en/info/api.html'
-  lifecycle_state: runnable_disabled
-  status_reason: Saskatchewan Court of Appeal decisions adapter is ready; source not
-    yet enabled.
-  operator_next_step: Confirm terms of use, then /enable via admin panel.
+  lifecycle_state: runnable
+  status_reason: Saskatchewan Court of Appeal decisions adapter is ready and enabled.
+  operator_next_step: Monitor ingestion runs and review queue for new snapshots.
   confidence_class: primary_official
   retention_policy: indefinite
   canonical_url: https://api.canlii.org/v1
@@ -663,7 +661,7 @@ sources:
   adapter:
     parser: canlii_api
     mode: api
-    machine_ingest_enabled: false
+    machine_ingest_enabled: true
     requires_secret: true
     rate_limit_rpm: 30
     timeout_seconds: 30
@@ -838,7 +836,7 @@ sources:
   update_cadence: daily
   refresh_interval_minutes: 1440
   source_class: machine_ingest
-  automation_status: machine_ready_disabled
+  automation_status: machine_ready_enabled
   parser_version: '1.0'
   parser: federal_court_html
   creates:
@@ -851,10 +849,9 @@ sources:
   priority: 3
   admin_notes: 'Validated 2026-05-06: decisions page uses iframe; content at ?iframe=true.
     Decision links: /fc-cf/decisions/en/item/NNNNN/index.do. h3 format: CaseName-NeutralCitation-Date.'
-  lifecycle_state: runnable_disabled
-  status_reason: Federal Court of Canada adapter ready; source awaiting operator /enable.
-  operator_next_step: Confirm base_url is reachable and terms permit ingest, then
-    /enable via admin panel.
+  lifecycle_state: runnable
+  status_reason: Federal Court of Canada adapter ready and enabled.
+  operator_next_step: Monitor ingestion runs and review queue for new snapshots.
   confidence_class: primary_official
   retention_policy: indefinite
   canonical_url: https://decisions.fct-cf.gc.ca
@@ -865,7 +862,7 @@ sources:
   adapter:
     parser: federal_court_html
     mode: web_scrape
-    machine_ingest_enabled: false
+    machine_ingest_enabled: true
     requires_secret: false
     rate_limit_rpm: 30
     timeout_seconds: 30
@@ -905,16 +902,14 @@ sources:
   precision_level: national
   priority: 3
   source_class: machine_ingest
-  automation_status: machine_ready_disabled
+  automation_status: machine_ready_enabled
   parser_version: '1.0'
   admin_notes: 'Validated 2026-05-06: RSS feed at decisions.scc-csc.ca returns 100
     items. Fields: title (whitespace-heavy), link, description, date (not pubDate).
     Title format: CaseName - NeutralCitation - YYYY-MM-DD.'
-  lifecycle_state: runnable_disabled
-  status_reason: Supreme Court of Canada decisions adapter ready; source awaiting
-    operator /enable.
-  operator_next_step: Confirm base_url is reachable and terms permit ingest, then
-    /enable via admin panel.
+  lifecycle_state: runnable
+  status_reason: Supreme Court of Canada decisions adapter ready and enabled.
+  operator_next_step: Monitor ingestion runs and review queue for new snapshots.
   confidence_class: primary_official
   retention_policy: indefinite
   canonical_url: https://decisions.scc-csc.ca/scc-csc/scc-csc/en/rss.do
@@ -925,7 +920,7 @@ sources:
   adapter:
     parser: scc_lexum_api
     mode: api
-    machine_ingest_enabled: false
+    machine_ingest_enabled: true
     requires_secret: false
     rate_limit_rpm: 30
     timeout_seconds: 30
@@ -1010,16 +1005,14 @@ sources:
   precision_level: province
   priority: 4
   source_class: machine_ingest
-  automation_status: machine_ready_disabled
+  automation_status: machine_ready_enabled
   parser_version: '1.0'
   admin_notes: 'Validated 2026-05-06: Hansard index page at /legislative-business/debates-hansard/
     has a table with Legislature/Session/Timeframe/SubjectIndex/SpeakerIndex. Index
     links point to docs.legassembly.sk.ca.'
-  lifecycle_state: runnable_disabled
-  status_reason: Saskatchewan Legislature Hansard adapter ready; source awaiting operator
-    /enable.
-  operator_next_step: Confirm base_url is reachable and terms permit ingest, then
-    /enable via admin panel.
+  lifecycle_state: runnable
+  status_reason: Saskatchewan Legislature Hansard adapter ready and enabled.
+  operator_next_step: Monitor ingestion runs and review queue for new snapshots.
   confidence_class: primary_official
   retention_policy: indefinite
   canonical_url: https://www.legassembly.sk.ca/legislative-business/debates-hansard/
@@ -1030,7 +1023,7 @@ sources:
   adapter:
     parser: sk_legislature_html
     mode: web_scrape
-    machine_ingest_enabled: false
+    machine_ingest_enabled: true
     requires_secret: false
     rate_limit_rpm: 30
     timeout_seconds: 30

@@ -53,6 +53,7 @@ _SKIP_FILE_NAMES = {
     "publication_gate.py",  # Checks LegalSource.lifecycle_state for deprecated/quarantined, not ingestion status
     "geocoding.py",  # Geocoding service status enum (exact, approximate, failed) not ingestion status
     "done_criteria.py",  # Phase completion tracking uses completed/pending as dict keys, not ingestion status
+    "verification_standard.py",  # ReviewDecision domain enum (pending, approved, rejected, escalated)
 }
 
 

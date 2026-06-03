@@ -21,3 +21,4 @@ __pycache__/
 dist/
 tmp/
 artifacts/tmp/
+THE-JUDGE.sln

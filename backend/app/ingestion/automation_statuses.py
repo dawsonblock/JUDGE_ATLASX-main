@@ -36,7 +36,7 @@ DEPRECATED = "deprecated"
 # ---------------------------------------------------------------------------
 
 #: Only a source with this status may transition to enabled via /enable.
-ENABLEABLE_STATUSES: frozenset[str] = frozenset({MACHINE_READY_DISABLED})
+ENABLEABLE_STATUSES: frozenset[str] = frozenset({MACHINE_READY_DISABLED, MACHINE_READY_ENABLED})
 
 #: Statuses that permit the scheduler to execute an ingestion run, provided
 #: the source also has ``is_active=True``.
