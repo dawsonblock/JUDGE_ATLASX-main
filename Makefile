@@ -1,4 +1,4 @@
-.PHONY: backend-install backend-test frontend-install frontend-check frontend-typecheck verify verify-runtime doctor-macos docker-smoke proof release-proof backend-proof frontend-build bootstrap-backend bootstrap-frontend bootstrap truth-check full-proof clean-clone-proof release-proof-local release-package-proof-local nox test check-generated dev stop setup release-zip build-clean-release validate-release-zip proof-static validate-archive-freshness validate-handoff-consistency saskatoon-staging-proof canlii-staging-contract statscan-boundary-proof validate-smoke-workspace validate-full-workspace validate-docker-workspace check-route-contract check-local-env check-config-docs sync-status-docs test-backend-unit test-backend-integration test-backend-db test-backend-auth test-backend-ingestion test-backend-proof test-frontend typecheck-frontend build-frontend lint-frontend frontend-route-smoke test-frontend-proof proof-evidence-verification
+.PHONY: backend-install backend-test frontend-install frontend-check frontend-typecheck verify verify-runtime doctor-macos docker-smoke docker-proof-junit proof release-proof backend-proof frontend-build bootstrap-backend bootstrap-frontend bootstrap truth-check full-proof clean-clone-proof release-proof-local release-package-proof-local nox test check-generated dev stop setup release-zip build-clean-release validate-release-zip proof-static validate-archive-freshness validate-handoff-consistency saskatoon-staging-proof canlii-staging-contract statscan-boundary-proof validate-smoke-workspace validate-full-workspace validate-docker-workspace check-route-contract check-local-env check-config-docs sync-status-docs test-backend-unit test-backend-integration test-backend-db test-backend-auth test-backend-ingestion test-backend-proof test-frontend typecheck-frontend build-frontend lint-frontend frontend-route-smoke test-frontend-proof proof-evidence-verification
 
 backend-install:
 	cd backend && python -m pip install -e ".[test]"
@@ -60,7 +60,8 @@ test-frontend:
 	@bash -lc 'NVM_DIR="$${NVM_DIR:-$$HOME/.nvm}"; \
 		[ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh"; \
 		nvm use 22.22.3 >/dev/null 2>&1 || { echo "BLOCKED_NODE_VERSION: nvm use 22.22.3 failed -- install Node 22.22.3 via: nvm install 22.22.3"; exit 1; }; \
-		npm run test --prefix frontend 2>&1 | tee artifacts/proof/current/frontend_test.log'
+		npm run test --prefix frontend 2>&1 | tee artifacts/proof/current/frontend_test.log; \
+		npm run test:junit --prefix frontend 2>&1 | tee artifacts/proof/current/frontend_vitest_junit.log || true'
 
 typecheck-frontend:
 	@mkdir -p artifacts/proof/current
@@ -174,6 +175,14 @@ docker-smoke:
 	curl -f http://localhost:3000 >/dev/null
 	docker compose down -v
 
+docker-proof-junit:
+	@mkdir -p artifacts/proof/current
+	@python3 scripts/wrap_as_junit.py \
+		--suite docker_runtime_preflight \
+		--xml artifacts/proof/current/docker_runtime_preflight.xml \
+		-- bash scripts/check_docker_runtime.sh \
+		2>&1 | tee artifacts/proof/current/docker_runtime_preflight_junit.log || true
+
 proof-evidence-verification:
 	@mkdir -p artifacts/proof/current
 	@if [ ! -f artifacts/proof/current/evidence_verification_standard.log ]; then \
@@ -193,6 +202,7 @@ proof:
 	@python3 scripts/check_toolchain_versions.py --root .
 	@$(MAKE) test-backend-proof test-frontend-proof
 	@$(MAKE) release-proof-local
+	@$(MAKE) docker-proof-junit
 	@python3 scripts/write_repair_report.py
 	@python3 scripts/check_single_proof_authority.py
 	@python3 scripts/check_status_truth_consistency.py --root .

@@ -2336,6 +2336,7 @@ def main() -> int:
                     "--tests-root backend/app/tests "
                     "--collect-log artifacts/proof/current/backend_pytest_collect.log "
                     "--status-json artifacts/proof/current/backend_pytest_chunked_status.json "
+                    "--junitxml-output artifacts/proof/current/backend_pytest.xml "
                     "--batch-size 40 "
                     "--ignore backend/app/tests/test_release_gate_consistency.py"
                 ),

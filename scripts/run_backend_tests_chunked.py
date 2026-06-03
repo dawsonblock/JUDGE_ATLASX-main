@@ -10,6 +10,7 @@ import os
 import re
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -90,6 +91,11 @@ def main() -> int:
         action="append",
         default=[],
         help="Test file path to exclude (repeatable)",
+    )
+    parser.add_argument(
+        "--junitxml-output",
+        default="",
+        help="Path to write merged JUnit XML (empty = skip)",
     )
     args = parser.parse_args()
 
@@ -184,11 +190,21 @@ def main() -> int:
     batches: list[dict[str, object]] = []
     merged_lines: list[str] = []
     batch_exit_code = 0
+    batch_junit_paths: list[Path] = []
 
     for idx in range(total_batches):
         start = idx * args.batch_size
         end = start + args.batch_size
         batch_files = test_files[start:end]
+
+        batch_junit: list[str] = []
+        if args.junitxml_output:
+            batch_xml_path = (
+                repo_root
+                / f"artifacts/proof/current/backend_pytest_batch_{idx + 1}.xml"
+            )
+            batch_junit = [f"--junitxml={batch_xml_path}"]
+            batch_junit_paths.append(batch_xml_path)
 
         cmd = [
             sys.executable,
@@ -198,6 +214,7 @@ def main() -> int:
             "-x",
             "--tb=short",
             "-q",
+            *batch_junit,
             *batch_files,
         ]
         started_at = _utc_now()
@@ -257,7 +274,50 @@ def main() -> int:
     )
     print("\n".join(merged_lines).rstrip())
 
+    if args.junitxml_output and batch_junit_paths:
+        _merge_junit_xml(batch_junit_paths, repo_root / args.junitxml_output)
+
     return batch_exit_code
+
+
+def _merge_junit_xml(batch_paths: list[Path], output: Path) -> None:
+    """Merge per-batch JUnit XML files into one combined testsuite."""
+    merged = ET.Element("testsuites")
+    total_tests = 0
+    total_failures = 0
+    total_errors = 0
+    total_skipped = 0
+
+    for path in batch_paths:
+        if not path.exists():
+            continue
+        try:
+            tree = ET.parse(str(path))
+            root = tree.getroot()
+        except ET.ParseError:
+            continue
+        suites = (
+            list(root.iter("testsuite"))
+            if root.tag != "testsuite"
+            else [root]
+        )
+        for suite in suites:
+            total_tests += int(suite.get("tests", 0))
+            total_failures += int(suite.get("failures", 0))
+            total_errors += int(suite.get("errors", 0))
+            total_skipped += int(suite.get("skipped", 0))
+            merged.append(suite)
+        path.unlink(missing_ok=True)
+
+    merged.set("tests", str(total_tests))
+    merged.set("failures", str(total_failures))
+    merged.set("errors", str(total_errors))
+    merged.set("skipped", str(total_skipped))
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    ET.ElementTree(merged).write(
+        str(output), encoding="unicode", xml_declaration=True
+    )
 
 
 if __name__ == "__main__":

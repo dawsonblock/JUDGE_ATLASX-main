@@ -14,6 +14,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:junit": "vitest run --reporter=junit --outputFile=../artifacts/proof/current/frontend_vitest.xml",
     "test:contracts": "vitest run tests/contracts tests/*.contract.test.ts"
   },
   "dependencies": {
