@@ -1,6 +1,6 @@
 # RELEASE_READINESS
 
-- generated_at_utc: 2026-06-03T03:17:45.439825+00:00
+- generated_at_utc: 2026-06-03T04:18:37.332006+00:00
 - overall_status: self-verifying-alpha
 - alpha_candidate: true
 - self_verifying_alpha: true
@@ -8,7 +8,7 @@
 - production_ready: false
 - public_release_safe: false
 - release_recommendation: self-verifying-alpha
-- archive_hash: 98778ed21a662fddd3fd5093021a3dbb233a0ba3
+- archive_hash: 13c503bd375cef49a64b0536133f7b302a6d8f02
 - platform: macOS-26.2-arm64-arm-64bit
 - python_version: 3.11.9
 - node_version: v22.22.3
@@ -28,18 +28,18 @@
 | check_compose_auth_defaults | PASS | 0 | artifacts/proof/current/check_compose_auth_defaults.log | ce53c858a818dccbbd3685948e8ce1414dddb23714d77e259787b0ce79eceac9 |
 | backend_compile | PASS | 0 | artifacts/proof/current/backend_compile.log | ff048fbcb05f4b23e858a813501477214166d826b765b8ca1f6bba526c2b6e9c |
 | backend_import | PASS | 0 | artifacts/proof/current/backend_import.log | 6393cbd986957cbe5d40d4556853a5b1c49f25d6898cb7f61eaa8aee496ec4f5 |
-| backend_pytest_collect | PASS | 0 | artifacts/proof/current/backend_pytest_collect.log | 2beb8e324d79084bc40d8d646f40ab3985236d103679b12a88dabec347e7a443 |
+| backend_pytest_collect | PASS | 0 | artifacts/proof/current/backend_pytest_collect.log | d539259c0a27e11b0417a21cb5c8f93a93dfbe9db352f904b105bda3a5af173d |
 | runtime_smoke | PASS | 0 | artifacts/proof/current/runtime_smoke.log | 561261d657b5b6b5bd99f9db4f716948b8a6188d16238c6259018c5ac421a7f3 |
-| backend_pytest | PASS | 0 | artifacts/proof/current/backend_pytest.log | 0f846e8f229ff24105ac0b880d08ea33e758fe09a92cc6f0acbf98152849ec8e |
+| backend_pytest | PASS | 0 | artifacts/proof/current/backend_pytest.log | 44e0a95f7e4e937c402e0e2df04ec30afe12d811cd7eb1c151cce447946c1648 |
 | check_migrations | PASS | 0 | artifacts/proof/current/check_migrations.log | b1a31ef1e482457fd1c47ac213cc98d199e78f8051acc81264a305cf629b66bf |
 | docker_runtime_preflight | PASS | 0 | artifacts/proof/current/docker_runtime_preflight.log | 5730b468f30c432a6e9dd370dbc8a55e9e0093775701fc7d2b767d50626b9463 |
-| docker_smoke | PASS | 0 | artifacts/proof/current/docker_smoke.log | 1b965709c16a498f9d95aabad8caa544bce4231696289a8914a47d90b72c810d |
-| postgis_proof | PASS | 0 | artifacts/proof/current/postgis_proof.log | f349a3e31e52753ff336043cad4faf2f51eb090e6c49376d70ef245a276f4102 |
-| egress_proxy_proof | PASS | 0 | artifacts/proof/current/egress_proxy_proof.log | 620c476c5dcd26ca04cc686e40bb0e17baf211d058e58536748d9657018ba2d6 |
+| docker_smoke | PASS | 0 | artifacts/proof/current/docker_smoke.log | 3f70425d4316de2b3b018389d77518399b503257e0e8d8713ee093a9a8ca20b0 |
+| postgis_proof | PASS | 0 | artifacts/proof/current/postgis_proof.log | ba0c7109fca5e6e77720f465234af5c08c59a09613d6b4d7ef803236bd787748 |
+| egress_proxy_proof | PASS | 0 | artifacts/proof/current/egress_proxy_proof.log | 6c19cb59d6f075257954589e740348d9905631c64c3744fa40146c496681521b |
 | demo_proof | PASS | 0 | artifacts/proof/current/demo_proof.log | 5de510ce42797df8e127acf38025711918f2b55854ecaf8f51d8c3d81e29026e |
 | validate_sources | PASS | 0 | artifacts/proof/current/validate_sources.log | 4d734d90bf04c25a04d4752d5067c94dc51e963876cfc4f61bbf698de63c27ba |
 | check_yaml_duplicate_keys | PASS | 0 | artifacts/proof/current/check_yaml_duplicate_keys.log | 88b52b46f87e415fc01b849aececd79f567ac8ea21f09f1d891a37eca7ddb06d |
-| verify_source_registry | PASS | 0 | artifacts/proof/current/verify_source_registry.log | 5bc9d0d57c6b2b0660bca6998d5bc00073816f6feed14d20a56f74843ee667e4 |
+| verify_source_registry | PASS | 0 | artifacts/proof/current/verify_source_registry.log | 694d8538567232a4296e9d6c7f27c492205c05362f0885cd8dbbc6378ce3a717 |
 | source_registry_status | PASS | 0 | artifacts/proof/current/source_registry_status.log | a627028cae8dc77fd1985e05a14c9eb33197aebcd2791d1824866799fe8c86be |
 | generate_coverage_matrix | PASS | 0 | artifacts/proof/current/generate_coverage_matrix.log | 3d868e3cbd1d339db9943afaaf81a5a2e3ad66fc852f8f7a5f57ffc063133f23 |
 | check_source_registry_docs | PASS | 0 | artifacts/proof/current/check_source_registry_docs.log | fe1b62e3c0b1bc448549dfe49a124455c9c01b1813f6d4e8effac96e238d35fe |
@@ -47,15 +47,15 @@
 | verify_evidence_store | PASS | 0 | artifacts/proof/current/verify_evidence_store.log | 7b693f37394b451d76dd236d9668d34a5e48b67f48dee151954763083deca20f |
 | evidence_verification_standard | PASS | 0 | artifacts/proof/current/evidence_verification_standard.log | 135d21e9308aeca27d724d74b34077ea16cb290440c5de5a76e19c3b37604ee9 |
 | evidence_verification_standard_pytest | PASS | 0 | artifacts/proof/current/evidence_verification_standard_pytest.log | 0274cc3334000e39e666da6b1f22dc45573d6a6bdf2c77cc0a9d0b2817a404b9 |
-| verify_audit_chain | PASS | 0 | artifacts/proof/current/verify_audit_chain.log | df7239f84583e6e10520e8ec286588592f70de17d3778cff4a31a9d8a4e55a0e |
-| auth_mutation_route_coverage | PASS | 0 | artifacts/proof/current/auth_mutation_route_coverage.log | 2a7d251874f6b6cfb13fff84ae694c0637e665e4a6f687e4a389d2364b3f9915 |
-| mutation_fail_closed_coverage | PASS | 0 | artifacts/proof/current/mutation_fail_closed_coverage.log | e32c8efb507db37b2b4b453167234dfefe12b465162dd79ca3abef81acbeceba |
+| verify_audit_chain | PASS | 0 | artifacts/proof/current/verify_audit_chain.log | e32b95fd6c399baa1bc85bae3ca74d37e1f0de56519f56e186143db94c209d73 |
+| auth_mutation_route_coverage | PASS | 0 | artifacts/proof/current/auth_mutation_route_coverage.log | 4a64f86dcde28b25cf9f2a19086cd025d8bec3c035ea723832b7eb0ede98b354 |
+| mutation_fail_closed_coverage | PASS | 0 | artifacts/proof/current/mutation_fail_closed_coverage.log | a5827770312079eb477c2e8db85e3e13e8ab42ada37ce886e4a1cb159c9425cb |
 | check_node_policy | PASS | 0 | artifacts/proof/current/check_node_policy.log | 5a8b2cacbf3c1df63dc8cd6f8a7d3e1769e0683212fc3442cefff374232c5c32 |
 | frontend_node_gate | PASS | 0 | artifacts/proof/current/frontend_node_gate.log | 39dc95fbc807439ae0edd07db104299b2a68d401fefe617df96cb835e3585dc9 |
-| frontend_install | PASS | 0 | artifacts/proof/current/frontend_install.log | 33368f0a63db354b08cfa45c00433eb9c8120c899375619b04d909ea67b07b22 |
+| frontend_install | PASS | 0 | artifacts/proof/current/frontend_install.log | 5546b39e450981ff500803c723af897c91c8923e42de825ca3cfa9474d2f311d |
 | frontend_lint | PASS | 0 | artifacts/proof/current/frontend_lint.log | 9d79910829d5abcf1161f85f3d57cc9c745d1edd5734a88fee634c9913b368e8 |
 | frontend_typecheck | PASS | 0 | artifacts/proof/current/frontend_typecheck.log | 701338e1389ab6284419cba533b353099f6b47658b930e128a8627a7a2d6d6e7 |
-| frontend_contracts | PASS | 0 | artifacts/proof/current/frontend_contracts.log | f22334d5951a205c53ecceb4b88bb6acca9dd759b7180e09661e6d63af298c7a |
+| frontend_contracts | PASS | 0 | artifacts/proof/current/frontend_contracts.log | 30ff37239cb4ee575cceb1c0db1234879a88ac6638e402692fc623317836e2fe |
 | frontend_build | PASS | 0 | artifacts/proof/current/frontend_build.log | 39798d23c4446d3d60b08cb30d3115a9baeeeded0f0434dddee9a487463644b0 |
 | check_api_contracts | PASS | 0 | artifacts/proof/current/check_api_contracts.log | f6750f8d64797a660c9122c245fa0ae38eb689dd8023b7fef1d0481e4ab86216 |
 | frontend_backend_route_contract | PASS | 0 | artifacts/proof/current/frontend_backend_route_contract.log | f3563209ec0dcbcbf599836f73236926eee160235914e0fe0e660e945c9042a0 |
@@ -63,18 +63,18 @@
 | repo_generated_files | PASS | 0 | artifacts/proof/current/repo_generated_files.log | 1f136c767a6ec6bd6d527af249dd34271e19a2e1287eedd33fd8364bb9384137 |
 | check_npm_audit_triage | PASS | 0 | artifacts/proof/current/check_npm_audit_triage.log | c9bab79018cc60539b4fa5a6d6b6e291f3138327e6689b409cb60d8087b54092 |
 | map_route_check | PASS | 0 | artifacts/proof/current/map_route_check.log | 3f2c0fb18144134952224494bc6690cde35213914ff5880a8eed0b5ca519e30f |
-| public_api_boundary | PASS | 0 | artifacts/proof/current/public_api_boundary.log | 93a7c5a74c4b897a00360775eb8a2f6bc2c343bab67af9f3d53dd8b576eee792 |
+| public_api_boundary | PASS | 0 | artifacts/proof/current/public_api_boundary.log | b5358ee878447fd778ea8e6daba2e52657ee206388bb7f8286e63213f08091d7 |
 | canlii_staging_proof | PASS | 0 | artifacts/proof/current/canlii_staging_proof.log | d7c9393bb589559678b644f26519944ef1a69f81a771fdbd5fce0282bb665ab5 |
 | proof_freshness | PASS | 0 | artifacts/proof/current/proof_freshness.log | ab9298531c9465b4315a67ad1feb0e7f68ba7c1d22e0fdb42aa98980fee38793 |
 | single_proof_authority | PASS | 0 | artifacts/proof/current/single_proof_authority.log | 67de9d9d555d8a633cccb3b3fd168f55f5975ed306de95965f06666949cc4337 |
-| release_readiness_generation | PASS | 0 | artifacts/proof/current/release_readiness.md | fc23957aea5db2402c71e7c8549d53c785de085f28a4f555dac1ff1a09e0c996 |
+| release_readiness_generation | PASS | 0 | artifacts/proof/current/release_readiness.md | 5efb61c957af41f188bdbcb64ee6f0e2aefd13639ddeb7030e4369f39614a7ac |
 | proof_consistency_pytest | PASS | 0 | artifacts/proof/current/proof_consistency_pytest.log | 71b613bcd27213dfff551d96b719001cddd9753def7294194d078f5a3c0dc56a |
-| archive_validation | PASS | 0 | artifacts/proof/current/archive_validation.log | 27910780e7de38790198cc6319f9d3507fdf14d5f18d3ef9dc8a9fe396ca1c1b |
+| archive_validation | PASS | 0 | artifacts/proof/current/archive_validation.log | fbb885f135bee93b18e503a5fd90e6e06720ce95cd37c42082117e93197bfdbd |
 | check_proof_manifest | PASS | 0 | artifacts/proof/current/check_proof_manifest.log | e63ce35132ca4d582b603680717610f4abe0456f3d6c0f26fde65294e4a21910 |
 | check_no_local_paths_in_release_proof | PASS | 0 | artifacts/proof/current/check_no_local_paths_in_release_proof.log | 7ab4d071c63ecc123622b94a78dda4a32381a788cc2f318f840fe2f9e799c8e4 |
 | check_proof_consistency | PASS | 0 | artifacts/proof/current/check_proof_consistency.log | 0a6ed516987c56172c896b5e5e4bae178cd6f9a2b53df2aa17bb118215f63a28 |
 | required_proof_logs | PASS | 0 | artifacts/proof/current/required_proof_logs.log | a3bb446f2cd83447e8dcc0f301e9458579aaa156f0bcbac9691e805033a503b9 |
-| release_gate | PASS | 0 | artifacts/proof/current/release_gate.log | ce8f7bc40cdc274645e5ee32af2f879aa4b9c0e8d46226d28b55abd1f3d869e0 |
+| release_gate | PASS | 0 | artifacts/proof/current/release_gate.log | 3e4c398b084307b9a602aacd082dd02938134b00c1577d78f6012c15673c332f |
 
 ## Optional Proof Gates
 
