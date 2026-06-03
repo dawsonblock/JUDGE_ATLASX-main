@@ -48,6 +48,7 @@ DEFAULT_INCLUDE_FILES = (
     "CURRENT_STATUS.md",
     "PROOF_STATUS.md",
     "RELEASE_BLOCKERS.md",
+    "artifacts/release_blockers.json",
     "STUBS_AND_PLACEHOLDERS.md",
     "REPO_REALITY.md",
     "COMPLETION_CHECKLIST.md",
@@ -236,7 +237,8 @@ def _is_excluded(rel_path: str, include_external: bool, include_proof_archive: b
         return True
     if lower_name in EXCLUDED_FILE_NAMES:
         return True
-    if lower_name.startswith(".env."):
+    # .env.example is a safe template — allow it through before the broad .env. block.
+    if lower_name.startswith(".env.") and lower_name != ".env.example":
         return True
     for pattern in RELEASEIGNORE_PATTERNS:
         normalized_pattern = pattern.lstrip("/")

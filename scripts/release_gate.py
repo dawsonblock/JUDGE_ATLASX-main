@@ -219,6 +219,7 @@ REQUIRED_GATE_NAMES = {
     "verify_evidence_store",
     "evidence_verification_standard",
     "evidence_verification_standard_pytest",
+    "source_registry_status",
     "source_registry_proof_pytest",
     "verify_audit_chain",
     "check_node_policy",
@@ -254,6 +255,7 @@ REQUIRED_PROOF_MANIFEST_LOGS = (
     "artifacts/proof/current/proof_consistency_pytest.log",
     "artifacts/proof/current/docker_smoke.log",
     "artifacts/proof/current/runtime_smoke.log",
+    "artifacts/proof/current/source_registry_proof_pytest.log",
 )
 
 REQUIRED_PROOF_FILES = (

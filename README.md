@@ -33,8 +33,20 @@ Current expected release posture:
 
 ## Quickstart
 
+**Prerequisites:** Python 3.11.x, Node 22.x / npm 10.x, Docker Desktop or Colima.
+See [docs/setup/MACOS_VSCODE.md](docs/setup/MACOS_VSCODE.md) for a full setup guide.
+
 ```bash
+# 1. Copy environment template and review placeholder values
+cp .env.example .env
+
+# 2. Bootstrap all dependencies
 make setup
+
+# 3. Verify local environment
+python3 scripts/check_local_dev_environment.py
+
+# 4. Start the stack
 make dev
 ```
 

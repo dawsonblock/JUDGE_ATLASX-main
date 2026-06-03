@@ -123,6 +123,7 @@ truth-check:
 	python3 scripts/validate_workflows.py
 	python3 scripts/check_source_keys.py
 	python3 scripts/check_statuses.py
+	python3 scripts/check_azure_prod_config.py --root .
 
 check-local-env:
 	python3 scripts/check_local_dev_environment.py
@@ -197,6 +198,8 @@ proof:
 	@python3 scripts/check_status_truth_consistency.py --root .
 	@python3 scripts/check_proof_consistency.py
 	@python3 scripts/check_proof_freshness.py
+	@python3 scripts/check_no_post_proof_mutation.py
+	@python3 scripts/check_release_claims.py --root .
 	@python3 scripts/verify_proof_hash_sync.py --root .
 	@python3 scripts/check_required_proof_logs.py --strict-required-files
 	@$(MAKE) proof-evidence-verification
@@ -214,17 +217,21 @@ release-proof:
 	@python3 scripts/check_frontend_backend_route_contract.py
 	@python3 scripts/check_map_route.py
 	@python3 scripts/check_proof_freshness.py
+	@python3 scripts/check_no_post_proof_mutation.py
+	@python3 scripts/check_release_claims.py --root .
 	@python3 scripts/verify_proof_hash_sync.py --root .
 	@python3 scripts/check_proof_consistency.py
 	@python3 scripts/check_release_gate.py --root .
 	@python3 scripts/check_required_proof_logs.py --root . --strict-required-files
 	@python3 scripts/check_single_proof_authority.py --root .
 	@bash scripts/check_no_pyc.sh
+	@python3 scripts/check_azure_prod_config.py --root .
 	@python3 scripts/check_no_generated_files.py --root .
 	@bash scripts/package_and_validate_release_archive.sh --archive-path dist/JUDGE_ATLAS-main-final.zip --package-root-name JUDGE_ATLAS-main
 	@python3 scripts/validate_final_zip.py dist/JUDGE_ATLAS-main-final.zip
 	@python3 scripts/check_release_surface.py --archive dist/JUDGE_ATLAS-main-final.zip
 	@python3 scripts/validate_extracted_release.py --archive dist/JUDGE_ATLAS-main-final.zip --expected-root JUDGE_ATLAS-main
+	@python3 scripts/cleanroom_release_test.py --archive dist/JUDGE_ATLAS-main-final.zip
 
 check-route-contract:
 	@python3 scripts/check_frontend_backend_route_contract.py
