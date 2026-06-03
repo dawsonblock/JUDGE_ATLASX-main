@@ -1,7 +1,7 @@
 # Source Coverage Matrix
 
 Generated from artifacts/proof/current/source_registry_status.json.
-Generated at: 2026-06-03T04:45:38.786083+00:00
+Generated at: 2026-06-03T07:49:47.851448+00:00
 
 ## Summary
 

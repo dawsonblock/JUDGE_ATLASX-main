@@ -184,6 +184,7 @@ proof:
 	@python3 scripts/check_toolchain_versions.py --root .
 	@$(MAKE) test-backend-proof test-frontend-proof
 	@$(MAKE) release-proof-local
+	@python3 scripts/write_repair_report.py
 	@python3 scripts/check_single_proof_authority.py
 	@python3 scripts/check_status_truth_consistency.py --root .
 	@python3 scripts/check_proof_consistency.py
