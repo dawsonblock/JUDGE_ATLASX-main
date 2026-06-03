@@ -1,15 +1,15 @@
 # Archive Validation
 
-- validated_at_utc: 2026-06-03T08:58:27.142338+00:00
+- validated_at_utc: 2026-06-03T20:01:31.693205+00:00
 - archive: dist/JUDGE_ATLAS-main-final.zip
-- archive_sha256: a83f7d41ddeb8e0037d45243e2a094d449eb9dd75b15eb7a88d2b52badf00965
+- archive_sha256: 486d0b49bab7e9ee44df5055cc4c17bac03a5634fb501a53f5ae4dbc62549bc9
 - expected_root: JUDGE_ATLAS-main
 - actual_root: JUDGE_ATLAS-main
 - top_level_roots: JUDGE_ATLAS-main
 - root_match: yes
 - valid: PASS
-- compressed_size_bytes: 2190169
-- uncompressed_size_bytes: 8559835
+- compressed_size_bytes: 2190272
+- uncompressed_size_bytes: 8560470
 
 ## Errors
 
@@ -25,13 +25,13 @@
 |---|---:|---:|
 | JUDGE_ATLAS-main/backend/uv.lock | 769811 | 238625 |
 | JUDGE_ATLAS-main/frontend/package-lock.json | 393441 | 85051 |
-| JUDGE_ATLAS-main/artifacts/proof/current/backend_pytest_collect.log | 325075 | 46001 |
+| JUDGE_ATLAS-main/artifacts/proof/current/backend_pytest_collect.log | 325075 | 45997 |
 | JUDGE_ATLAS-main/scripts/release_gate.py | 127342 | 23592 |
 | JUDGE_ATLAS-main/backend/app/models/entities.py | 101799 | 16701 |
-| JUDGE_ATLAS-main/artifacts/proof/current/release_gate.json | 97463 | 14260 |
-| JUDGE_ATLAS-main/artifacts/proof/current/proof_manifest.json | 57968 | 7811 |
+| JUDGE_ATLAS-main/artifacts/proof/current/release_gate.json | 97471 | 14268 |
+| JUDGE_ATLAS-main/artifacts/proof/current/proof_manifest.json | 57976 | 7818 |
+| JUDGE_ATLAS-main/artifacts/proof/current/docker_smoke.log | 48978 | 9272 |
 | JUDGE_ATLAS-main/backend/app/memory/contradiction_engine.py | 48640 | 8977 |
-| JUDGE_ATLAS-main/artifacts/proof/current/docker_smoke.log | 48372 | 9201 |
 | JUDGE_ATLAS-main/backend/app/ingestion/sources/canada_saskatchewan_sources.yaml | 48199 | 6787 |
 | JUDGE_ATLAS-main/backend/app/api/routes/admin_sources.py | 46299 | 9283 |
 | JUDGE_ATLAS-main/backend/app/tests/test_api.py | 43536 | 7488 |
@@ -51,7 +51,7 @@
 | backend | 5589289 |
 | scripts | 905048 |
 | frontend | 873785 |
-| artifacts | 683895 |
+| artifacts | 684530 |
 | docs | 368068 |
 | .github | 50671 |
 | demo | 26537 |
