@@ -172,6 +172,28 @@ class TestPlaceholderTasksDoNotReportSuccess:
         assert result.success is False
         assert result.status is TaskExecutionStatus.NOT_IMPLEMENTED
 
+    def test_publish_map_layer_is_not_success(self) -> None:
+        import sys
+        from types import SimpleNamespace
+        from unittest.mock import MagicMock
+
+        fake_mod = SimpleNamespace(materialize_all_events=lambda _db: [])
+        sys.modules["app.map.materialize_geo_legal_events"] = fake_mod
+        try:
+            reg = self._registry()
+            mock_db = MagicMock()
+            result = reg._task_publish_map_layer(
+                db=mock_db, workspace_path="/tmp", params={}
+            )
+        finally:
+            sys.modules.pop("app.map.materialize_geo_legal_events", None)
+            sys.modules.pop("app.orchestration.task_registry", None)
+        assert isinstance(result, TaskResult)
+        assert result.success is False
+        assert result.status is TaskExecutionStatus.DRY_RUN
+        assert result.safe_to_rely_on is False
+        assert result.executed is False
+
     def test_unknown_task_returns_not_implemented(self) -> None:
         reg = self._registry()
         result = reg.execute_task(

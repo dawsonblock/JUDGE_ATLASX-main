@@ -123,6 +123,7 @@ class TestSourceRegistryPerSource:
             "runnable_disabled",
             "disabled_stub",
             "portal_reference",
+            "manual_reference",
             "manual_upload",
             "deprecated",
             "enable_ready",

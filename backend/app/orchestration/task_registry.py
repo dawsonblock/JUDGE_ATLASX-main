@@ -411,22 +411,29 @@ class TaskRegistry:
 
     def _task_publish_map_layer(
         self, db: Session, workspace_path: str, params: Dict[str, Any]
-    ) -> Any:
-        """Publish map layer using the materializer."""
+    ) -> TaskResult:
+        """Read-only preview of map layer data; does not publish externally."""
         from app.map.materialize_geo_legal_events import materialize_all_events
 
         layer_type = params.get("layer_type", "default")
         publish_status = params.get("publish_status", "public_safe")
         require_approval = params.get("require_approval", True)
 
-        # This would integrate with the map materializer
         events = materialize_all_events(db)
-        return {
-            "layer_type": layer_type,
-            "publish_status": publish_status,
-            "require_approval": require_approval,
-            "events_published": len(events),
-        }
+        return TaskResult(
+            status=TaskExecutionStatus.DRY_RUN,
+            output={
+                "layer_type": layer_type,
+                "publish_status": publish_status,
+                "require_approval": require_approval,
+                "events_previewed": len(events),
+            },
+            message=(
+                "Map layer materialization is a dry-run preview only; "
+                "no external publish occurred."
+            ),
+            executed=False,
+        )
 
 
 # Global task registry instance
