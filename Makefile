@@ -312,3 +312,8 @@ release-zip:
 	bash scripts/create_release_zip.sh --allow-non-authoritative --output "$${OUTFILE}"; \
 	echo "Non-authoritative source snapshot archive: $${OUTFILE}"; \
 	echo "For distributable releases use: make release-package-proof-local"
+
+# verify-upload: validate canonical archive before uploading
+# Ensures only dist/JUDGE_ATLAS-main-final.zip is uploaded
+verify-upload:
+	@bash scripts/verify_upload_ready.sh
