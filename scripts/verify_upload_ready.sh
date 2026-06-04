@@ -72,6 +72,8 @@ fi
 # 7. Check for forbidden source-snapshot ZIPs in the project root
 for candidate in "${ROOT_DIR}"/*.zip; do
     [[ -f "${candidate}" ]] || continue
+    # Skip symlinks (e.g., UPLOAD_THIS.zip pointing to canonical archive)
+    [[ -L "${candidate}" ]] && continue
     basename_candidate=$(basename "${candidate}")
     if [[ "${basename_candidate}" != "${CANONICAL_NAME}" ]]; then
         log_warn "Found non-canonical ZIP that must NOT be uploaded: ${basename_candidate}"

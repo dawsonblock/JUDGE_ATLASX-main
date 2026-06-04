@@ -317,3 +317,10 @@ release-zip:
 # Ensures only dist/JUDGE_ATLAS-main-final.zip is uploaded
 verify-upload:
 	@bash scripts/verify_upload_ready.sh
+
+# build-for-upload: produce the canonical archive and place it where you cannot miss it
+# Usage: make build-for-upload
+# This will copy dist/JUDGE_ATLAS-main-final.zip to your Desktop as
+# UPLOAD_THIS_JUDGE_ATLAS-main-final.zip and create UPLOAD_THIS.zip in the repo root.
+build-for-upload:
+	@bash scripts/build_for_upload.sh
