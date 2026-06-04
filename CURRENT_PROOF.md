@@ -1,7 +1,7 @@
 # CURRENT_PROOF
 
-- generated_at_utc: 2026-06-04T08:09:19.898461+00:00
-- commit_hash: 2f3f99abb08402eb49460b9eb8e70b26998b9dad
+- generated_at_utc: 2026-06-04T22:56:16.313805+00:00
+- commit_hash: 0789aaa55aca8c0ae1b1e71c8a747c2fb39aa4cb
 - alpha_gate_passed: true
 - alpha_gate_status: PASS
 - alpha_candidate: true
@@ -24,7 +24,7 @@
 ## Runtime Metadata
 
 - gate_runner_python_version: 3.11.9
-- gate_runner_python_executable: [REDACTED_LOCAL_PATH]
+- gate_runner_python_executable: [REDACTED_LOCAL_PATH]/.venv/bin/python3
 - backend_test_python_version: 3.11.9
 - backend_test_python_executable: [REDACTED_LOCAL_PATH]/backend/.venv/bin/python
 - backend_required_python: >=3.11
