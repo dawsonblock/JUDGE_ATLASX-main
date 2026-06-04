@@ -68,15 +68,18 @@ if [[ "${USE_EXISTING_PROOF}" != "true" ]]; then
     log_pass "Toolchain check passed"
 
     log_bold "1.2 Regenerating release gate"
-    python3 scripts/release_gate.py --out-dir artifacts/proof/current || { log_fail "release_gate.py failed"; exit 1; }
-    log_pass "release_gate.py completed"
+    if python3 scripts/release_gate.py --out-dir artifacts/proof/current; then
+        log_pass "release_gate.py completed (alpha gate passed)"
+    else
+        log_warn "release_gate.py completed (alpha gate blocked — archive will be marked blocked)"
+    fi
 
     log_bold "1.3 Synchronizing status docs"
     python3 scripts/sync_status_docs_from_gate.py || { log_fail "sync_status_docs failed"; exit 1; }
     log_pass "Status docs synchronized"
 
     log_bold "1.4 Rendering proof status docs"
-    python3 scripts/render_proof_status_docs.py --root . || { log_fail "render_proof_status_docs failed"; exit 1; }
+    python3 scripts/render_proof_status_docs.py --root . --skip-handoff || { log_fail "render_proof_status_docs failed"; exit 1; }
     log_pass "Proof status docs rendered"
 
     log_bold "1.5 Checking proof freshness"

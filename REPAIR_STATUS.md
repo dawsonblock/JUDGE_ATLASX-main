@@ -21,7 +21,7 @@ Current canonical state is derived from artifacts/proof/current/release_gate.jso
 ## Status Matrix
 
 - authority: artifacts/proof/current/release_gate.json
-- alpha_ready: false
+- alpha_ready: true
 - production_ready: false
 - public_release_safe: false
 - ingestion_coverage: 7/26 runnable sources (from canonical source-registry proof)

@@ -1099,19 +1099,38 @@ def _generate_release_readiness_from_manifest(
         if not entry.get("required", True)
     ]
 
+    def _normalize_blocker_name(blocker: str) -> str:
+        """Extract raw gate name from prefixed blocker strings."""
+        if blocker.startswith("missing_required_gate:"):
+            return blocker.split(":", 1)[1].strip()
+        if blocker.startswith("required_gate_failed:"):
+            return blocker.split(":", 1)[1].strip()
+        if blocker.endswith("_not_pass"):
+            return blocker.replace("_not_pass", "").strip()
+        if blocker == "archive_validation_missing":
+            return "archive_validation"
+        return blocker.strip()
+
     blockers: list[str] = []
+    blocker_names_seen: set[str] = set()
+
+    def _add_blocker(raw_blocker: str) -> None:
+        normalized = _normalize_blocker_name(raw_blocker)
+        if normalized and normalized not in blocker_names_seen:
+            blocker_names_seen.add(normalized)
+            blockers.append(raw_blocker)
+
     for missing_name in missing_required_names:
-        blockers.append(f"missing_required_gate:{missing_name}")
+        _add_blocker(f"missing_required_gate:{missing_name}")
 
     for entry in required_entries:
+        name = entry.get("name", "")
         if entry.get("status") != "PASS":
-            blockers.append(f"required_gate_failed:{entry.get('name')}")
+            _add_blocker(f"required_gate_failed:{name}")
         if not entry.get("log_exists"):
-            blockers.append(
-                f"missing_log:{entry.get('name')}:{entry.get('log_path')}"
-            )
+            _add_blocker(f"missing_log:{name}:{entry.get('log_path')}")
         if not entry.get("log_sha256"):
-            blockers.append(f"missing_log_sha256:{entry.get('name')}")
+            _add_blocker(f"missing_log_sha256:{name}")
 
     archive_entry = next(
         (
@@ -1122,17 +1141,22 @@ def _generate_release_readiness_from_manifest(
         None,
     )
     if archive_entry is None:
-        blockers.append("archive_validation_missing")
+        _add_blocker("archive_validation_missing")
     elif archive_entry.get("status") != "PASS":
-        blockers.append("archive_validation_not_pass")
+        _add_blocker("archive_validation_not_pass")
 
     if additional_blockers is not None:
         # Merge manifest-derived blockers with the payload's pre-existing list
         # so that newly-failed required gates are not silently dropped.
+        # Use normalized names to avoid duplicates like:
+        #   required_gate_failed:archive_validation + archive_validation
         merged_blockers = list(blockers)
         for blocker in additional_blockers:
-            if isinstance(blocker, str) and blocker and blocker not in merged_blockers:
-                merged_blockers.append(blocker)
+            if isinstance(blocker, str) and blocker:
+                normalized = _normalize_blocker_name(blocker)
+                if normalized and normalized not in blocker_names_seen:
+                    blocker_names_seen.add(normalized)
+                    merged_blockers.append(blocker)
     else:
         merged_blockers = list(blockers)
 
@@ -3145,13 +3169,7 @@ def main() -> int:
     results.append(single_proof_authority_step)
 
     missing_logs = _missing_logs(repo_root, results)
-    remaining_required_steps = {
-        "proof_consistency_pytest",
-        "required_proof_logs",
-        "check_proof_manifest",
-        "check_proof_consistency",
-        "archive_validation",
-    } - {r.name for r in results}
+    remaining_required_steps = REQUIRED_GATE_NAMES - {r.name for r in results}
     required_failed_checks = _failed_required_checks(results)
     ok = (
         not required_failed_checks
@@ -3213,12 +3231,7 @@ def main() -> int:
         blocked_checks["source_registry_status_final"] = source_registry_error
 
     missing_logs = _missing_logs(repo_root, results)
-    remaining_required_steps = {
-        "required_proof_logs",
-        "check_proof_manifest",
-        "check_proof_consistency",
-        "archive_validation",
-    } - {r.name for r in results}
+    remaining_required_steps = REQUIRED_GATE_NAMES - {r.name for r in results}
     required_failed_checks = _failed_required_checks(results)
     ok = (
         not required_failed_checks
@@ -3286,12 +3299,7 @@ def main() -> int:
 
     missing_logs = _missing_logs(repo_root, results)
     required_failed_checks = _failed_required_checks(results)
-    remaining_required_steps = {
-        "archive_validation",
-        "required_proof_logs",
-        "check_proof_manifest",
-        "check_proof_consistency",
-    } - {r.name for r in results}
+    remaining_required_steps = REQUIRED_GATE_NAMES - {r.name for r in results}
     ok = (
         not required_failed_checks
         and not missing_logs
