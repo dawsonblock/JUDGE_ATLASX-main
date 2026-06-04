@@ -6,37 +6,37 @@ Manual edits are not authoritative.
 
 ## Authoritative Archive
 - Path: dist/JUDGE_ATLAS-main-final.zip
-- SHA-256: 44ea89c6b65ae730e61fa49bb6e8fa6de92b3103f94bc93924e88d37f22df89b
+- SHA-256: d29044923a46aaae38476127595c08f1be961045ac38a8e6e7cb58fe9706e0fe
 
 ## Proof Anchors
 - release_gate_path: artifacts/proof/current/release_gate.json
-- release_gate_sha256: 4ed557383d8f4d3698d76e67743d92621484039425f5189edc96eddd5b959bf6
+- release_gate_sha256: c91be3ffaa2a83051f6aa7dc6bfc7506bd0bc4227211256a55fd9969e3b408e2
 - proof_manifest_path: artifacts/proof/current/proof_manifest.json
-- proof_manifest_sha256: e1f50a8167186957750545a36a75f53ac3ea11f3392d5678a9edfbf9d690d4d8
+- proof_manifest_sha256: 08e22d5e3afd0bd506efd38e47956c1ac83e01c18a24592c24a1319786de733d
 - required_log_index_path: artifacts/proof/current/required_log_index.json
-- required_log_index_sha256: e3bbc51c8c50a502e7c01fa78abb778a365189c8b70544f7abbd50f99bcd28af
+- required_log_index_sha256: 20196d97e3d7623574f28f757a116747e5cca161b4e671adacc357bfa44a87dc
 
 ## Release Status
-- release_classification: proof-blocked alpha proof snapshot
-- alpha_candidate: false
-- self_verifying_alpha: false
+- release_classification: self-verifying alpha
+- alpha_candidate: true
+- self_verifying_alpha: true
 - production_release_candidate: false
 - production_ready: false
 - public_release_safe: false
-- proof_complete: false
-- blocked_release_checks: ["archive_validation", "check_proof_consistency"]
+- proof_complete: true
+- blocked_release_checks: []
 
 ## Build Metadata
-- created_at_utc: 2026-06-04T05:00:30.368264+00:00
-- generated_at_utc: 2026-06-04T05:00:30.368264+00:00
-- git_commit: f05f8f471467212412d49125a85476b6ad31af7f
+- created_at_utc: 2026-06-04T08:09:50.350929+00:00
+- generated_at_utc: 2026-06-04T08:09:50.350929+00:00
+- git_commit: 2f3f99abb08402eb49460b9eb8e70b26998b9dad
 - platform: macOS-26.2-arm64-arm-64bit
 - python: 3.11.9
 - node: v22.22.3
 - npm: 10.9.8
 
 ## Notes
-- This is a proof-blocked alpha proof snapshot.
+- This is a self-verifying alpha.
 - It is not ready for production deployment.
 - Ship only the archive listed above.
 - Validation must run against a fresh extraction
