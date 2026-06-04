@@ -1,0 +1,342 @@
+# Instincts generated from https://github.com/dawsonblock/JUDGE_ATLASX-main
+# Generated: 2026-06-04T23:05:13.629Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: JUDGE_ATLASX-main-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/dawsonblock/JUDGE_ATLASX-main
+---
+
+# JUDGE_ATLASX Main Commit Length
+
+## Action
+
+Write moderate-length commit messages (~88 characters)
+
+## Evidence
+
+- Average commit message length: 88 chars
+- Based on 2 commits
+
+---
+id: JUDGE_ATLASX-main-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/dawsonblock/JUDGE_ATLASX-main
+---
+
+# JUDGE_ATLASX Main Naming Files
+
+## Action
+
+Use snake_case naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: snake_case
+
+---
+id: JUDGE_ATLASX-main-import-relative
+trigger: "when importing modules"
+confidence: 0.75
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/dawsonblock/JUDGE_ATLASX-main
+---
+
+# JUDGE_ATLASX Main Import Relative
+
+## Action
+
+Use relative imports for project files
+
+## Evidence
+
+- Import analysis shows relative import pattern
+- Example: import { x } from '../lib/x'
+
+---
+id: JUDGE_ATLASX-main-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/dawsonblock/JUDGE_ATLASX-main
+---
+
+# JUDGE_ATLASX Main Export Style
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: named
+
+---
+id: JUDGE_ATLASX-main-test-separate
+trigger: "when writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/dawsonblock/JUDGE_ATLASX-main
+---
+
+# JUDGE_ATLASX Main Test Separate
+
+## Action
+
+Place tests in the tests/ or __tests__/ directory, mirroring src structure
+
+## Evidence
+
+- Separate test directory pattern detected
+- Tests live in dedicated test folders
+
+---
+id: JUDGE_ATLASX-main-workflow-proof-artifact-reset-and-cleanup
+trigger: "when doing proof artifact reset and cleanup"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/dawsonblock/JUDGE_ATLASX-main
+---
+
+# JUDGE_ATLASX Main Workflow Proof Artifact Reset And Cleanup
+
+## Action
+
+Follow the proof-artifact-reset-and-cleanup workflow:
+1. Update .releaseignore or similar config to exclude unnecessary files from release artifacts
+2. Truncate or reset in-progress proof artifact stubs (e.g., CURRENT_PROOF.md, FIX_VERIFICATION_REPORT.md, SOURCE_REGISTRY_STATUS.md)
+3. Remove or regenerate completed or stale proof artifacts (e.g., backend_pytest_batch_X.xml, PROOF_POLICY.md, archive_validation.md, proof summaries)
+4. Update docs and generated status/summary files to reflect the current proof state
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: .releaseignore, artifacts/proof/current/CURRENT_PROOF.md, artifacts/proof/current/FIX_VERIFICATION_REPORT.md
+
+---
+id: judge_atlasx-main-instinct-file-naming
+trigger: "When creating a new file in the repository"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: dawsonblock/JUDGE_ATLASX-main
+---
+
+# Judge_atlasx Main Instinct File Naming
+
+## Action
+
+Name the file using snake_case
+
+## Evidence
+
+- Pattern in namingConventions.files: snake_case
+
+---
+id: judge_atlasx-main-instinct-function-naming
+trigger: "When defining a new function"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: dawsonblock/JUDGE_ATLASX-main
+---
+
+# Judge_atlasx Main Instinct Function Naming
+
+## Action
+
+Name the function using camelCase
+
+## Evidence
+
+- Pattern in namingConventions.functions: camelCase
+
+---
+id: judge_atlasx-main-instinct-class-naming
+trigger: "When defining a new class"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: dawsonblock/JUDGE_ATLASX-main
+---
+
+# Judge_atlasx Main Instinct Class Naming
+
+## Action
+
+Name the class using PascalCase
+
+## Evidence
+
+- Pattern in namingConventions.classes: PascalCase
+
+---
+id: judge_atlasx-main-instinct-constant-naming
+trigger: "When declaring a constant"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: dawsonblock/JUDGE_ATLASX-main
+---
+
+# Judge_atlasx Main Instinct Constant Naming
+
+## Action
+
+Name the constant using SCREAMING_SNAKE_CASE
+
+## Evidence
+
+- Pattern in namingConventions.constants: SCREAMING_SNAKE_CASE
+
+---
+id: judge_atlasx-main-instinct-import-style
+trigger: "When importing modules"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: dawsonblock/JUDGE_ATLASX-main
+---
+
+# Judge_atlasx Main Instinct Import Style
+
+## Action
+
+Use relative import paths
+
+## Evidence
+
+- Pattern in importStyle: relative
+
+---
+id: judge_atlasx-main-instinct-export-style
+trigger: "When exporting modules or functions"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: dawsonblock/JUDGE_ATLASX-main
+---
+
+# Judge_atlasx Main Instinct Export Style
+
+## Action
+
+Use named exports
+
+## Evidence
+
+- Pattern in exportStyle: named
+
+---
+id: judge_atlasx-main-instinct-test-location
+trigger: "When adding new tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: dawsonblock/JUDGE_ATLASX-main
+---
+
+# Judge_atlasx Main Instinct Test Location
+
+## Action
+
+Place test files in a separate test directory, not mixed with source files
+
+## Evidence
+
+- Pattern in architecture.testLocation: separate
+
+---
+id: judge_atlasx-main-instinct-git-commit-prefix-fix
+trigger: "When making a commit that fixes a bug or issue"
+confidence: 0.9
+domain: git
+source: repo-analysis
+source_repo: dawsonblock/JUDGE_ATLASX-main
+---
+
+# Judge_atlasx Main Instinct Git Commit Prefix Fix
+
+## Action
+
+Prefix the commit message with 'fix:'
+
+## Evidence
+
+- Seen in commit: fix(proof): exclude .env.example files from release archive and reset in-progress proof artifacts
+
+---
+id: judge_atlasx-main-instinct-git-commit-prefix-proof
+trigger: "When making a commit related to proof artifacts or verification"
+confidence: 0.9
+domain: git
+source: repo-analysis
+source_repo: dawsonblock/JUDGE_ATLASX-main
+---
+
+# Judge_atlasx Main Instinct Git Commit Prefix Proof
+
+## Action
+
+Prefix the commit message with 'proof:'
+
+## Evidence
+
+- Seen in commit: proof(main31): remove stale backend_pytest_batch_1.xml after proof regeneration
+
+---
+id: judge_atlasx-main-instinct-git-commit-length
+trigger: "When writing a commit message"
+confidence: 0.7
+domain: git
+source: repo-analysis
+source_repo: dawsonblock/JUDGE_ATLASX-main
+---
+
+# Judge_atlasx Main Instinct Git Commit Length
+
+## Action
+
+Keep the commit message concise, around 88 characters on average
+
+## Evidence
+
+- Pattern in commits.averageLength: 88
+
+---
+id: judge_atlasx-main-instinct-proof-artifact-reset
+trigger: "When preparing for a new proof cycle, release, or after proof regeneration"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: dawsonblock/JUDGE_ATLASX-main
+---
+
+# Judge_atlasx Main Instinct Proof Artifact Reset
+
+## Action
+
+Reset in-progress proof artifacts and remove or regenerate stale or completed proof files to ensure only current and relevant proof artifacts are present
+
+## Evidence
+
+- Workflow: proof-artifact-reset-and-cleanup
+- Seen in commit: fix(proof): exclude .env.example files from release archive and reset in-progress proof artifacts
+- Pattern in files: artifacts/proof/current/*, docs/generated/*
+
