@@ -318,9 +318,10 @@ release-zip:
 verify-upload:
 	@bash scripts/verify_upload_ready.sh
 
-# build-for-upload: produce the canonical archive and place it where you cannot miss it
+# build-for-upload: produce the canonical archive after strict proof regeneration
 # Usage: make build-for-upload
-# This will copy dist/JUDGE_ATLAS-main-final.zip to your Desktop as
-# UPLOAD_THIS_JUDGE_ATLAS-main-final.zip and create UPLOAD_THIS.zip in the repo root.
+# This forces full proof regeneration, runs all validators, then builds the archive.
+# The archive is copied to Desktop as UPLOAD_THIS_JUDGE_ATLAS-main-final.zip.
+# Expert override: make build-for-upload EXISTING_PROOF=1 (not recommended)
 build-for-upload:
 	@bash scripts/build_for_upload.sh

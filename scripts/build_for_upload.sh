@@ -1,13 +1,40 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Build the canonical archive and place it where the user cannot miss it.
-# This script exists because the user repeatedly uploads source snapshots
-# instead of the canonical release archive. Make the right file obvious.
+# Build the canonical archive after forcing strict proof regeneration.
+# This script prevents the stale-proof bug: it NEVER reuses an existing
+# archive unless --use-existing-proof is explicitly passed.
+#
+# Usage:
+#   bash scripts/build_for_upload.sh          # strict mode: regenerate proof first
+#   bash scripts/build_for_upload.sh --use-existing-proof  # advanced: skip proof regen
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CANONICAL_ARCHIVE="${ROOT_DIR}/dist/JUDGE_ATLAS-main-final.zip"
 UPLOAD_BASENAME="UPLOAD_THIS_JUDGE_ATLAS-main-final.zip"
+
+USE_EXISTING_PROOF=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --use-existing-proof)
+      USE_EXISTING_PROOF=true
+      shift
+      ;;
+    --help|-h)
+      echo "Usage: bash scripts/build_for_upload.sh [--use-existing-proof]"
+      echo ""
+      echo "  Default (strict): regenerates all proof before building archive."
+      echo "  --use-existing-proof: skips proof regeneration (expert only)."
+      exit 0
+      ;;
+    *)
+      echo "ERROR: unknown argument: $1"
+      echo "Run: bash scripts/build_for_upload.sh --help"
+      exit 2
+      ;;
+  esac
+done
 
 # Try Desktop, fall back to repo root
 if [[ -d "${HOME}/Desktop" ]]; then
@@ -31,28 +58,89 @@ log_bold() { echo -e "${BOLD}$*${NC}"; }
 
 cd "${ROOT_DIR}"
 
-# Step 1: ensure canonical archive exists
-if [[ ! -f "${CANONICAL_ARCHIVE}" ]]; then
-    log_warn "Canonical archive not found. Building it now..."
-    bash scripts/package_and_validate_release_archive.sh \
-        --archive-path "${CANONICAL_ARCHIVE}" \
-        --package-root-name JUDGE_ATLAS-main \
-        --skip-release-gate \
-        --skip-handoff-check \
-        --skip-extracted-validation
+# Step 1: strict proof regeneration (unless explicitly skipped)
+if [[ "${USE_EXISTING_PROOF}" != "true" ]]; then
+    log_bold "=== Phase 1: Strict Proof Regeneration ==="
+    echo ""
+
+    log_bold "1.1 Toolchain check"
+    python3 scripts/check_toolchain_versions.py --root . || { log_fail "Toolchain check failed"; exit 1; }
+    log_pass "Toolchain check passed"
+
+    log_bold "1.2 Regenerating release gate"
+    python3 scripts/release_gate.py --out-dir artifacts/proof/current || { log_fail "release_gate.py failed"; exit 1; }
+    log_pass "release_gate.py completed"
+
+    log_bold "1.3 Synchronizing status docs"
+    python3 scripts/sync_status_docs_from_gate.py || { log_fail "sync_status_docs failed"; exit 1; }
+    log_pass "Status docs synchronized"
+
+    log_bold "1.4 Rendering proof status docs"
+    python3 scripts/render_proof_status_docs.py --root . || { log_fail "render_proof_status_docs failed"; exit 1; }
+    log_pass "Proof status docs rendered"
+
+    log_bold "1.5 Checking proof freshness"
+    python3 scripts/check_proof_freshness.py || { log_fail "check_proof_freshness failed"; exit 1; }
+    python3 scripts/check_proof_freshness.py --strict-extra-files || { log_fail "check_proof_freshness --strict-extra-files failed"; exit 1; }
+    log_pass "Proof freshness passed"
+
+    log_bold "1.6 Checking proof consistency"
+    python3 scripts/check_proof_consistency.py || { log_fail "check_proof_consistency failed"; exit 1; }
+    log_pass "Proof consistency passed"
+
+    log_bold "1.7 Checking required proof logs"
+    python3 scripts/check_required_proof_logs.py --root . --strict-required-files || { log_fail "check_required_proof_logs failed"; exit 1; }
+    log_pass "Required proof logs passed"
+
+    log_bold "1.8 Checking single proof authority"
+    python3 scripts/check_single_proof_authority.py --root . || { log_fail "check_single_proof_authority failed"; exit 1; }
+    log_pass "Single proof authority passed"
+
+    log_bold "1.9 Checking release gate"
+    python3 scripts/check_release_gate.py --root . || { log_fail "check_release_gate failed"; exit 1; }
+    log_pass "Release gate check passed"
+
+    log_bold "1.10 Checking no local paths in release proof"
+    python3 scripts/check_no_local_paths_in_release_proof.py --root . || { log_fail "check_no_local_paths failed"; exit 1; }
+    log_pass "No local paths check passed"
+
+    echo ""
+    log_pass "=== Phase 1 Complete: All proof validators passed ==="
+    echo ""
+else
+    log_warn "--use-existing-proof: SKIPPING strict proof regeneration"
+    log_warn "This is dangerous. Only use if you are certain proof is fresh."
+    echo ""
 fi
+
+# Step 2: build canonical archive
+log_bold "=== Phase 2: Building Canonical Archive ==="
+echo ""
+
+# Always remove stale archive before building fresh
+if [[ -f "${CANONICAL_ARCHIVE}" ]]; then
+    rm -f "${CANONICAL_ARCHIVE}" "${CANONICAL_ARCHIVE}.sha256"
+    log_warn "Removed stale archive: ${CANONICAL_ARCHIVE}"
+fi
+
+bash scripts/package_and_validate_release_archive.sh \
+    --archive-path "${CANONICAL_ARCHIVE}" \
+    --package-root-name JUDGE_ATLAS-main \
+    --skip-release-gate \
+    --skip-handoff-check \
+    --skip-extracted-validation || { log_fail "package_and_validate_release_archive.sh failed"; exit 1; }
 
 if [[ ! -f "${CANONICAL_ARCHIVE}" ]]; then
     log_fail "Failed to build canonical archive: ${CANONICAL_ARCHIVE}"
     exit 1
 fi
-log_pass "Canonical archive exists: ${CANONICAL_ARCHIVE}"
+log_pass "Canonical archive built: ${CANONICAL_ARCHIVE}"
 
-# Step 2: copy to obvious location
+# Step 3: copy to obvious location
 cp -f "${CANONICAL_ARCHIVE}" "${UPLOAD_TARGET}"
 log_pass "Copied canonical archive to: ${UPLOAD_TARGET}"
 
-# Step 3: compute SHA-256
+# Step 4: compute SHA-256
 ARCHIVE_SHA256=""
 if command -v sha256sum >/dev/null 2>&1; then
     ARCHIVE_SHA256=$(sha256sum "${CANONICAL_ARCHIVE}" | awk '{print $1}')
@@ -60,11 +148,16 @@ else
     ARCHIVE_SHA256=$(shasum -a 256 "${CANONICAL_ARCHIVE}" | awk '{print $1}')
 fi
 
-# Step 4: create symlink in repo root
+# Step 5: create symlink in repo root
 SYMLINK_PATH="${ROOT_DIR}/UPLOAD_THIS.zip"
 rm -f "${SYMLINK_PATH}"
 ln -s "${CANONICAL_ARCHIVE}" "${SYMLINK_PATH}"
 log_pass "Created symlink: ${SYMLINK_PATH} → ${CANONICAL_ARCHIVE}"
+
+# Step 6: run upload verification
+log_bold "=== Phase 3: Upload Verification ==="
+echo ""
+bash scripts/verify_upload_ready.sh || { log_fail "Upload verification failed"; exit 1; }
 
 echo ""
 echo "========================================"
