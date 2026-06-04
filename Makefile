@@ -1,4 +1,4 @@
-.PHONY: backend-install backend-test frontend-install frontend-check frontend-typecheck verify verify-runtime doctor-macos docker-smoke docker-proof-junit proof release-proof backend-proof frontend-build bootstrap-backend bootstrap-frontend bootstrap truth-check full-proof clean-clone-proof release-proof-local release-package-proof-local nox test check-generated dev stop setup release-zip build-clean-release validate-release-zip proof-static validate-archive-freshness validate-handoff-consistency saskatoon-staging-proof canlii-staging-contract statscan-boundary-proof validate-smoke-workspace validate-full-workspace validate-docker-workspace check-route-contract check-local-env check-config-docs sync-status-docs test-backend-unit test-backend-integration test-backend-db test-backend-auth test-backend-ingestion test-backend-proof test-frontend typecheck-frontend build-frontend lint-frontend frontend-route-smoke test-frontend-proof proof-evidence-verification
+.PHONY: backend-install backend-test frontend-install frontend-check frontend-typecheck verify verify-runtime doctor-macos docker-smoke docker-proof-junit proof release-proof backend-proof frontend-build bootstrap-backend bootstrap-frontend bootstrap truth-check full-proof clean-clone-proof release-proof-local release-package-proof-local nox test check-generated dev stop setup release-zip build-clean-release validate-release-zip proof-static validate-archive-freshness validate-handoff-consistency saskatoon-staging-proof canlii-staging-contract statscan-boundary-proof validate-smoke-workspace validate-full-workspace validate-docker-workspace check-route-contract check-local-env check-config-docs sync-status-docs test-backend-unit test-backend-integration test-backend-db test-backend-auth test-backend-ingestion test-backend-proof test-frontend typecheck-frontend build-frontend lint-frontend frontend-route-smoke test-frontend-proof proof-evidence-verification validate-build validate-source-snapshot validate-build-no-docker
 
 backend-install:
 	cd backend && python -m pip install -e ".[test]"
@@ -289,6 +289,21 @@ proof-static:
 	@python3 scripts/validate_runtime_boundaries.py --static-only
 	@python3 scripts/check_truth_claims.py --root .
 	@echo "Static boundary checks complete (no backend install required)"
+
+# validate-build: full 21-step validation — source snapshot → proof → canonical archive
+validate-build:
+	@bash scripts/run_full_validation.sh
+
+# validate-source-snapshot: validate a ZIP as a source snapshot only (phases A-D)
+# Usage: make validate-source-snapshot SOURCE_ZIP=/path/to/archive.zip
+validate-source-snapshot:
+	@bash scripts/run_full_validation.sh \
+		--source-snapshot-only \
+		$(if $(SOURCE_ZIP),--source-zip "$(SOURCE_ZIP)",)
+
+# validate-build-no-docker: full validation without Docker-dependent phases
+validate-build-no-docker:
+	@bash scripts/run_full_validation.sh --skip-docker
 
 # release-zip: create a distributable archive excluding development artifacts
 release-zip:
