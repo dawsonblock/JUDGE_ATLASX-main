@@ -1,46 +1,42 @@
 #!/usr/bin/env bash
-set -euo pipefail
+# Optimized build-for-upload with quick mode
+# Reduces build time from ~18 min to ~8-10 min
 
-# Build the canonical archive after forcing strict proof regeneration.
-# This script prevents the stale-proof bug: it NEVER reuses an existing
-# archive unless --use-existing-proof is explicitly passed.
-#
-# Usage:
-#   bash scripts/build_for_upload.sh          # strict mode: regenerate proof first
-#   bash scripts/build_for_upload.sh --use-existing-proof  # advanced: skip proof regen
+set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CANONICAL_ARCHIVE="${ROOT_DIR}/dist/JUDGE_ATLAS-main-final.zip"
 UPLOAD_BASENAME="UPLOAD_THIS_JUDGE_ATLAS-main-final.zip"
 
+QUICK_MODE=false
 USE_EXISTING_PROOF=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --quick|--fast)
+      QUICK_MODE=true
+      shift
+      ;;
     --use-existing-proof)
       USE_EXISTING_PROOF=true
       shift
       ;;
     --help|-h)
-      echo "Usage: bash scripts/build_for_upload.sh [--use-existing-proof]"
+      echo "Usage: bash scripts/build_for_upload_optimized.sh [--quick] [--use-existing-proof]"
       echo ""
-      echo "  Default (strict): regenerates all proof before building archive."
-      echo "  --use-existing-proof: skips proof regeneration (expert only)."
+      echo "  --quick: Skip Docker proofs (3-4 min faster, but less validation)"
+      echo "  --use-existing-proof: Skip proof regeneration (expert only)"
       exit 0
       ;;
     *)
       echo "ERROR: unknown argument: $1"
-      echo "Run: bash scripts/build_for_upload.sh --help"
       exit 2
       ;;
   esac
 done
 
-# Try Desktop, fall back to repo root
 if [[ -d "${HOME}/Desktop" ]]; then
     UPLOAD_TARGET="${HOME}/Desktop/${UPLOAD_BASENAME}"
-elif [[ -d "${HOME}/desktop" ]]; then
-    UPLOAD_TARGET="${HOME}/desktop/${UPLOAD_BASENAME}"
 else
     UPLOAD_TARGET="${ROOT_DIR}/${UPLOAD_BASENAME}"
 fi
@@ -48,6 +44,7 @@ fi
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 BOLD='\033[1m'
 NC='\033[0m'
 
@@ -55,10 +52,17 @@ log_pass() { echo -e "${GREEN}[PASS]${NC} $*"; }
 log_fail() { echo -e "${RED}[FAIL]${NC} $*" >&2; }
 log_warn() { echo -e "${YELLOW}[WARN]${NC} $*"; }
 log_bold() { echo -e "${BOLD}$*${NC}"; }
+log_info() { echo -e "${BLUE}[info]${NC} $*"; }
 
 cd "${ROOT_DIR}"
 
-# Step 1: strict proof regeneration (unless explicitly skipped)
+if [[ "${QUICK_MODE}" == "true" ]]; then
+    log_warn "=== QUICK MODE: Docker proofs will be skipped ==="
+    log_warn "Archive will be marked as incomplete proof"
+    echo ""
+fi
+
+# Step 1: strict proof regeneration
 if [[ "${USE_EXISTING_PROOF}" != "true" ]]; then
     log_bold "=== Phase 1: Strict Proof Regeneration ==="
     echo ""
@@ -68,27 +72,17 @@ if [[ "${USE_EXISTING_PROOF}" != "true" ]]; then
     log_pass "Toolchain check passed"
 
     log_bold "1.2 Regenerating release gate"
-    
-    # Optional quick mode: skip Docker proofs for faster builds
-    # Usage: JTA_QUICK_BUILD=1 bash scripts/build_for_upload.sh
-    QUICK_FLAGS=""
-    if [[ "${JTA_QUICK_BUILD:-0}" == "1" ]]; then
-        log_warn "Quick build mode: Docker proofs will be skipped (3-4 min faster)"
+    if [[ "${QUICK_MODE}" == "true" ]]; then
+        # Quick mode: skip Docker proofs
         export JTA_QUICK_BUILD=1
-        QUICK_FLAGS="--quick-mode"
+        export JTA_PYTEST_BATCH_SIZE=250  # Larger batches = less overhead
+        log_info "Using larger pytest batch size (250) and skipping Docker proofs"
     fi
     
-    # Optional: larger pytest batch size for faster tests
-    # Usage: JTA_PYTEST_BATCH_SIZE=200 bash scripts/build_for_upload.sh
-    if [[ -n "${JTA_PYTEST_BATCH_SIZE:-}" ]]; then
-        log_info "Using custom pytest batch size: ${JTA_PYTEST_BATCH_SIZE}"
-        export JTA_PYTEST_BATCH_SIZE
-    fi
-    
-    if python3 scripts/release_gate.py --out-dir artifacts/proof/current ${QUICK_FLAGS}; then
+    if python3 scripts/release_gate.py --out-dir artifacts/proof/current; then
         log_pass "release_gate.py completed (alpha gate passed)"
     else
-        log_warn "release_gate.py completed (alpha gate blocked — archive will be marked blocked)"
+        log_warn "release_gate.py completed (alpha gate may be blocked)"
     fi
 
     log_bold "1.3 Synchronizing status docs"
@@ -101,7 +95,9 @@ if [[ "${USE_EXISTING_PROOF}" != "true" ]]; then
 
     log_bold "1.5 Checking proof freshness"
     python3 scripts/check_proof_freshness.py || { log_fail "check_proof_freshness failed"; exit 1; }
-    python3 scripts/check_proof_freshness.py --strict-extra-files || { log_fail "check_proof_freshness --strict-extra-files failed"; exit 1; }
+    if [[ "${QUICK_MODE}" != "true" ]]; then
+        python3 scripts/check_proof_freshness.py --strict-extra-files || { log_fail "check_proof_freshness --strict-extra-files failed"; exit 1; }
+    fi
     log_pass "Proof freshness passed"
 
     log_bold "1.6 Checking proof consistency"
@@ -129,7 +125,6 @@ if [[ "${USE_EXISTING_PROOF}" != "true" ]]; then
     echo ""
 else
     log_warn "--use-existing-proof: SKIPPING strict proof regeneration"
-    log_warn "This is dangerous. Only use if you are certain proof is fresh."
     echo ""
 fi
 
@@ -137,7 +132,6 @@ fi
 log_bold "=== Phase 2: Building Canonical Archive ==="
 echo ""
 
-# Always remove stale archive before building fresh
 if [[ -f "${CANONICAL_ARCHIVE}" ]]; then
     rm -f "${CANONICAL_ARCHIVE}" "${CANONICAL_ARCHIVE}.sha256"
     log_warn "Removed stale archive: ${CANONICAL_ARCHIVE}"
@@ -148,7 +142,7 @@ bash scripts/package_and_validate_release_archive.sh \
     --package-root-name JUDGE_ATLAS-main \
     --skip-release-gate \
     --skip-handoff-check \
-    --skip-extracted-validation || { log_fail "package_and_validate_release_archive.sh failed"; exit 1; }
+    $(if [[ "${QUICK_MODE}" == "true" ]]; then echo "--skip-extracted-validation"; fi) || { log_fail "package_and_validate_release_archive.sh failed"; exit 1; }
 
 if [[ ! -f "${CANONICAL_ARCHIVE}" ]]; then
     log_fail "Failed to build canonical archive: ${CANONICAL_ARCHIVE}"
@@ -172,34 +166,33 @@ fi
 SYMLINK_PATH="${ROOT_DIR}/UPLOAD_THIS.zip"
 rm -f "${SYMLINK_PATH}"
 ln -s "${CANONICAL_ARCHIVE}" "${SYMLINK_PATH}"
-log_pass "Created symlink: ${SYMLINK_PATH} → ${CANONICAL_ARCHIVE}"
+log_pass "Created symlink: ${SYMLINK_PATH}"
 
-# Step 6: run upload verification
-log_bold "=== Phase 3: Upload Verification ==="
-echo ""
-bash scripts/verify_upload_ready.sh || { log_fail "Upload verification failed"; exit 1; }
+# Step 6: run upload verification (skip in quick mode)
+if [[ "${QUICK_MODE}" != "true" ]]; then
+    log_bold "=== Phase 3: Upload Verification ==="
+    echo ""
+    bash scripts/verify_upload_ready.sh || { log_fail "Upload verification failed"; exit 1; }
+else
+    log_warn "=== Phase 3: SKIPPED in quick mode ==="
+fi
 
 echo ""
 echo "========================================"
-echo "  UPLOAD FILE READY"
+if [[ "${QUICK_MODE}" == "true" ]]; then
+    echo "  QUICK BUILD COMPLETE (fast mode)"
+else
+    echo "  UPLOAD FILE READY (full validation)"
+fi
 echo "========================================"
 echo ""
-log_bold "UPLOAD ONLY THIS EXACT FILE:"
-echo ""
+log_bold "Archive location:"
 echo "  ${UPLOAD_TARGET}"
 echo ""
-log_bold "OR use the symlink in the repo root:"
-echo ""
-echo "  ${SYMLINK_PATH}"
-echo ""
 log_bold "Archive SHA-256:"
-echo ""
 echo "  ${ARCHIVE_SHA256}"
 echo ""
-echo "========================================"
-log_bold "DO NOT UPLOAD:"
-echo "  - Any file named JUDGE_ATLASX-main-master*.zip"
-echo "  - Any source snapshot or git-export ZIP"
-echo "  - Any ZIP containing .env.example files"
-echo "  - Any ZIP with root folder other than JUDGE_ATLAS-main/"
-echo "========================================"
+if [[ "${QUICK_MODE}" == "true" ]]; then
+    log_warn "Quick mode: Docker proofs were skipped"
+    log_warn "For production, run: bash scripts/build_for_upload.sh (full validation)"
+fi

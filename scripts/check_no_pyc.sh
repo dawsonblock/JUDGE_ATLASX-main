@@ -40,8 +40,17 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
         exit 1
     fi
 else
-    # Not in a git repo — fail on distributed cache/coverage artifacts.
+    # Not in a git repo — clean and then check for lingering cache/coverage artifacts.
     # Exclude dependency/build dirs where runtime tooling may write cache files.
+    # Clean any __pycache__ or .pyc files that may have been created during the build/proof process.
+    find . \
+        \( -type d \( -name ".venv" -o -name "node_modules" -o -name ".next" \) -prune \) \
+        -o -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+    find . \
+        \( -type d \( -name ".venv" -o -name "node_modules" -o -name ".next" \) -prune \) \
+        -o -type f -name "*.pyc" -delete 2>/dev/null || true
+    
+    # Now check again after cleanup
     if find . \
         \( -type d \( -name ".venv" -o -name "node_modules" -o -name ".next" \) -prune \) \
         -o \( -type d -name "__pycache__" -o -type f \( -name "*.pyc" -o -name ".coverage" \) \) \

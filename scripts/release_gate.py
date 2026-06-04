@@ -2697,6 +2697,21 @@ def main() -> int:
         ),
     ]
 
+    # Quick build mode: skip expensive/optional gates
+    # Usage: JTA_QUICK_BUILD=1 python3 scripts/release_gate.py
+    if os.getenv("JTA_QUICK_BUILD") == "1":
+        gates_to_skip = {
+            "docker_smoke",  # ~2 min, optional
+            "postgis_proof",  # ~1 min, optional
+            "egress_proxy_proof",  # ~1 min, optional
+            "demo_proof",  # ~1 min, optional
+            "canlii_staging_proof",  # ~1 min, optional
+            "mutation_fail_closed_coverage",  # ~1 min, optional mutation testing
+        }
+        gate_steps = [g for g in gate_steps if g.name not in gates_to_skip]
+        print(f"[release_gate] QUICK BUILD MODE: Skipped {len(gates_to_skip)} optional gates", file=sys.stderr)
+        print(f"[release_gate] Expected time savings: 4-6 minutes", file=sys.stderr)
+
     # proof_freshness runs as a post-write step after the preliminary
     # release_gate.json is written, so the stored manifest is final before
     # validation. Not in gate_steps; handled explicitly below.

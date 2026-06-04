@@ -83,8 +83,8 @@ def main() -> int:
     parser.add_argument(
         "--batch-size",
         type=int,
-        default=40,
-        help="Number of test files per pytest invocation",
+        default=int(os.getenv("JTA_PYTEST_BATCH_SIZE", "40")),
+        help="Number of test files per pytest invocation (env: JTA_PYTEST_BATCH_SIZE)",
     )
     parser.add_argument(
         "--ignore",
