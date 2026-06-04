@@ -1,7 +1,7 @@
 # FIX_VERIFICATION_REPORT
 
-- generated_at_utc: 2026-06-04T00:36:51.330555+00:00
-- commit_hash: 33262b904e226582a043eec875b2791cac4189f9
+- generated_at_utc: 2026-06-04T01:44:09.851900+00:00
+- commit_hash: ade75a2e2db55680225b88a92eb76fdea7730690
 - alpha_gate_passed: false
 - alpha_candidate: false
 - self_verifying_alpha: false
@@ -13,7 +13,7 @@
 
 - backend_compile: PASS
 - backend_import: PASS
-- backend_pytest: FAIL
+- backend_pytest: PASS
 - verify_evidence_store: PASS
 - verify_audit_chain: PASS
 - public_api_boundary: PASS
@@ -24,9 +24,6 @@
 
 ## Release Blockers
 
-- check_false_claims
-- check_statuses
-- backend_pytest
 - source_registry_proof_pytest
 - archive_validation
 - check_proof_consistency

@@ -31,6 +31,9 @@ REPO_ROOT_DEFAULT = Path(__file__).resolve().parents[1]
 _PLACEHOLDER_SECRETS = (
     "CHANGE-ME-BEFORE-PRODUCTION",
     "changeme",
+    "placeholder",
+    "dummy",
+    "fake_secret",
     "password",
     "secret",
     "12345",
@@ -38,6 +41,10 @@ _PLACEHOLDER_SECRETS = (
 )
 
 _PROD_ENV_NAME_RE = re.compile(r"judgetracker-prod(?!uction-ready-false)", re.IGNORECASE)
+GITHUB_SECRET_PATTERN = re.compile(
+    r"\$\{\{[^}]*secrets\.[A-Z0-9_]+[^}]*\}\}",
+    re.IGNORECASE,
+)
 _ALPHA_LABEL_PHRASES = ("alpha", "ALPHA")
 
 
@@ -99,7 +106,8 @@ def _check_azure_deploy_workflow(repo_root: Path) -> list[str]:
 
     # Baked-in placeholder secrets
     for placeholder in _PLACEHOLDER_SECRETS:
-        if placeholder in text:
+        scrubbed_text = GITHUB_SECRET_PATTERN.sub("", text)
+        if placeholder in scrubbed_text:
             errors.append(
                 f"azure_deploy_workflow_contains_placeholder_secret:{placeholder}"
             )

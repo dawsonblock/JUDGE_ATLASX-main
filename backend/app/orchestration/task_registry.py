@@ -13,6 +13,8 @@ from urllib.parse import urlparse
 
 from sqlalchemy.orm import Session
 
+from app.core.task_status import TaskExecutionStatus
+
 logger = logging.getLogger(__name__)
 
 # Security constraints
@@ -97,22 +99,34 @@ class TaskResult:
 
     def __init__(
         self,
-        success: bool,
-        output: Any = None,
+        status: TaskExecutionStatus,
+        output: Dict[str, Any] | None = None,
         error: str | None = None,
+        message: str = "",
+        executed: bool | None = None,
         metadata: Dict[str, Any] | None = None,
     ):
-        self.success = success
-        self.output = output
+        self.status = status
+        self.success = status is TaskExecutionStatus.COMPLETED
+        self.safe_to_rely_on = status.safe_to_rely_on
+        self.executed = self.success if executed is None else executed
+        if self.executed is False and self.success:
+            raise ValueError("executed=False cannot be success=True")
+        self.output = output or {}
         self.error = error
+        self.message = message
         self.metadata = metadata or {}
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "success": self.success,
+            "status": self.status.value,
+            "safe_to_rely_on": self.safe_to_rely_on,
+            "executed": self.executed,
             "output": self.output,
             "error": self.error,
+            "message": self.message,
             "metadata": self.metadata,
         }
 
@@ -133,6 +147,22 @@ class TaskRegistry:
         """Get a task implementation by type."""
         return self.tasks.get(task_type)
 
+    def _completed(self, output: Dict[str, Any], message: str = "") -> TaskResult:
+        return TaskResult(
+            status=TaskExecutionStatus.COMPLETED,
+            output=output,
+            message=message,
+            executed=True,
+        )
+
+    def _not_implemented(self, message: str) -> TaskResult:
+        return TaskResult(
+            status=TaskExecutionStatus.NOT_IMPLEMENTED,
+            output={},
+            message=message,
+            executed=False,
+        )
+
     def execute_task(
         self,
         task_type: str,
@@ -144,16 +174,25 @@ class TaskRegistry:
         task_func = self.get_task(task_type)
         if not task_func:
             return TaskResult(
-                success=False,
+                status=TaskExecutionStatus.NOT_IMPLEMENTED,
                 error=f"Unknown task type: {task_type}",
+                message=f"Unknown task type: {task_type}",
+                executed=False,
             )
 
         try:
             output = task_func(db, workspace_path, params)
-            return TaskResult(success=True, output=output)
+            if isinstance(output, TaskResult):
+                return output
+            return self._completed(output=output)
         except Exception as e:
             logger.error(f"Task {task_type} failed: {e}", exc_info=True)
-            return TaskResult(success=False, error=str(e))
+            return TaskResult(
+                status=TaskExecutionStatus.ERROR,
+                error=str(e),
+                message=str(e),
+                executed=False,
+            )
 
     def _register_default_tasks(self) -> None:
         """Register default safe task implementations."""
@@ -208,11 +247,11 @@ class TaskRegistry:
             
             output_path.write_bytes(response.content)
 
-        return {
+        return self._completed({
             "output_path": str(output_path),
             "content_length": content_length,
             "status_code": response.status_code,
-        }
+        })
 
     def _task_fetch_api(
         self, db: Session, workspace_path: str, params: Dict[str, Any]
@@ -247,58 +286,42 @@ class TaskRegistry:
             
             output_path.write_bytes(response.content)
 
-        return {
+        return self._completed({
             "output_path": str(output_path),
             "status_code": response.status_code,
-        }
+        })
 
     def _task_evidence_snapshot(
         self, db: Session, workspace_path: str, params: Dict[str, Any]
     ) -> Any:
         """Create an evidence snapshot from fetched data."""
-        from pathlib import Path
-
-        preserve_raw = params.get("preserve_raw", True)
-        store_in_vault = params.get("store_in_vault", True)
-
-        # This would integrate with the existing SourceSnapshot system
-        # For now, return a placeholder
-        return {
-            "preserve_raw": preserve_raw,
-            "store_in_vault": store_in_vault,
-            "snapshot_id": "placeholder_snapshot_id",
-        }
+        return self._not_implemented(
+            "Evidence snapshot creation is not implemented in this build."
+        )
 
     def _task_parse_law_xml(
         self, db: Session, workspace_path: str, params: Dict[str, Any]
     ) -> Any:
         """Parse law XML data into structured format."""
-        from pathlib import Path
-
-        parser_version = params.get("parser_version", "1.0")
-        extract_sections = params.get("extract_sections", True)
-
-        # This would integrate with existing XML parsers
-        # For now, return a placeholder
-        return {
-            "parser_version": parser_version,
-            "extract_sections": extract_sections,
-            "statutes_parsed": 0,
-        }
+        return self._not_implemented(
+            "Law XML parsing is not implemented in this build."
+        )
 
     def _task_parse_court_events(
         self, db: Session, workspace_path: str, params: Dict[str, Any]
     ) -> Any:
         """Parse court event data."""
-        # This would integrate with existing court event parsers
-        return {"events_parsed": 0}
+        return self._not_implemented(
+            "Court event parsing is not implemented in this build."
+        )
 
     def _task_parse_police_release(
         self, db: Session, workspace_path: str, params: Dict[str, Any]
     ) -> Any:
         """Parse police release data."""
-        # This would integrate with existing police release parsers
-        return {"releases_parsed": 0}
+        return self._not_implemented(
+            "Police release parsing is not implemented in this build."
+        )
 
     def _task_extract_claims(
         self, db: Session, workspace_path: str, params: Dict[str, Any]
@@ -323,107 +346,68 @@ class TaskRegistry:
         if not isinstance(claims, list):
             raise ValueError("claim extraction failed: extractor returned non-list output")
 
-        return {
+        return self._completed({
             "claim_types": claim_types,
             "confidence_threshold": confidence_threshold,
             "claims": claims,
             "claims_extracted": len(claims),
-        }
+        })
 
     def _task_resolve_entities(
         self, db: Session, workspace_path: str, params: Dict[str, Any]
     ) -> Any:
         """Resolve and deduplicate legal entities."""
-        entity_types = params.get("entity_types", [])
-        dedupe_by_name = params.get("dedupe_by_name", True)
-
-        # This would integrate with the existing entity resolution system
-        return {
-            "entity_types": entity_types,
-            "dedupe_by_name": dedupe_by_name,
-            "entities_resolved": 0,
-        }
+        return self._not_implemented(
+            "Entity resolution is not implemented in this build."
+        )
 
     def _task_geocode_locations(
         self, db: Session, workspace_path: str, params: Dict[str, Any]
     ) -> Any:
         """Geocode location references."""
-        # This would integrate with the existing geocoding service
-        return {"locations_geocoded": 0}
+        return self._not_implemented(
+            "Location geocoding is not implemented in this build."
+        )
 
     def _task_dedupe_events(
         self, db: Session, workspace_path: str, params: Dict[str, Any]
     ) -> Any:
         """Deduplicate events based on configured fields."""
-        dedupe_fields = params.get("dedupe_fields", [])
-        fuzzy_match_threshold = params.get("fuzzy_match_threshold", 0.9)
-
-        # This would integrate with existing deduplication logic
-        return {
-            "dedupe_fields": dedupe_fields,
-            "fuzzy_match_threshold": fuzzy_match_threshold,
-            "duplicates_found": 0,
-        }
+        return self._not_implemented(
+            "Event deduplication is not implemented in this build."
+        )
 
     def _task_contradiction_check(
         self, db: Session, workspace_path: str, params: Dict[str, Any]
     ) -> Any:
         """Check for contradictions using the contradiction engine."""
-        from app.memory.contradiction_engine import check_contradictions_for_run
-
-        check_against = params.get("check_against", [])
-        severity_threshold = params.get("severity_threshold", "medium")
-
-        # This would integrate with the existing contradiction engine
-        return {
-            "check_against": check_against,
-            "severity_threshold": severity_threshold,
-            "contradictions_found": 0,
-        }
+        return self._not_implemented(
+            "Contradiction checking is not implemented in this build."
+        )
 
     def _task_confidence_score(
         self, db: Session, workspace_path: str, params: Dict[str, Any]
     ) -> Any:
         """Score confidence of claims using the confidence engine."""
-        from app.ai.confidence_engine import calculate_claim_confidence
-
-        model = params.get("model", "default")
-        min_confidence = params.get("min_confidence", 0.6)
-
-        # This would integrate with the existing confidence engine
-        return {
-            "model": model,
-            "min_confidence": min_confidence,
-            "claims_scored": 0,
-        }
+        return self._not_implemented(
+            "Confidence scoring is not implemented in this build."
+        )
 
     def _task_legal_correlation(
         self, db: Session, workspace_path: str, params: Dict[str, Any]
     ) -> Any:
         """Run legal correlation analysis."""
-        correlation_types = params.get("correlation_types", [])
-        confidence_threshold = params.get("confidence_threshold", 0.5)
-
-        # This would integrate with the legal correlation engine
-        return {
-            "correlation_types": correlation_types,
-            "confidence_threshold": confidence_threshold,
-            "correlations_found": 0,
-        }
+        return self._not_implemented(
+            "Legal correlation analysis is not implemented in this build."
+        )
 
     def _task_enqueue_review(
         self, db: Session, workspace_path: str, params: Dict[str, Any]
     ) -> Any:
         """Enqueue items for review."""
-        review_queue = params.get("review_queue", "default")
-        auto_approve_threshold = params.get("auto_approve_threshold", 0.9)
-
-        # This would integrate with the existing review queue system
-        return {
-            "review_queue": review_queue,
-            "auto_approve_threshold": auto_approve_threshold,
-            "items_enqueued": 0,
-        }
+        return self._not_implemented(
+            "Review enqueueing is not implemented in this build."
+        )
 
     def _task_publish_map_layer(
         self, db: Session, workspace_path: str, params: Dict[str, Any]

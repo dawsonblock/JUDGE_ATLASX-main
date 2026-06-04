@@ -26,6 +26,7 @@ class TestExecuteApprovedMergeHonesty:
         entity_1.confidence_score = confidence
         entity_1.merge_count = 0
         entity_1.is_canonical = True
+        entity_1.jurisdiction = None
 
         entity_2 = MagicMock()
         entity_2.id = 2
@@ -35,6 +36,7 @@ class TestExecuteApprovedMergeHonesty:
         entity_2.confidence_score = confidence
         entity_2.merge_count = 0
         entity_2.is_canonical = True
+        entity_2.jurisdiction = None
 
         return entity_1, entity_2
 
@@ -48,7 +50,7 @@ class TestExecuteApprovedMergeHonesty:
         with patch(
             "app.graph.entity_resolution_safety.propose_entity_merge",
             return_value={
-                "similarity_score": confidence,
+                "confidence": confidence,
                 "shared_sources": [],
                 "name_similarity": 0.99,
                 "type_match": True,

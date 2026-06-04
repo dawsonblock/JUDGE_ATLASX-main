@@ -125,8 +125,8 @@ class TestMergeApproval:
             entity1.id, entity2.id, "test_user", db_session
         )
 
-        assert result["status"] in ["executed", "blocked"]
-        if result["status"] == "executed":
+        assert result["status"] in ["not_implemented", "blocked"]
+        if result["status"] == "not_implemented":
             assert "approved_by" in result
             assert result["approved_by"] == "test_user"
 

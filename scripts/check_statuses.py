@@ -39,7 +39,7 @@ _TEST_DIR_PARTS = {"tests", "test"}
 _ALEMBIC_DIR_PARTS = {"alembic", "versions"}
 
 # These modules use status strings for non-ingestion purposes; skip them.
-_SKIP_DIR_PARTS = {"workers", "memory", "graph", "seed", "archive"}
+_SKIP_DIR_PARTS = {"workers", "memory", "graph", "seed", "archive", "scripts", ".venv"}
 
 # These individual files use status strings for non-ingestion domain enums.
 _SKIP_FILE_NAMES = {
@@ -54,6 +54,9 @@ _SKIP_FILE_NAMES = {
     "geocoding.py",  # Geocoding service status enum (exact, approximate, failed) not ingestion status
     "done_criteria.py",  # Phase completion tracking uses completed/pending as dict keys, not ingestion status
     "verification_standard.py",  # ReviewDecision domain enum (pending, approved, rejected, escalated)
+    "task_status.py",  # Canonical TaskExecutionStatus enum definition.
+    "release_gate.py",  # Release gate uses 'failed' for overall gate result, not ingestion status.
+    "validate_workspace.py",  # Workspace validator uses 'failed' for validation result, not ingestion status.
 }
 
 

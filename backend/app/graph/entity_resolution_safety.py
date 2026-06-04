@@ -173,7 +173,12 @@ def execute_approved_merge(
     proposal = propose_safe_merge(entity_id_1, entity_id_2, db)
 
     if proposal["status"] != "proposed":
-        return {"status": "error", "message": "Merge proposal failed"}
+        return {
+            "status": TaskExecutionStatus.ERROR,
+            "executed": False,
+            "safe_to_rely_on": False,
+            "message": "Merge proposal failed",
+        }
 
     safety = proposal["safety"]
     if not safety["safe"]:
@@ -182,7 +187,9 @@ def execute_approved_merge(
             approved_by,
         )
         return {
-            "status": "blocked",
+            "status": TaskExecutionStatus.BLOCKED,
+            "executed": False,
+            "safe_to_rely_on": False,
             "message": "Merge blocked by safety check",
             "safety": safety,
         }

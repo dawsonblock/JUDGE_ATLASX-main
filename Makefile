@@ -294,16 +294,16 @@ proof-static:
 validate-build:
 	@bash scripts/run_full_validation.sh
 
-# validate-source-snapshot: validate a ZIP as a source snapshot only (phases A-D)
+# validate-source-snapshot: validate source snapshot only
 # Usage: make validate-source-snapshot SOURCE_ZIP=/path/to/archive.zip
 validate-source-snapshot:
 	@bash scripts/run_full_validation.sh \
-		--source-snapshot-only \
+		--source-snapshot \
 		$(if $(SOURCE_ZIP),--source-zip "$(SOURCE_ZIP)",)
 
 # validate-build-no-docker: full validation without Docker-dependent phases
 validate-build-no-docker:
-	@bash scripts/run_full_validation.sh --skip-docker
+	@bash scripts/run_full_validation.sh --source-snapshot --skip-docker
 
 # release-zip: create a distributable archive excluding development artifacts
 release-zip:

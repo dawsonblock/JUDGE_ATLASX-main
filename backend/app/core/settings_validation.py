@@ -30,7 +30,7 @@ class InsecureProductionConfigError(RuntimeError):
 
 _PLACEHOLDER_SECRETS = frozenset(
     {
-        "CHANGE-ME-BEFORE-PRODUCTION",
+        "change-me-before-production",
         "change-me",
         "dev-only-change-me",
         "secret",

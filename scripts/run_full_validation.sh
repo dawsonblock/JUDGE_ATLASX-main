@@ -23,6 +23,8 @@
 # Options:
 #   --source-zip <path>       Run phase A ZIP safety check against this file
 #   --skip-docker             Skip phases/steps that require Docker
+#   --source-snapshot         Validate source snapshot only
+#   --final-archive           Validate only dist/JUDGE_ATLAS-main-final.zip
 #   --source-snapshot-only    Stop after phase D (validate source snapshot only)
 #   --proof-only              Skip A-D; run G onwards assuming proof is fresh
 #   -h, --help                Show this help
@@ -45,7 +47,8 @@ ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 # ---------------------------------------------------------------------------
 SOURCE_ZIP=""
 SKIP_DOCKER=false
-SOURCE_SNAPSHOT_ONLY=false
+SOURCE_SNAPSHOT=false
+FINAL_ARCHIVE=false
 PROOF_ONLY=false
 
 while [[ $# -gt 0 ]]; do
@@ -54,8 +57,12 @@ while [[ $# -gt 0 ]]; do
       SOURCE_ZIP="$2"; shift 2 ;;
     --skip-docker)
       SKIP_DOCKER=true; shift ;;
+    --source-snapshot)
+      SOURCE_SNAPSHOT=true; shift ;;
+    --final-archive)
+      FINAL_ARCHIVE=true; shift ;;
     --source-snapshot-only)
-      SOURCE_SNAPSHOT_ONLY=true; shift ;;
+      SOURCE_SNAPSHOT=true; shift ;;
     --proof-only)
       PROOF_ONLY=true; shift ;;
     -h|--help)
@@ -65,6 +72,11 @@ while [[ $# -gt 0 ]]; do
       echo "Unknown option: $1" >&2; exit 2 ;;
   esac
 done
+
+if "${SOURCE_SNAPSHOT}" && "${FINAL_ARCHIVE}"; then
+  echo "ERROR: choose either --source-snapshot or --final-archive, not both" >&2
+  exit 2
+fi
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -78,6 +90,7 @@ RESET="\033[0m"
 PHASE_RESULTS=()   # "PHASE_NAME:PASS" or "PHASE_NAME:FAIL:reason"
 OVERALL_EXIT=0
 STARTED_AT="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+SOURCE_REQUIRED_EXIT=0
 
 _pass() {
   local phase="$1"
@@ -91,6 +104,13 @@ _fail() {
   echo -e "${RED}[FAIL]${RESET} ${phase}${reason:+ — ${reason}}"
   PHASE_RESULTS+=("${phase}:FAIL:${reason}")
   OVERALL_EXIT=1
+}
+
+_source_fail() {
+  local phase="$1"
+  local reason="${2:-}"
+  SOURCE_REQUIRED_EXIT=1
+  _fail "${phase}" "${reason}"
 }
 
 _skip() {
@@ -113,6 +133,15 @@ _run_check() {
     _pass "${phase}"
   else
     _fail "${phase}" "exit code $?"
+  fi
+}
+
+_run_source_check() {
+  local phase="$1"; shift
+  if "$@" 2>&1; then
+    _pass "${phase}"
+  else
+    _source_fail "${phase}" "exit code $?"
   fi
 }
 
@@ -171,15 +200,15 @@ _print_summary() {
 # ---------------------------------------------------------------------------
 # Phase A — ZIP safety check (optional)
 # ---------------------------------------------------------------------------
-if [[ -n "${SOURCE_ZIP}" ]] && ! "${PROOF_ONLY}"; then
+if [[ -n "${SOURCE_ZIP}" ]] && ! "${PROOF_ONLY}" && ! "${FINAL_ARCHIVE}"; then
   _header "Phase A — ZIP Safety Check"
   if [[ ! -f "${SOURCE_ZIP}" ]]; then
-    _fail "A.zip-exists" "file not found: ${SOURCE_ZIP}"
+    _source_fail "A.zip-exists" "file not found: ${SOURCE_ZIP}"
   else
     _pass "A.zip-exists"
     unsafe="$(zipinfo "${SOURCE_ZIP}" 2>/dev/null | grep -E '(^|/)\.\./' || true)"
     if [[ -n "${unsafe}" ]]; then
-      _fail "A.zip-traversal-safe" "unsafe entries found: ${unsafe}"
+      _source_fail "A.zip-traversal-safe" "unsafe entries found: ${unsafe}"
     else
       _pass "A.zip-traversal-safe"
     fi
@@ -189,14 +218,14 @@ fi
 # ---------------------------------------------------------------------------
 # Phase B — Runtime versions
 # ---------------------------------------------------------------------------
-if ! "${PROOF_ONLY}"; then
+if ! "${PROOF_ONLY}" && ! "${FINAL_ARCHIVE}"; then
   _header "Phase B — Runtime Versions"
   pushd "${ROOT_DIR}" >/dev/null
 
-  _run_check "B.check-runtime-versions" \
+  _run_source_check "B.check-runtime-versions" \
     python3 scripts/check_runtime_versions.py --root .
 
-  _run_check "B.check-toolchain-versions" \
+  _run_source_check "B.check-toolchain-versions" \
     python3 scripts/check_toolchain_versions.py --root .
 
   popd >/dev/null
@@ -205,23 +234,23 @@ fi
 # ---------------------------------------------------------------------------
 # Phase C — Source snapshot validity
 # ---------------------------------------------------------------------------
-if ! "${PROOF_ONLY}"; then
+if ! "${PROOF_ONLY}" && ! "${FINAL_ARCHIVE}"; then
   _header "Phase C — Source Snapshot Validity"
   pushd "${ROOT_DIR}" >/dev/null
 
-  _run_check "C.compileall-backend" \
+  _run_source_check "C.compileall-backend" \
     python3 -m compileall -q backend/app scripts tests
 
-  _run_check "C.source-registry-docs" \
+  _run_source_check "C.source-registry-docs" \
     python3 scripts/check_source_registry_docs.py
 
-  _run_check "C.status-consistency" \
+  _run_source_check "C.status-consistency" \
     python3 scripts/check_status_consistency.py
 
-  _run_check "C.no-local-paths" \
+  _run_source_check "C.no-local-paths" \
     python3 scripts/check_no_local_paths_in_release_proof.py
 
-  _run_check "C.evidence-verification-standard" \
+  _run_source_check "C.evidence-verification-standard" \
     python3 scripts/check_evidence_verification_standard.py
 
   popd >/dev/null
@@ -230,7 +259,7 @@ fi
 # ---------------------------------------------------------------------------
 # Phase D — Prove NOT a final release (expected-fail)
 # ---------------------------------------------------------------------------
-if ! "${PROOF_ONLY}"; then
+if ! "${PROOF_ONLY}" && ! "${FINAL_ARCHIVE}"; then
   _header "Phase D — Confirm Not a Final Release (Expected Failures)"
   echo "  These checks are expected to FAIL if proof logs are absent."
   echo "  A pass here means build is already a complete release."
@@ -242,7 +271,13 @@ if ! "${PROOF_ONLY}"; then
   _expected_fail "D.proof-consistency-absent" \
     python3 scripts/check_proof_consistency.py
 
-  if [[ -n "${SOURCE_ZIP}" ]]; then
+  if "${SOURCE_SNAPSHOT}"; then
+    if [[ -f "dist/JUDGE_ATLAS-main-final.zip" ]]; then
+      echo "  Note: final archive exists; source-snapshot mode will not validate it."
+    else
+      echo "  Expected: final archive not present yet."
+    fi
+  elif [[ -n "${SOURCE_ZIP}" ]]; then
     _expected_fail "D.final-zip-invalid" \
       python3 scripts/validate_final_zip.py "${SOURCE_ZIP}"
   else
@@ -251,20 +286,24 @@ if ! "${PROOF_ONLY}"; then
 
   popd >/dev/null
 
-  if "${SOURCE_SNAPSHOT_ONLY}"; then
-    _header "Source Snapshot Validation Complete (--source-snapshot-only)"
+  if "${SOURCE_SNAPSHOT}"; then
+    _header "Source Snapshot Validation Complete"
     echo ""
-    echo "Result: build is a valid SOURCE SNAPSHOT."
-    echo "It is NOT a self-verifying release archive."
-    echo "Run without --source-snapshot-only to generate the canonical archive."
+    if [[ "${SOURCE_REQUIRED_EXIT}" -eq 0 ]]; then
+      echo "Result: build is a valid SOURCE SNAPSHOT."
+      echo "It is NOT a self-verifying release archive."
+      echo "Run --final-archive after generating the canonical archive."
+    else
+      echo "Result: source snapshot validation FAILED."
+      echo "Do not call this a valid source snapshot until required checks pass."
+    fi
     echo ""
-    # Use overall exit 1 to signal that this is not a final release.
-    # Phase-D expected-fail confirmations are informational, not errors,
-    # but the caller should know this path did not produce an archive.
     _print_summary
-    exit 1
+    exit "${SOURCE_REQUIRED_EXIT}"
   fi
 fi
+
+if ! "${FINAL_ARCHIVE}"; then
 
 # ---------------------------------------------------------------------------
 # Phase E — Clean proof directory
@@ -382,6 +421,8 @@ _run_check "J.package-and-validate" \
     --package-root-name JUDGE_ATLAS-main
 
 popd >/dev/null
+
+fi
 
 # ---------------------------------------------------------------------------
 # Phase K — Archive hygiene

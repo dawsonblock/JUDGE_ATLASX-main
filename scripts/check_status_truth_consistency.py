@@ -76,16 +76,17 @@ STALE_REPAIR_PATTERNS = (
 )
 
 # Known-wrong source count phrases that must never appear in status docs.
-# Update this list whenever canonical counts change.
-STALE_COUNT_PHRASES: tuple[str, ...] = (
-    "2/26 runnable",
-    "2 actively runnable",
-    "5 enable-ready sources",
-    "5 enable-ready",
-    "3 runnable sources",
-    "4 runnable sources",
-    "5 runnable sources",
-    "6 runnable sources",
+# Use regex boundaries so "6 runnable sources" does not match
+# "7/26 runnable sources".
+STALE_COUNT_PATTERNS: tuple[re.Pattern[str], ...] = (
+    re.compile(r"(?<![\d/])2/26\s+runnable\b", re.IGNORECASE),
+    re.compile(r"(?<![\d/])2\s+actively\s+runnable\b", re.IGNORECASE),
+    re.compile(r"(?<![\d/])5\s+enable-ready\s+sources\b", re.IGNORECASE),
+    re.compile(r"(?<![\d/])5\s+enable-ready\b", re.IGNORECASE),
+    re.compile(r"(?<![\d/])3\s+runnable\s+sources\b", re.IGNORECASE),
+    re.compile(r"(?<![\d/])4\s+runnable\s+sources\b", re.IGNORECASE),
+    re.compile(r"(?<![\d/])5\s+runnable\s+sources\b", re.IGNORECASE),
+    re.compile(r"(?<![\d/])6\s+runnable\s+sources\b", re.IGNORECASE),
 )
 
 _STALE_COUNT_SKIP_DOCS = {
@@ -264,9 +265,11 @@ def _scan_stale_count_phrases(root: Path) -> list[str]:
             text = _read_text(path)
         except OSError:
             continue
-        for phrase in STALE_COUNT_PHRASES:
-            if phrase.lower() in text.lower():
-                errors.append(f"stale_count_phrase:{rel}:{phrase!r}")
+        for pattern in STALE_COUNT_PATTERNS:
+            if pattern.search(text):
+                errors.append(
+                    f"stale_count_phrase:{rel}:{pattern.pattern!r}"
+                )
     return errors
 
 

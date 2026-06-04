@@ -123,6 +123,13 @@ ALLOWED_POLICY_FILES: dict[str, AllowedPolicyPhrase] = {
         ),
         phrases=("is guilty",),
     ),
+    "backend/test_legal_safety_gates.py": AllowedPolicyPhrase(
+        reason=(
+            "Policy-layer legal safety test intentionally includes prohibited "
+            "causal attribution phrases as fixtures to verify they are blocked."
+        ),
+        phrases=("is guilty",),
+    ),
     "backend/app/tests/test_ai_correctness.py": AllowedPolicyPhrase(
         reason="Test asserts that danger score is NOT produced.",
         phrases=("danger score",),
