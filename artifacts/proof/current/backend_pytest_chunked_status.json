@@ -1,15 +1,15 @@
 {
-  "started_at": "2026-06-03T19:56:22.611929+00:00",
-  "finished_at": "2026-06-03T19:57:52.614376+00:00",
+  "started_at": "2026-06-04T00:31:21.434701+00:00",
+  "finished_at": "2026-06-04T00:32:04.505973+00:00",
   "collect_exit_code": 0,
-  "batch_exit_code": 0,
+  "batch_exit_code": 1,
   "batch_size": 40,
-  "discovered_files": 300,
+  "discovered_files": 304,
   "batches": [
     {
       "index": 1,
-      "started_at": "2026-06-03T19:56:26.527440+00:00",
-      "finished_at": "2026-06-03T19:56:41.162984+00:00",
+      "started_at": "2026-06-04T00:31:26.079522+00:00",
+      "finished_at": "2026-06-04T00:31:42.824104+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/ingestion/test_ckan_adapter.py",
@@ -17,67 +17,13 @@
     },
     {
       "index": 2,
-      "started_at": "2026-06-03T19:56:41.163106+00:00",
-      "finished_at": "2026-06-03T19:57:02.194555+00:00",
-      "exit_code": 0,
+      "started_at": "2026-06-04T00:31:42.824789+00:00",
+      "finished_at": "2026-06-04T00:32:04.505850+00:00",
+      "exit_code": 1,
       "file_count": 40,
       "first_file": "backend/app/tests/test_auto_review.py",
       "last_file": "backend/app/tests/test_crawlee_safety.py"
-    },
-    {
-      "index": 3,
-      "started_at": "2026-06-03T19:57:02.194738+00:00",
-      "finished_at": "2026-06-03T19:57:08.626300+00:00",
-      "exit_code": 0,
-      "file_count": 40,
-      "first_file": "backend/app/tests/test_crime_source_ingestion.py",
-      "last_file": "backend/app/tests/test_import_authority_roles.py"
-    },
-    {
-      "index": 4,
-      "started_at": "2026-06-03T19:57:08.626422+00:00",
-      "finished_at": "2026-06-03T19:57:13.227150+00:00",
-      "exit_code": 0,
-      "file_count": 40,
-      "first_file": "backend/app/tests/test_ingestion_identity_uniqueness.py",
-      "last_file": "backend/app/tests/test_memory_derivative_boundary.py"
-    },
-    {
-      "index": 5,
-      "started_at": "2026-06-03T19:57:13.227225+00:00",
-      "finished_at": "2026-06-03T19:57:25.827684+00:00",
-      "exit_code": 0,
-      "file_count": 40,
-      "first_file": "backend/app/tests/test_memory_graph_bridge.py",
-      "last_file": "backend/app/tests/test_public_api_safety.py"
-    },
-    {
-      "index": 6,
-      "started_at": "2026-06-03T19:57:25.827782+00:00",
-      "finished_at": "2026-06-03T19:57:31.510695+00:00",
-      "exit_code": 0,
-      "file_count": 40,
-      "first_file": "backend/app/tests/test_public_graph_api_safety.py",
-      "last_file": "backend/app/tests/test_saskatchewan_court_sources.py"
-    },
-    {
-      "index": 7,
-      "started_at": "2026-06-03T19:57:31.510762+00:00",
-      "finished_at": "2026-06-03T19:57:41.450030+00:00",
-      "exit_code": 0,
-      "file_count": 40,
-      "first_file": "backend/app/tests/test_saskatoon_ingest_endpoint.py",
-      "last_file": "backend/app/tests/test_source_trust_hierarchy.py"
-    },
-    {
-      "index": 8,
-      "started_at": "2026-06-03T19:57:41.450153+00:00",
-      "finished_at": "2026-06-03T19:57:52.614207+00:00",
-      "exit_code": 0,
-      "file_count": 20,
-      "first_file": "backend/app/tests/test_source_verifier.py",
-      "last_file": "backend/app/tests/test_workflow_admin_security.py"
     }
   ],
-  "status": "PASS"
+  "status": "FAIL"
 }

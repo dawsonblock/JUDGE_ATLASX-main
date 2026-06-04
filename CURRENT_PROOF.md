@@ -1,23 +1,23 @@
 # CURRENT_PROOF
 
-- generated_at_utc: 2026-06-03T20:01:02.171804+00:00
-- commit_hash: f9253a4b7585b08c132603b5df9b1aa6a2e8a196
-- alpha_gate_passed: true
-- alpha_gate_status: PASS
-- alpha_candidate: true
-- self_verifying_alpha: true
+- generated_at_utc: 2026-06-04T00:36:51.330555+00:00
+- commit_hash: 33262b904e226582a043eec875b2791cac4189f9
+- alpha_gate_passed: false
+- alpha_gate_status: BLOCKED
+- alpha_candidate: false
+- self_verifying_alpha: false
 - production_release_candidate: false
 - production_ready: false
 - public_release_safe: false
-- release_gate_check_count: 56
+- release_gate_check_count: 57
 - docker_available: true
 - postgis_proof_result: PASS
 - egress_proxy_proof_result: PASS
 - demo_proof_result: PASS
 - proof_freshness_result: PASS
-- archive_validation_result: PASS
-- proof_input_tree_hash: a5f3333e7d1e9046326e0c1da7d5fab125199a05d4d620e3ad081caa798186e6
-- proof_input_file_count: 1122
+- archive_validation_result: FAIL
+- proof_input_tree_hash: b8f3fffa13c76e5749a96aa06803271b5a41b7ed50881c2f2fb888c2fddb7eec
+- proof_input_file_count: 1135
 - egress_proxy_proof_log: artifacts/proof/current/egress_proxy_proof.log
 - demo_proof_log: artifacts/proof/current/demo_proof.log
 
@@ -51,7 +51,7 @@
 - Dedicated egress proxy proof passed in the current release gate.
 - Dedicated synthetic demo proof passed in the current release gate.
 - Proof freshness passed against the stored proof-input file list and tree hash.
-- Archive validation passed against the final distributable archive shape.
+- Archive validation has not yet been recorded for this run.
 - archive_validation_log: artifacts/proof/current/archive_validation.log
 - archive_validation_supported_shapes:
   - JUDGE-main/
@@ -75,6 +75,15 @@
 - CanLII staging proof: PASS
 - mutation fail-closed coverage: PASS
 - Alembic migrations: 72
+
+## Failed Checks
+
+- check_false_claims
+- check_statuses
+- backend_pytest
+- source_registry_proof_pytest
+- archive_validation
+- check_proof_consistency
 
 ## Egress Proxy Coverage
 

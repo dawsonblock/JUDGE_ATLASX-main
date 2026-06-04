@@ -1,6 +1,6 @@
 # Archive Validation
 
-- validated_at_utc: 2026-06-03T20:01:31.693205+00:00
+- validated_at_utc: 2026-06-04T00:37:22.606554+00:00
 - archive: dist/JUDGE_ATLAS-main-final.zip
 - archive_sha256: 486d0b49bab7e9ee44df5055cc4c17bac03a5634fb501a53f5ae4dbc62549bc9
 - expected_root: JUDGE_ATLAS-main
