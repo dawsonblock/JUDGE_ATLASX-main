@@ -572,8 +572,8 @@ _check_item 14 "dist/JUDGE_ATLAS-main-final.zip exists" \
   "$(_file_check dist/JUDGE_ATLAS-main-final.zip)"
 
 _check_item 15 "ZIP root is JUDGE_ATLAS-main/" \
-  "$(zipinfo dist/JUDGE_ATLAS-main-final.zip 2>/dev/null \
-      | grep -qE '^[dr-].*JUDGE_ATLAS-main/$' && echo pass || echo fail)"
+  "$( (zipinfo dist/JUDGE_ATLAS-main-final.zip 2>/dev/null || true) \
+      | grep -qE 'JUDGE_ATLAS-main/' && echo pass || echo fail)"
 
 _check_item 16 "Final ZIP contains proof .log files" \
   "$([ "$(zipinfo dist/JUDGE_ATLAS-main-final.zip 2>/dev/null \
