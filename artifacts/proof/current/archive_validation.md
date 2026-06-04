@@ -1,15 +1,15 @@
 # Archive Validation
 
-- validated_at_utc: 2026-06-04T03:13:51.729153+00:00
+- validated_at_utc: 2026-06-04T04:10:54.392098+00:00
 - archive: dist/JUDGE_ATLAS-main-final.zip
-- archive_sha256: c6ee0138ad467ff670b6c39f436a8549c91709728fc24af3527d2ed921086d4e
+- archive_sha256: 1045dd84e569ad38859a056a24f9682610763e56ba1ff6e064b78ce6a53492fb
 - expected_root: JUDGE_ATLAS-main
 - actual_root: JUDGE_ATLAS-main
 - top_level_roots: JUDGE_ATLAS-main
 - root_match: yes
 - valid: PASS
-- compressed_size_bytes: 2219148
-- uncompressed_size_bytes: 8667257
+- compressed_size_bytes: 2219150
+- uncompressed_size_bytes: 8667194
 
 ## Errors
 
@@ -26,12 +26,12 @@
 |---|---:|---:|
 | JUDGE_ATLAS-main/backend/uv.lock | 769811 | 238625 |
 | JUDGE_ATLAS-main/frontend/package-lock.json | 393441 | 85051 |
-| JUDGE_ATLAS-main/artifacts/proof/current/backend_pytest_collect.log | 331169 | 46674 |
-| JUDGE_ATLAS-main/scripts/release_gate.py | 128173 | 23713 |
+| JUDGE_ATLAS-main/artifacts/proof/current/backend_pytest_collect.log | 331169 | 46680 |
+| JUDGE_ATLAS-main/scripts/release_gate.py | 128221 | 23705 |
 | JUDGE_ATLAS-main/backend/app/models/entities.py | 101799 | 16701 |
-| JUDGE_ATLAS-main/artifacts/proof/current/release_gate.json | 99114 | 14565 |
-| JUDGE_ATLAS-main/artifacts/proof/current/proof_manifest.json | 59251 | 8034 |
-| JUDGE_ATLAS-main/artifacts/proof/current/docker_smoke.log | 48849 | 9303 |
+| JUDGE_ATLAS-main/artifacts/proof/current/release_gate.json | 99137 | 14577 |
+| JUDGE_ATLAS-main/artifacts/proof/current/proof_manifest.json | 59249 | 8032 |
+| JUDGE_ATLAS-main/artifacts/proof/current/docker_smoke.log | 48690 | 9287 |
 | JUDGE_ATLAS-main/backend/app/memory/contradiction_engine.py | 48640 | 8977 |
 | JUDGE_ATLAS-main/backend/app/ingestion/sources/canada_saskatchewan_sources.yaml | 48199 | 6787 |
 | JUDGE_ATLAS-main/backend/app/api/routes/admin_sources.py | 46299 | 9283 |
@@ -43,16 +43,16 @@
 | JUDGE_ATLAS-main/backend/app/tests/test_ai_reasoning.py | 30318 | 4943 |
 | JUDGE_ATLAS-main/scripts/check_proof_consistency.py | 30315 | 5929 |
 | JUDGE_ATLAS-main/backend/app/ingestion/courtlistener_bulk_normalizer.py | 29758 | 5588 |
-| JUDGE_ATLAS-main/artifacts/proof/current/backend_pytest.log | 28861 | 4264 |
+| JUDGE_ATLAS-main/artifacts/proof/current/backend_pytest.log | 28862 | 4265 |
 
 ## Largest Top-Level Directories
 
 | path | uncompressed |
 |---|---:|
 | backend | 5615960 |
-| scripts | 968798 |
+| scripts | 968848 |
 | frontend | 873894 |
-| artifacts | 697266 |
+| artifacts | 697153 |
 | docs | 369096 |
 | .github | 50711 |
 | demo | 26537 |

@@ -1142,7 +1142,7 @@ def _generate_release_readiness_from_manifest(
 
     readiness = {
         "overall_status": status,
-        "alpha_candidate": True,
+        "alpha_candidate": not merged_blockers,
         "self_verifying_alpha": not merged_blockers,
         "production_release_candidate": False,
         "production_ready": production_ready,
@@ -1156,7 +1156,7 @@ def _generate_release_readiness_from_manifest(
         "",
         f"- generated_at_utc: {manifest.get('generated_at', 'unknown')}",
         f"- overall_status: {status}",
-        "- alpha_candidate: true",
+        f"- alpha_candidate: {str((not merged_blockers)).lower()}",
         f"- self_verifying_alpha: {str((not merged_blockers)).lower()}",
         "- production_release_candidate: false",
         f"- production_ready: {str(production_ready).lower()}",
