@@ -1,0 +1,83 @@
+{
+  "started_at": "2026-06-04T22:58:05.687884+00:00",
+  "finished_at": "2026-06-04T23:00:37.029721+00:00",
+  "collect_exit_code": 0,
+  "batch_exit_code": 0,
+  "batch_size": 40,
+  "discovered_files": 305,
+  "batches": [
+    {
+      "index": 1,
+      "started_at": "2026-06-04T22:58:12.298557+00:00",
+      "finished_at": "2026-06-04T22:58:36.366087+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "backend/app/tests/ingestion/test_ckan_adapter.py",
+      "last_file": "backend/app/tests/test_auth_sessions.py"
+    },
+    {
+      "index": 2,
+      "started_at": "2026-06-04T22:58:36.366687+00:00",
+      "finished_at": "2026-06-04T22:59:09.879068+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "backend/app/tests/test_auto_review.py",
+      "last_file": "backend/app/tests/test_crawlee_safety.py"
+    },
+    {
+      "index": 3,
+      "started_at": "2026-06-04T22:59:09.879369+00:00",
+      "finished_at": "2026-06-04T22:59:20.766898+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "backend/app/tests/test_crime_source_ingestion.py",
+      "last_file": "backend/app/tests/test_graph_mutation_audit_fail_closed.py"
+    },
+    {
+      "index": 4,
+      "started_at": "2026-06-04T22:59:20.767050+00:00",
+      "finished_at": "2026-06-04T22:59:30.308166+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "backend/app/tests/test_import_authority_roles.py",
+      "last_file": "backend/app/tests/test_memory_contradictions.py"
+    },
+    {
+      "index": 5,
+      "started_at": "2026-06-04T22:59:30.308326+00:00",
+      "finished_at": "2026-06-04T22:59:54.845878+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "backend/app/tests/test_memory_derivative_boundary.py",
+      "last_file": "backend/app/tests/test_proof_freshness.py"
+    },
+    {
+      "index": 6,
+      "started_at": "2026-06-04T22:59:54.847992+00:00",
+      "finished_at": "2026-06-04T23:00:07.509962+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "backend/app/tests/test_prove_justice_canada_ingestion.py",
+      "last_file": "backend/app/tests/test_reviewer_dashboard_routes.py"
+    },
+    {
+      "index": 7,
+      "started_at": "2026-06-04T23:00:07.510251+00:00",
+      "finished_at": "2026-06-04T23:00:24.882545+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "backend/app/tests/test_run_persist_summary_truth.py",
+      "last_file": "backend/app/tests/test_source_run_failure_persistence.py"
+    },
+    {
+      "index": 8,
+      "started_at": "2026-06-04T23:00:24.882836+00:00",
+      "finished_at": "2026-06-04T23:00:37.029623+00:00",
+      "exit_code": 0,
+      "file_count": 25,
+      "first_file": "backend/app/tests/test_source_run_policy.py",
+      "last_file": "backend/app/tests/test_workflow_admin_security.py"
+    }
+  ],
+  "status": "PASS"
+}
