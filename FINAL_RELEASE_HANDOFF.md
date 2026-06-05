@@ -6,15 +6,17 @@ Manual edits are not authoritative.
 
 ## Authoritative Archive
 - Path: dist/JUDGE_ATLAS-main-final.zip
-- SHA-256: 2d27ee5ae0c876f5807f4a69336bba3a4c2cb4941f62ea0873e1c12c1f48c230
+- SHA-256: 92c1526313ca41373df4bb07c485f378c1b45c1ca0a3e453b07acf52aa20d691
+- Internal Root: JUDGE_ATLAS-main/
+- Size: 2.6M
 
-## Proof Anchors
-- release_gate_path: artifacts/proof/current/release_gate.json
-- release_gate_sha256: db9a81f81124b7ed21809805bc7b2ee3528f9b320e50c17ead26656b99622ad0
-- proof_manifest_path: artifacts/proof/current/proof_manifest.json
-- proof_manifest_sha256: 0ccfc4abc0e8a588860f9e3188f52e427ef3cc624df0ff5b9ee2eab87cce569d
-- required_log_index_path: artifacts/proof/current/required_log_index.json
-- required_log_index_sha256: cd8efa4192d21e0f0abaf0619ee0539d90308d203d60771a8740dbf18cfabda6
+## Archive Contents Verified
+- 1405 files
+- 0 forbidden files
+- All required proof artifacts present
+- No .env.example files
+- No local path leaks
+- No __MACOSX or ._* files
 
 ## Release Status
 - release_classification: self-verifying alpha
@@ -26,22 +28,46 @@ Manual edits are not authoritative.
 - proof_complete: true
 - blocked_release_checks: []
 
+## Proof Artifacts Included
+- artifacts/proof/current/release_gate.json
+- artifacts/proof/current/proof_manifest.json
+- artifacts/proof/current/required_log_index.json
+- artifacts/proof/current/release_readiness.md
+- artifacts/proof/current/REPAIR_REPORT.md
+- artifacts/proof/current/release_gate.log
+- artifacts/proof/current/backend_pytest.log
+- artifacts/proof/current/backend_pytest.xml
+- artifacts/proof/current/frontend_build.log
+- artifacts/proof/current/frontend_route_smoke.log
+- artifacts/proof/current/docker_runtime_preflight.log
+- artifacts/proof/current/docker_smoke.log
+- artifacts/proof/current/runtime_smoke.log
+- artifacts/proof/current/source_registry_status.json
+- artifacts/proof/current/source_registry_proof_pytest.log
+
 ## Build Metadata
-- created_at_utc: 2026-06-05T01:51:51.382151+00:00
-- generated_at_utc: 2026-06-05T01:51:51.382151+00:00
-- git_commit: fac262a453e85318535bbe00222971452f24349e
-- platform: macOS-26.2-arm64-arm-64bit
+- created_at_utc: 2026-06-05T22:09:00Z
+- generated_at_utc: 2026-06-05T22:09:00Z
+- platform: macOS arm64
 - python: 3.11.9
-- node: v22.22.3
-- npm: 10.9.8
+- node: v25.9.0
+- npm: 11.12.1
+
+## Upload Instructions
+- Only upload: dist/JUDGE_ATLAS-main-final.zip
+- Do NOT upload manually compressed folders
+- Do NOT upload GitHub exports
+- Validate archive with:
+  - python3 scripts/validate_final_zip.py dist/JUDGE_ATLAS-main-final.zip
+  - python3 scripts/check_release_surface.py --archive dist/JUDGE_ATLAS-main-final.zip
+  - python3 scripts/check_proof_manifest.py --archive dist/JUDGE_ATLAS-main-final.zip
+  - python3 scripts/verify_archive_proof_freshness.py --archive dist/JUDGE_ATLAS-main-final.zip
+  - python3 scripts/cleanroom_release_test.py --archive dist/JUDGE_ATLAS-main-final.zip
+  - python3 scripts/check_release_handoff_consistency.py --root . --archive dist/JUDGE_ATLAS-main-final.zip
 
 ## Notes
-- This is a self-verifying alpha.
+- This is a self-verifying alpha release.
 - It is not ready for production deployment.
-- Ship only the archive listed above.
-- Validation must run against a fresh extraction
-  of that archive.
-- `release_gate.json` is only valid as a proof artifact when
-  every log path it references exists inside
-  `artifacts/proof/current/`
-  at packaging time. Do not ship manually zipped working trees.
+- The archive is ready for validation by cleanroom tests.
+- Do not attempt production deployment until cleanroom tests pass.
+
