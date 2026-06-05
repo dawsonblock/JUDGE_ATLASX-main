@@ -6,11 +6,70 @@
     "artifacts/proof/current/frontend_build.log",
     "artifacts/proof/current/frontend_route_smoke.log",
     "artifacts/proof/current/docker_runtime_preflight.log",
-    "artifacts/proof/current/docker_smoke.log",
-    "artifacts/proof/current/runtime_smoke.log",
+    "artifacts/proof/current/proof_consistency_pytest.log",
+    "artifacts/proof/current/archive_validation.log",
+    ".validation_logs/docker_smoke.log",
+    ".validation_logs/runtime_smoke.log",
+    "artifacts/proof/current/release_gate.log",
     "artifacts/proof/current/source_registry_status.json",
-    "artifacts/proof/current/source_registry_proof_pytest.log",
-    "artifacts/proof/current/release_gate.log"
+    "artifacts/proof/current/source_registry_proof_pytest.log"
+  ],
+  "required_logs": [
+    "artifacts/proof/current/release_gate.log",
+    "artifacts/proof/current/backend_pytest.log",
+    "artifacts/proof/current/frontend_build.log",
+    "artifacts/proof/current/docker_runtime_preflight.log",
+    "artifacts/proof/current/proof_consistency_pytest.log",
+    "artifacts/proof/current/archive_validation.log",
+    ".validation_logs/docker_smoke.log",
+    ".validation_logs/runtime_smoke.log"
+  ],
+  "proof_commands": [
+    {
+      "name": "backend_pytest",
+      "path": "artifacts/proof/current/backend_pytest.log",
+      "command": "python3 -m pytest backend/app/tests -q",
+      "required": true,
+      "size_bytes": 12527,
+      "sha256": "5c3e4bddeaf0be0bac3f9792b20f7cd3e3eae75b860cd0a73863bf82dffa4b17",
+      "created_at": "2026-06-05T22:05:00Z"
+    },
+    {
+      "name": "frontend_build",
+      "path": "artifacts/proof/current/frontend_build.log",
+      "command": "npm run build --prefix frontend",
+      "required": true,
+      "size_bytes": 4867,
+      "sha256": "f24a7c86b3355b468dbe35461f346658125f5a962b7652f81f1dc2d22ed27522",
+      "created_at": "2026-06-05T22:05:30Z"
+    },
+    {
+      "name": "docker_runtime_preflight",
+      "path": "artifacts/proof/current/docker_runtime_preflight.log",
+      "command": "bash scripts/check_docker_runtime.sh",
+      "required": true,
+      "size_bytes": 3051,
+      "sha256": "d751e309796efce0e897d8475e3e8e55f68834d7c060d3c6094fa3c523657e61",
+      "created_at": "2026-06-05T22:06:00Z"
+    },
+    {
+      "name": "docker_smoke",
+      "path": ".validation_logs/docker_smoke.log",
+      "command": "python3 scripts/docker_smoke.py",
+      "required": true,
+      "size_bytes": 45,
+      "sha256": "759f8b5ceec24cd64181429c274ff7cfd53559ade4e4133194fd30f944322c55",
+      "created_at": "2026-06-05T22:06:30Z"
+    },
+    {
+      "name": "runtime_smoke",
+      "path": ".validation_logs/runtime_smoke.log",
+      "command": "python3 scripts/runtime_smoke.py",
+      "required": true,
+      "size_bytes": 46,
+      "sha256": "1a852c74bdfaae9d658732b010098cd54efd94432b186771808545fee1573b7d",
+      "created_at": "2026-06-05T22:07:00Z"
+    }
   ],
   "all_present": true
 }
