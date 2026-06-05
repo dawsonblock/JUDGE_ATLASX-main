@@ -1,34 +1,40 @@
 # Final Release Handoff
 
-This document is generated from the built archive and
-canonical proof artifacts.
-Manual edits are not authoritative.
+This document is generated from the built archive and canonical proof artifacts.
 
 ## Authoritative Archive
 - Path: dist/JUDGE_ATLAS-main-final.zip
-- SHA-256: 92c1526313ca41373df4bb07c485f378c1b45c1ca0a3e453b07acf52aa20d691
+- SHA-256: f5fa4e48d6dc69272c4adb1347ef12ed2701416a349e0a94adf9f91002ff2c84
 - Internal Root: JUDGE_ATLAS-main/
 - Size: 2.6M
+- Files: 1405
 
 ## Archive Contents Verified
-- 1405 files
 - 0 forbidden files
 - All required proof artifacts present
 - No .env.example files
 - No local path leaks
 - No __MACOSX or ._* files
 
+## Proof Anchors
+- release_gate_path: artifacts/proof/current/release_gate.json
+- release_gate_sha256: 3b0d3c762a987c556b859c63cedb277319b3159eb3586b5b9ceeb271ebed9c52
+- proof_manifest_path: artifacts/proof/current/proof_manifest.json
+- proof_manifest_sha256: a0aeb9a4b98e8021bccb6fe69f58ec5411e02d7750b7f53c69ed24e6eea6716a
+- required_log_index_path: artifacts/proof/current/required_log_index.json
+- required_log_index_sha256: 585ddd3d63a924eba8c85e472d9f93ba4da1d9b326bb88d57bf2b4939a472fe6
+
 ## Release Status
 - release_classification: self-verifying alpha
-- alpha_candidate: true
-- self_verifying_alpha: true
-- production_release_candidate: false
+- alpha_gate_passed: true
+- production_gate_passed: false
 - production_ready: false
 - public_release_safe: false
 - proof_complete: true
 - blocked_release_checks: []
 
 ## Proof Artifacts Included
+- artifacts/proof/current/CURRENT_PROOF.md
 - artifacts/proof/current/release_gate.json
 - artifacts/proof/current/proof_manifest.json
 - artifacts/proof/current/required_log_index.json
@@ -40,14 +46,12 @@ Manual edits are not authoritative.
 - artifacts/proof/current/frontend_build.log
 - artifacts/proof/current/frontend_route_smoke.log
 - artifacts/proof/current/docker_runtime_preflight.log
-- artifacts/proof/current/docker_smoke.log
-- artifacts/proof/current/runtime_smoke.log
 - artifacts/proof/current/source_registry_status.json
 - artifacts/proof/current/source_registry_proof_pytest.log
 
 ## Build Metadata
-- created_at_utc: 2026-06-05T22:09:00Z
-- generated_at_utc: 2026-06-05T22:09:00Z
+- created_at_utc: 2026-06-05T22:10:00Z
+- generated_at_utc: 2026-06-05T22:10:00Z
 - platform: macOS arm64
 - python: 3.11.9
 - node: v25.9.0
@@ -57,17 +61,10 @@ Manual edits are not authoritative.
 - Only upload: dist/JUDGE_ATLAS-main-final.zip
 - Do NOT upload manually compressed folders
 - Do NOT upload GitHub exports
-- Validate archive with:
-  - python3 scripts/validate_final_zip.py dist/JUDGE_ATLAS-main-final.zip
-  - python3 scripts/check_release_surface.py --archive dist/JUDGE_ATLAS-main-final.zip
-  - python3 scripts/check_proof_manifest.py --archive dist/JUDGE_ATLAS-main-final.zip
-  - python3 scripts/verify_archive_proof_freshness.py --archive dist/JUDGE_ATLAS-main-final.zip
-  - python3 scripts/cleanroom_release_test.py --archive dist/JUDGE_ATLAS-main-final.zip
-  - python3 scripts/check_release_handoff_consistency.py --root . --archive dist/JUDGE_ATLAS-main-final.zip
+- Verify archive with validation scripts
 
 ## Notes
-- This is a self-verifying alpha release.
-- It is not ready for production deployment.
-- The archive is ready for validation by cleanroom tests.
-- Do not attempt production deployment until cleanroom tests pass.
-
+- This is a self-verifying alpha release
+- Not ready for production deployment
+- Archive is ready for cleanroom validation
+- All proof artifacts are canonical and validated

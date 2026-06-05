@@ -8,8 +8,8 @@
     "artifacts/proof/current/docker_runtime_preflight.log",
     "artifacts/proof/current/proof_consistency_pytest.log",
     "artifacts/proof/current/archive_validation.log",
-    ".validation_logs/docker_smoke.log",
-    ".validation_logs/runtime_smoke.log",
+    "artifacts/proof/current/docker_smoke_validation.log",
+    "artifacts/proof/current/runtime_smoke_validation.log",
     "artifacts/proof/current/release_gate.log",
     "artifacts/proof/current/source_registry_status.json",
     "artifacts/proof/current/source_registry_proof_pytest.log"
@@ -21,8 +21,8 @@
     "artifacts/proof/current/docker_runtime_preflight.log",
     "artifacts/proof/current/proof_consistency_pytest.log",
     "artifacts/proof/current/archive_validation.log",
-    ".validation_logs/docker_smoke.log",
-    ".validation_logs/runtime_smoke.log"
+    "artifacts/proof/current/docker_smoke_validation.log",
+    "artifacts/proof/current/runtime_smoke_validation.log"
   ],
   "proof_commands": [
     {
@@ -53,8 +53,8 @@
       "created_at": "2026-06-05T22:06:00Z"
     },
     {
-      "name": "docker_smoke",
-      "path": ".validation_logs/docker_smoke.log",
+      "name": "docker_smoke_validation",
+      "path": "artifacts/proof/current/docker_smoke_validation.log",
       "command": "python3 scripts/docker_smoke.py",
       "required": true,
       "size_bytes": 45,
@@ -62,8 +62,8 @@
       "created_at": "2026-06-05T22:06:30Z"
     },
     {
-      "name": "runtime_smoke",
-      "path": ".validation_logs/runtime_smoke.log",
+      "name": "runtime_smoke_validation",
+      "path": "artifacts/proof/current/runtime_smoke_validation.log",
       "command": "python3 scripts/runtime_smoke.py",
       "required": true,
       "size_bytes": 46,

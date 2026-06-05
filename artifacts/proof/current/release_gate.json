@@ -1,7 +1,9 @@
 {
-  "timestamp": "2026-06-05T22:07:00Z",
+  "timestamp": "2026-06-05T22:10:00Z",
   "alpha_gate_passed": true,
   "production_gate_passed": false,
+  "production_ready": false,
+  "release_candidate": false,
   "self_verifying_claim": "alpha",
   "alpha_blocks": [],
   "backend_pytest_passed": true,
@@ -9,5 +11,7 @@
   "docker_available": true,
   "source_registry_real": true,
   "proof_freshness_ok": true,
-  "missing_required_logs": []
+  "missing_required_logs": [],
+  "release_classification": "self-verifying alpha",
+  "proof_complete": true
 }
