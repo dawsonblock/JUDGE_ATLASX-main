@@ -4,7 +4,7 @@ This document is generated from the built archive and canonical proof artifacts.
 
 ## Authoritative Archive
 - Path: dist/JUDGE_ATLAS-main-final.zip
-- SHA-256: 7dd5ea7befad20cafdb6ba7d1fb704a4b574f97658a23d178f76c029fd7271cb
+- SHA-256: 707c412adaeb8bbc2b80ad9f4a645fc20896f589a4368cf14dd523ce68e0b3f5
 - Internal Root: JUDGE_ATLAS-main/
 - Size: 2.6M
 - Files: 1405
