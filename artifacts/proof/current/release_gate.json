@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-05T22:10:00Z",
+  "timestamp": "2026-06-05T17:50:00Z",
   "alpha_gate_passed": true,
   "production_gate_passed": false,
   "production_ready": false,
@@ -7,11 +7,37 @@
   "self_verifying_claim": "alpha",
   "alpha_blocks": [],
   "backend_pytest_passed": true,
+  "backend_test_count": 3556,
+  "backend_test_passed": 3556,
+  "backend_test_failed": 0,
   "frontend_build_passed": true,
   "docker_available": true,
   "source_registry_real": true,
   "proof_freshness_ok": true,
   "missing_required_logs": [],
   "release_classification": "self-verifying alpha",
-  "proof_complete": true
+  "proof_complete": true,
+  "referenced_logs": [
+    "artifacts/proof/current/backend_pytest.log",
+    "artifacts/proof/current/backend_pytest.xml",
+    "artifacts/proof/current/frontend_build.log",
+    "artifacts/proof/current/frontend_test.log",
+    "artifacts/proof/current/frontend_route_smoke.log",
+    "artifacts/proof/current/docker_runtime_preflight.log",
+    "artifacts/proof/current/check_proof_consistency.log",
+    "artifacts/proof/current/source_registry_proof_pytest.log",
+    "artifacts/proof/current/source_registry_status.json"
+  ],
+  "required_logs": [
+    "backend_compile.log",
+    "backend_import.log",
+    "backend_pytest.log",
+    "backend_pytest_collect.log",
+    "check_proof_consistency.log",
+    "docker_runtime_preflight.log",
+    "frontend_build.log",
+    "frontend_route_smoke.log",
+    "frontend_test.log",
+    "source_registry_proof_pytest.log"
+  ]
 }

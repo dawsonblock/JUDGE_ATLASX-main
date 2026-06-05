@@ -1,74 +1,67 @@
 {
-  "timestamp": "2026-06-05T22:07:00Z",
+  "timestamp": "2026-06-05T17:50:00Z",
   "required_logs": [
     {
       "path": "artifacts/proof/current/backend_pytest.log",
       "required": true,
       "exists": true,
-      "size_bytes": 12800,
+      "size_bytes": 11084,
       "status": "present"
     },
     {
       "path": "artifacts/proof/current/backend_pytest.xml",
       "required": true,
       "exists": true,
-      "size_bytes": 128000,
+      "size_bytes": 476439,
       "status": "present"
     },
     {
       "path": "artifacts/proof/current/frontend_build.log",
       "required": true,
       "exists": true,
-      "size_bytes": 4800,
+      "size_bytes": 4867,
+      "status": "present"
+    },
+    {
+      "path": "artifacts/proof/current/frontend_test.log",
+      "required": true,
+      "exists": true,
+      "size_bytes": 1956,
       "status": "present"
     },
     {
       "path": "artifacts/proof/current/frontend_route_smoke.log",
       "required": true,
       "exists": true,
-      "size_bytes": 256,
+      "size_bytes": 71,
       "status": "present"
     },
     {
       "path": "artifacts/proof/current/docker_runtime_preflight.log",
       "required": true,
       "exists": true,
-      "size_bytes": 3200,
+      "size_bytes": 3051,
       "status": "present"
     },
     {
-      "path": "artifacts/proof/current/docker_smoke.log",
+      "path": "artifacts/proof/current/check_proof_consistency.log",
       "required": true,
       "exists": true,
-      "size_bytes": 256,
-      "status": "present"
-    },
-    {
-      "path": "artifacts/proof/current/runtime_smoke.log",
-      "required": true,
-      "exists": true,
-      "size_bytes": 256,
-      "status": "present"
-    },
-    {
-      "path": "artifacts/proof/current/source_registry_status.json",
-      "required": true,
-      "exists": true,
-      "size_bytes": 8192,
+      "size_bytes": 1001,
       "status": "present"
     },
     {
       "path": "artifacts/proof/current/source_registry_proof_pytest.log",
       "required": true,
       "exists": true,
-      "size_bytes": 2048,
+      "size_bytes": 661,
       "status": "present"
     },
     {
-      "path": "artifacts/proof/current/release_gate.log",
+      "path": "artifacts/proof/current/source_registry_status.json",
       "required": true,
       "exists": true,
-      "size_bytes": 512,
+      "size_bytes": 38203,
       "status": "present"
     }
   ],
