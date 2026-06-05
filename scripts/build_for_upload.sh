@@ -82,6 +82,10 @@ if [[ "${USE_EXISTING_PROOF}" != "true" ]]; then
     python3 scripts/render_proof_status_docs.py --root . --skip-handoff || { log_fail "render_proof_status_docs failed"; exit 1; }
     log_pass "Proof status docs rendered"
 
+    log_bold "1.4b Refreshing proof hash after status doc sync"
+    python3 scripts/refresh_proof_hash.py --root . || { log_fail "hash refresh failed"; exit 1; }
+    log_pass "Proof hash refreshed"
+
     log_bold "1.5 Checking proof freshness"
     python3 scripts/check_proof_freshness.py || { log_fail "check_proof_freshness failed"; exit 1; }
     python3 scripts/check_proof_freshness.py --strict-extra-files || { log_fail "check_proof_freshness --strict-extra-files failed"; exit 1; }

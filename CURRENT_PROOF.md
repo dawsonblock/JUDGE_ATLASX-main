@@ -1,7 +1,7 @@
 # CURRENT_PROOF
 
-- generated_at_utc: 2026-06-04T23:25:35.494581+00:00
-- commit_hash: 673826a516c4d12a74cbf88b4536eed79580cfaf
+- generated_at_utc: 2026-06-05T01:47:07.005225+00:00
+- commit_hash: fac262a453e85318535bbe00222971452f24349e
 - alpha_gate_passed: true
 - alpha_gate_status: PASS
 - alpha_candidate: true
@@ -16,8 +16,8 @@
 - demo_proof_result: PASS
 - proof_freshness_result: PASS
 - archive_validation_result: PASS
-- proof_input_tree_hash: b12d0f795f2f66dd52a17f58cec4f7b522d248ad395590a3bdf088f851b1b0f2
-- proof_input_file_count: 1139
+- proof_input_tree_hash: 1af7ab790f7dc7776d7e5172e847e20f51b7fa8899a1f2eaeeaa00007e458d93
+- proof_input_file_count: 1141
 - egress_proxy_proof_log: artifacts/proof/current/egress_proxy_proof.log
 - demo_proof_log: artifacts/proof/current/demo_proof.log
 
@@ -74,7 +74,7 @@
 - demo proof: PASS
 - CanLII staging proof: PASS
 - mutation fail-closed coverage: PASS
-- Alembic migrations: 72
+- Alembic migrations: 74
 
 ## Egress Proxy Coverage
 
