@@ -237,8 +237,7 @@ def _is_excluded(rel_path: str, include_external: bool, include_proof_archive: b
         return True
     if lower_name in EXCLUDED_FILE_NAMES:
         return True
-    # .env.example is a safe template — allow it through before the broad .env. block.
-    if lower_name.startswith(".env.") and lower_name != ".env.example":
+    if lower_name.startswith(".env."):
         return True
     for pattern in RELEASEIGNORE_PATTERNS:
         normalized_pattern = pattern.lstrip("/")

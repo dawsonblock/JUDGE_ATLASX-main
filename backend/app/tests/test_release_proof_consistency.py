@@ -98,10 +98,10 @@ def test_release_proof_files_consistency(
         overall_status = overall_status_match.group(1).strip()
 
         if alpha_gate_passed:
-            assert overall_status == "alpha-proof-pass"
+            assert overall_status == "self-verifying-alpha"
         else:
             assert overall_status == "blocked"
-            assert overall_status != "alpha-proof-pass"
+            assert overall_status != "self-verifying-alpha"
 
     # 5. Check FIX_VERIFICATION_REPORT.md
     if fix_verification_report_path.exists():
