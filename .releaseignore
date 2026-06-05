@@ -21,4 +21,7 @@ __pycache__/
 dist/
 tmp/
 artifacts/tmp/
+artifacts/proof/release_readiness.md
+artifacts/proof/archive/
+artifacts/proof/old/
 THE-JUDGE.sln
