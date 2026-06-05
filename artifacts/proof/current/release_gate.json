@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-06-05T22:07:00Z",
+  "alpha_gate_passed": true,
+  "production_gate_passed": false,
+  "self_verifying_claim": "alpha",
+  "alpha_blocks": [],
+  "backend_pytest_passed": true,
+  "frontend_build_passed": true,
+  "docker_available": true,
+  "source_registry_real": true,
+  "proof_freshness_ok": true,
+  "missing_required_logs": []
+}

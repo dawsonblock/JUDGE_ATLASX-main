@@ -1,0 +1,16 @@
+{
+  "version": "2.0",
+  "referenced_logs": [
+    "artifacts/proof/current/backend_pytest.log",
+    "artifacts/proof/current/backend_pytest.xml",
+    "artifacts/proof/current/frontend_build.log",
+    "artifacts/proof/current/frontend_route_smoke.log",
+    "artifacts/proof/current/docker_runtime_preflight.log",
+    "artifacts/proof/current/docker_smoke.log",
+    "artifacts/proof/current/runtime_smoke.log",
+    "artifacts/proof/current/source_registry_status.json",
+    "artifacts/proof/current/source_registry_proof_pytest.log",
+    "artifacts/proof/current/release_gate.log"
+  ],
+  "all_present": true
+}
