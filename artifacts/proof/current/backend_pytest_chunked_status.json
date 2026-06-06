@@ -1,0 +1,29 @@
+{
+  "started_at": "2026-06-06T21:21:40.490579+00:00",
+  "finished_at": "2026-06-06T21:22:20.811200+00:00",
+  "collect_exit_code": 0,
+  "batch_exit_code": 1,
+  "batch_size": 40,
+  "discovered_files": 305,
+  "batches": [
+    {
+      "index": 1,
+      "started_at": "2026-06-06T21:21:45.191508+00:00",
+      "finished_at": "2026-06-06T21:22:04.314728+00:00",
+      "exit_code": 0,
+      "file_count": 40,
+      "first_file": "backend/app/tests/ingestion/test_ckan_adapter.py",
+      "last_file": "backend/app/tests/test_auth_sessions.py"
+    },
+    {
+      "index": 2,
+      "started_at": "2026-06-06T21:22:04.315172+00:00",
+      "finished_at": "2026-06-06T21:22:20.811084+00:00",
+      "exit_code": 1,
+      "file_count": 40,
+      "first_file": "backend/app/tests/test_auto_review.py",
+      "last_file": "backend/app/tests/test_crawlee_safety.py"
+    }
+  ],
+  "status": "FAIL"
+}
