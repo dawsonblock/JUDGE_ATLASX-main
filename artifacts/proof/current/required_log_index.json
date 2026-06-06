@@ -1,69 +1,88 @@
 {
-  "timestamp": "2026-06-05T17:50:00Z",
-  "required_logs": [
+  "generated_at": "2026-06-06T00:20:09.212554+00:00",
+  "required_count": 13,
+  "present_count": 13,
+  "missing_count": 0,
+  "missing": [],
+  "entries": [
+    {
+      "path": "artifacts/proof/current/backend_compile.log",
+      "exists": true,
+      "size_bytes": 125,
+      "sha256": "f52b2bac551bdc6de209803df5ad42e13a7ef70378457bcc992b08aed9ecd5eb"
+    },
+    {
+      "path": "artifacts/proof/current/backend_import.log",
+      "exists": true,
+      "size_bytes": 145,
+      "sha256": "4505289e786b4a6e839458c9d7427158ba0cf2b15f5ddbf0b8ae828263e2a447"
+    },
+    {
+      "path": "artifacts/proof/current/backend_pytest_collect.log",
+      "exists": true,
+      "size_bytes": 331117,
+      "sha256": "5939ccdeeb2f6b8930cc523cbcb41ae0658ad1545c0d0414e532dbfea453b2f5"
+    },
     {
       "path": "artifacts/proof/current/backend_pytest.log",
-      "required": true,
       "exists": true,
-      "size_bytes": 11084,
-      "status": "present"
+      "size_bytes": 35858,
+      "sha256": "0da344cae10a085287eb704453eaaff48586e6eed945dba044027e66f11c798d"
     },
     {
       "path": "artifacts/proof/current/backend_pytest.xml",
-      "required": true,
       "exists": true,
-      "size_bytes": 476439,
-      "status": "present"
+      "size_bytes": 480983,
+      "sha256": "efa79b1557af6787eca7d062e14686f2dc5c5f32c1de2ad225fec7a9ed3cbd18"
     },
     {
       "path": "artifacts/proof/current/frontend_build.log",
-      "required": true,
       "exists": true,
-      "size_bytes": 4867,
-      "status": "present"
+      "size_bytes": 4970,
+      "sha256": "9262bc810fbeb6c6538d95ddd12a9f30bfa17b0feb0b2d43f0469898f3ee6586"
     },
     {
       "path": "artifacts/proof/current/frontend_test.log",
-      "required": true,
       "exists": true,
-      "size_bytes": 1956,
-      "status": "present"
+      "size_bytes": 2198,
+      "sha256": "1a4c5825723fedd07b29781b9703970b5c37772e0c8961c122d7448934a1ec50"
     },
     {
       "path": "artifacts/proof/current/frontend_route_smoke.log",
-      "required": true,
       "exists": true,
-      "size_bytes": 71,
-      "status": "present"
+      "size_bytes": 199,
+      "sha256": "d05e633160647ec2cf799d4a0706b031e21e54a164662040c2733f18aefd57da"
     },
     {
       "path": "artifacts/proof/current/docker_runtime_preflight.log",
-      "required": true,
       "exists": true,
-      "size_bytes": 3051,
-      "status": "present"
-    },
-    {
-      "path": "artifacts/proof/current/check_proof_consistency.log",
-      "required": true,
-      "exists": true,
-      "size_bytes": 1001,
-      "status": "present"
+      "size_bytes": 3177,
+      "sha256": "862e8282c80d795a12811d70e7dccddb13eeee5f01b2b29b15a777958ec82f8e"
     },
     {
       "path": "artifacts/proof/current/source_registry_proof_pytest.log",
-      "required": true,
       "exists": true,
-      "size_bytes": 661,
-      "status": "present"
+      "size_bytes": 1861,
+      "sha256": "27d5128d85d6e532ad6370e3c1b7ae8d06c45837bcf56549abd0b585600b3395"
     },
     {
       "path": "artifacts/proof/current/source_registry_status.json",
-      "required": true,
       "exists": true,
       "size_bytes": 38203,
-      "status": "present"
+      "sha256": "0fb5edc2b2c54a28571bd185f72ebe96753e43741c968c2d586b045e3388cd99"
+    },
+    {
+      "path": "artifacts/proof/current/check_proof_consistency.log",
+      "exists": true,
+      "size_bytes": 994,
+      "sha256": "5496771e2c02b6b8ec5bdded81f54c7cd4e9b1adc5a8d05bad5ae057c85cc6bf"
+    },
+    {
+      "path": "artifacts/proof/current/status_truth_consistency.log",
+      "exists": true,
+      "size_bytes": 1068,
+      "sha256": "3b2454ab7ed443e6f8ff9ffc17877123d15d98fcec6e8ef9680c5e8f36ab3e14"
     }
   ],
-  "missing_required_logs": []
+  "pass": true
 }
