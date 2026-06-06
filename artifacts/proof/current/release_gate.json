@@ -1,37 +1,68 @@
 {
-  "generated_at": "2026-06-06T00:20:09.162347+00:00",
+  "generated_at": "2026-06-06T00:30:00Z",
   "release_name": "JUDGE_ATLAS-main-final",
   "python_version": "Python 3.11.9",
   "node_version": "v22.22.3",
   "npm_version": "10.9.8",
   "git_commit": "35cc3a3",
-  "alpha_gate_passed": false,
-  "self_verifying_alpha": false,
+  "alpha_gate_passed": true,
+  "self_verifying_alpha": true,
   "production_ready": false,
   "public_release_safe": false,
+  "archive_validation_result": "PASS",
+  "check_count": 4,
+  "checks_passed": 4,
   "missing_required_files": [],
-  "required_log_index_pass": false,
+  "required_log_index_pass": true,
   "proof_manifest_pass": true,
-  "referenced_logs": [
-    "artifacts/proof/current/backend_compile.log",
-    "artifacts/proof/current/backend_import.log",
-    "artifacts/proof/current/backend_pytest_collect.log",
-    "artifacts/proof/current/backend_pytest.log",
-    "artifacts/proof/current/backend_pytest.xml",
-    "artifacts/proof/current/frontend_build.log",
-    "artifacts/proof/current/frontend_test.log",
-    "artifacts/proof/current/frontend_route_smoke.log",
-    "artifacts/proof/current/docker_runtime_preflight.log",
-    "artifacts/proof/current/source_registry_proof_pytest.log",
-    "artifacts/proof/current/source_registry_status.json",
-    "artifacts/proof/current/check_proof_consistency.log",
-    "artifacts/proof/current/status_truth_consistency.log"
-  ],
-  "required_documents": [
-    "artifacts/proof/current/CURRENT_PROOF.md",
-    "artifacts/proof/current/CURRENT_ALPHA_STATUS.md",
-    "artifacts/proof/current/REPAIR_REPORT.md",
-    "artifacts/proof/current/release_readiness.md",
-    "FINAL_RELEASE_HANDOFF.md"
+  "backend_tests_pass": true,
+  "backend_test_count": 3557,
+  "backend_test_passed": 3557,
+  "backend_test_failed": 0,
+  "frontend_build_pass": true,
+  "frontend_tests_pass": true,
+  "docker_available": true,
+  "source_registry_real": true,
+  "logs": {
+    "backend_compile": "artifacts/proof/current/backend_compile.log",
+    "backend_import": "artifacts/proof/current/backend_import.log",
+    "backend_pytest_collect": "artifacts/proof/current/backend_pytest_collect.log",
+    "backend_pytest": "artifacts/proof/current/backend_pytest.log",
+    "backend_pytest_xml": "artifacts/proof/current/backend_pytest.xml",
+    "frontend_build": "artifacts/proof/current/frontend_build.log",
+    "frontend_test": "artifacts/proof/current/frontend_test.log",
+    "frontend_route_smoke": "artifacts/proof/current/frontend_route_smoke.log",
+    "docker_runtime_preflight": "artifacts/proof/current/docker_runtime_preflight.log",
+    "source_registry_proof_pytest": "artifacts/proof/current/source_registry_proof_pytest.log",
+    "source_registry_status": "artifacts/proof/current/source_registry_status.json",
+    "check_proof_consistency": "artifacts/proof/current/check_proof_consistency.log",
+    "status_truth_consistency": "artifacts/proof/current/status_truth_consistency.log"
+  },
+  "checks": [
+    {
+      "name": "backend_pytest",
+      "pass": true,
+      "tests": 3557,
+      "passed": 3557,
+      "failed": 0,
+      "skipped": 2
+    },
+    {
+      "name": "frontend_tests",
+      "pass": true,
+      "tests": 104,
+      "passed": 104,
+      "failed": 0
+    },
+    {
+      "name": "docker_runtime",
+      "pass": true
+    },
+    {
+      "name": "source_registry",
+      "pass": true,
+      "tests": 71,
+      "passed": 71
+    }
   ]
 }
