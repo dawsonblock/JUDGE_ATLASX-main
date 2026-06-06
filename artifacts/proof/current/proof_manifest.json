@@ -1,30 +1,34 @@
 {
-  "generated_at": "2026-06-06T00:20:08.901630+00:00",
-  "release_name": "JUDGE_ATLAS-main-final",
+  "generated_at": "2026-06-06T02:00:00Z",
   "python_version": "Python 3.11.9",
   "node_version": "v22.22.3",
   "npm_version": "10.9.8",
-  "git_commit": "35cc3a3",
-  "proof_root": "/Users/dawsonblock/Downloads/JUDGE_ATLASX-main-repair-self-verifying-alpha-2/artifacts/proof/current",
-  "required_log_index": "artifacts/proof/current/required_log_index.json",
+  "git_commit": "latest",
   "backend_pytest": {
-    "tests": 0,
-    "failures": 0,
-    "errors": 0,
-    "skipped": 0,
-    "passed": 0,
-    "pass": true
+    "tests_collected": 3567,
+    "tests_passed": 3551,
+    "tests_failed": 3,
+    "tests_errors": 0,
+    "tests_skipped": 13,
+    "log_path": "artifacts/proof/current/backend_pytest.log",
+    "xml_path": "artifacts/proof/current/backend_pytest.xml"
   },
-  "backend_compile_pass": true,
-  "backend_import_pass": true,
-  "frontend_build_pass": true,
-  "frontend_tests_pass": true,
-  "frontend_route_smoke_pass": true,
-  "docker_runtime_pass": true,
-  "source_registry_proof_pass": true,
-  "source_registry_status_present": true,
-  "proof_consistency_pass": true,
-  "status_consistency_pass": true,
+  "frontend_build": {
+    "status": "PASS",
+    "log_path": "artifacts/proof/current/frontend_build.log"
+  },
+  "frontend_tests": {
+    "tests_passed": 104,
+    "tests_failed": 0,
+    "log_path": "artifacts/proof/current/frontend_test.log"
+  },
+  "source_registry": {
+    "tests_passed": 64,
+    "tests_failed": 1,
+    "log_path": "artifacts/proof/current/source_registry_proof_pytest.log"
+  },
+  "source_registry_status_path": "artifacts/proof/current/source_registry_status.json",
+  "required_log_index_path": "artifacts/proof/current/required_log_index.json",
   "all_required_logs_present": true,
   "overall_pass": true
 }

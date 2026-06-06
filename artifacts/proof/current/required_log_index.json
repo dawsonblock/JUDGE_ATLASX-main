@@ -1,88 +1,121 @@
 {
-  "generated_at": "2026-06-06T00:20:09.212554+00:00",
-  "required_count": 13,
-  "present_count": 13,
-  "missing_count": 0,
-  "missing": [],
-  "entries": [
+  "generated_at": "2026-06-06T02:00:00Z",
+  "required_files": [
     {
       "path": "artifacts/proof/current/backend_compile.log",
       "exists": true,
-      "size_bytes": 125,
-      "sha256": "f52b2bac551bdc6de209803df5ad42e13a7ef70378457bcc992b08aed9ecd5eb"
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
       "path": "artifacts/proof/current/backend_import.log",
       "exists": true,
-      "size_bytes": 145,
-      "sha256": "4505289e786b4a6e839458c9d7427158ba0cf2b15f5ddbf0b8ae828263e2a447"
+      "size_bytes": 39,
+      "sha256": "98f4ae7547f79d42ab5b94828bfc7dbf36610573663c75f064fdcadb3b9a12ef"
     },
     {
       "path": "artifacts/proof/current/backend_pytest_collect.log",
       "exists": true,
-      "size_bytes": 331117,
-      "sha256": "5939ccdeeb2f6b8930cc523cbcb41ae0658ad1545c0d0414e532dbfea453b2f5"
+      "size_bytes": 330975,
+      "sha256": "05ed8464e9c8b1d54745841d8d7b5f73b906c48d34b84dd475d837e5a8822eac"
     },
     {
       "path": "artifacts/proof/current/backend_pytest.log",
       "exists": true,
-      "size_bytes": 35858,
-      "sha256": "0da344cae10a085287eb704453eaaff48586e6eed945dba044027e66f11c798d"
+      "size_bytes": 8451,
+      "sha256": "bc82650cc0b0752704c459d582260bc9d25e469d06a8cf031b9074376dce0c0b"
     },
     {
       "path": "artifacts/proof/current/backend_pytest.xml",
       "exists": true,
-      "size_bytes": 480983,
-      "sha256": "efa79b1557af6787eca7d062e14686f2dc5c5f32c1de2ad225fec7a9ed3cbd18"
+      "size_bytes": 479570,
+      "sha256": "8866e1ec129f9a24bef8eaa4b92ae83d1bb9d754203fcc6ff2dbf29f336ab1a5"
     },
     {
       "path": "artifacts/proof/current/frontend_build.log",
       "exists": true,
-      "size_bytes": 4970,
-      "sha256": "9262bc810fbeb6c6538d95ddd12a9f30bfa17b0feb0b2d43f0469898f3ee6586"
+      "size_bytes": 4867,
+      "sha256": "d29615903768108e1cf019b5916762ec2bed30363a6fa4f1815e96269a018e63"
     },
     {
       "path": "artifacts/proof/current/frontend_test.log",
       "exists": true,
-      "size_bytes": 2198,
-      "sha256": "1a4c5825723fedd07b29781b9703970b5c37772e0c8961c122d7448934a1ec50"
+      "size_bytes": 1885,
+      "sha256": "368a1dcf8d22832b258dabf68344b5410356ee753e1e140be0127cf18c318971"
     },
     {
       "path": "artifacts/proof/current/frontend_route_smoke.log",
       "exists": true,
-      "size_bytes": 199,
-      "sha256": "d05e633160647ec2cf799d4a0706b031e21e54a164662040c2733f18aefd57da"
+      "size_bytes": 244,
+      "sha256": "2ef0ceb00f94fc54aa5c3c8101ffe33e23ead93c6b459115c6516c60a40b56b1"
     },
     {
       "path": "artifacts/proof/current/docker_runtime_preflight.log",
       "exists": true,
-      "size_bytes": 3177,
-      "sha256": "862e8282c80d795a12811d70e7dccddb13eeee5f01b2b29b15a777958ec82f8e"
+      "size_bytes": 386,
+      "sha256": "b65a288e910d4a0b886a790ace02677f2978cb25ddbb2eb2a2290e4f2da5c068"
+    },
+    {
+      "path": "artifacts/proof/current/docker_smoke_validation.log",
+      "exists": true,
+      "size_bytes": 362,
+      "sha256": "7e46e51c0ca5b5679a2b9919c9492c2f6da0abc462f3ab54e1986f66548fe962"
+    },
+    {
+      "path": "artifacts/proof/current/runtime_smoke_validation.log",
+      "exists": true,
+      "size_bytes": 248,
+      "sha256": "d7d5972b50c2d682b107e581a751660035fc7917af1f7b8a13c42828ffbd42c4"
     },
     {
       "path": "artifacts/proof/current/source_registry_proof_pytest.log",
       "exists": true,
-      "size_bytes": 1861,
-      "sha256": "27d5128d85d6e532ad6370e3c1b7ae8d06c45837bcf56549abd0b585600b3395"
+      "size_bytes": 840,
+      "sha256": "99adf43cc5e181f72525e8a4ac48b0a9b06ee640a0c3d62c12a12d4019c84ede"
     },
     {
       "path": "artifacts/proof/current/source_registry_status.json",
       "exists": true,
-      "size_bytes": 38203,
-      "sha256": "0fb5edc2b2c54a28571bd185f72ebe96753e43741c968c2d586b045e3388cd99"
+      "size_bytes": 1502,
+      "sha256": "f5bf2c5fe5031c09258816b6d163a7138bf875cb53511bd25b9222f9c7d1c40c"
     },
     {
-      "path": "artifacts/proof/current/check_proof_consistency.log",
+      "path": "artifacts/proof/current/proof_consistency_pytest.log",
       "exists": true,
-      "size_bytes": 994,
-      "sha256": "5496771e2c02b6b8ec5bdded81f54c7cd4e9b1adc5a8d05bad5ae057c85cc6bf"
+      "size_bytes": 356,
+      "sha256": "f17b7fa11a5ecbc2aa14d8cd9af70ca97c18492c9e706ba557c2c619b9c63b7c"
     },
     {
-      "path": "artifacts/proof/current/status_truth_consistency.log",
+      "path": "artifacts/proof/current/archive_validation.log",
       "exists": true,
-      "size_bytes": 1068,
-      "sha256": "3b2454ab7ed443e6f8ff9ffc17877123d15d98fcec6e8ef9680c5e8f36ab3e14"
+      "size_bytes": 418,
+      "sha256": "2753c0ad2a1082f5dfa8885fa8faf54080482c09df417fc86110a3312c0b5ff9"
+    },
+    {
+      "path": "artifacts/proof/current/CURRENT_PROOF.md",
+      "exists": true,
+      "size_bytes": 1717,
+      "sha256": "38c63aa197b1d198438c294b183aa624d460766b0adad78e5611fc32632dcc98"
+    },
+    {
+      "path": "artifacts/proof/current/CURRENT_ALPHA_STATUS.md",
+      "exists": true,
+      "size_bytes": 1882,
+      "sha256": "71c51e35bdb21768adfcc769b79a43f235969079f42ef158b494b1321ffad2fb"
+    },
+    {
+      "path": "artifacts/proof/current/REPAIR_REPORT.md",
+      "exists": true,
+      "size_bytes": 2969,
+      "sha256": "716eaf7c936a14a2b20a0e329ff0e7aa3186a785652bbf5e41dbff06db905042"
+    },
+    {
+      "path": "artifacts/proof/current/release_readiness.md",
+      "exists": true,
+      "size_bytes": 2050,
+      "sha256": "c25d45a42a008576a1f30ceafe3b09b364f0582a81b8ff8cbc1e7f98a1c05690"
     }
   ],
-  "pass": true
+  "missing_count": 0,
+  "present_count": 19
 }

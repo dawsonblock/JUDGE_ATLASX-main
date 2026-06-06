@@ -7,16 +7,57 @@
 - release_recommendation: self-verifying-alpha
 - canonical_artifact: dist/JUDGE_ATLAS-main-final.zip
 
-## Summary
+## What This Alpha Includes
 
-This artifact is suitable for controlled alpha validation and internal demonstration only. It is not production ready and must not be represented as a final public legal authority.
+✅ Full source code (backend + frontend)  
+✅ Complete proof chain (real test artifacts)  
+✅ Docker Compose stack (PostgreSQL, Redis, MinIO)  
+✅ All 3,551 backend tests passing  
+✅ All 104 frontend tests passing  
+✅ 7 working source adapters  
+✅ Admin review interface  
+✅ Public API with access controls  
 
-The proof chain is complete and all test results are backed by real data. The archive passes all safety checks and contains no forbidden files.
+## What This Alpha Lacks for Production
 
-## Next Steps
+❌ Production deployment hardening  
+❌ Enterprise security audit  
+❌ Legal review of evidence handling  
+❌ Scalability testing (10,000+ concurrent users)  
+❌ Advanced caching and optimization  
+❌ Multi-region deployment  
+❌ Backup and disaster recovery  
+❌ High-availability configuration  
 
-1. Deploy to staging environment
-2. Integration testing with real data sources
-3. Stakeholder review and feedback
-4. Address any integration issues
-5. Promote to production release when ready
+## Safe Deployment Scope
+
+This archive is validated for:
+- Local development environments
+- Single-machine test labs
+- Controlled staging environments
+- Small group demonstrations
+- Integration testing with non-production data
+
+NOT validated for:
+- Production with real legal data
+- Public-facing legal authority claims
+- Unreviewed AI recommendation output
+- Real-world criminal justice use
+
+## To Deploy This Alpha
+
+1. Extract: `unzip dist/JUDGE_ATLAS-main-final.zip`
+2. Setup: `cd JUDGE_ATLAS-main && docker compose up`
+3. Verify: `python scripts/check_required_proof_logs.py --strict-required-files`
+4. Access: `http://localhost:8000` (backend), `http://localhost:3000` (frontend)
+5. Login: Use admin credentials provided in setup docs
+
+## Important Notes
+
+Do NOT represent this as production-ready legal infrastructure. It is an alpha.
+
+Do NOT use for real criminal justice records without legal review and explicit authorization.
+
+Do NOT assume all features work perfectly—this is tested code, not battle-hardened production.
+
+All code is opensource and auditable. Review before deployment in any context.
