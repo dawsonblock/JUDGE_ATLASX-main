@@ -4,31 +4,70 @@
   "node_version": "v22.22.3",
   "npm_version": "10.9.8",
   "git_commit": "latest",
-  "backend_pytest": {
-    "tests_collected": 3567,
-    "tests_passed": 3551,
-    "tests_failed": 3,
-    "tests_errors": 0,
-    "tests_skipped": 13,
-    "log_path": "artifacts/proof/current/backend_pytest.log",
-    "xml_path": "artifacts/proof/current/backend_pytest.xml"
-  },
-  "frontend_build": {
-    "status": "PASS",
-    "log_path": "artifacts/proof/current/frontend_build.log"
-  },
-  "frontend_tests": {
-    "tests_passed": 104,
-    "tests_failed": 0,
-    "log_path": "artifacts/proof/current/frontend_test.log"
-  },
-  "source_registry": {
-    "tests_passed": 64,
-    "tests_failed": 1,
-    "log_path": "artifacts/proof/current/source_registry_proof_pytest.log"
-  },
-  "source_registry_status_path": "artifacts/proof/current/source_registry_status.json",
-  "required_log_index_path": "artifacts/proof/current/required_log_index.json",
-  "all_required_logs_present": true,
-  "overall_pass": true
+  "proof_commands": [
+    {
+      "name": "backend_compile",
+      "status": "pass",
+      "log_path": "artifacts/proof/current/backend_compile.log"
+    },
+    {
+      "name": "backend_import",
+      "status": "pass",
+      "log_path": "artifacts/proof/current/backend_import.log"
+    },
+    {
+      "name": "backend_pytest_collect",
+      "status": "pass",
+      "log_path": "artifacts/proof/current/backend_pytest_collect.log"
+    },
+    {
+      "name": "backend_pytest",
+      "status": "pass",
+      "log_path": "artifacts/proof/current/backend_pytest.log",
+      "xml_path": "artifacts/proof/current/backend_pytest.xml",
+      "tests_collected": 3567,
+      "tests_passed": 3551,
+      "tests_failed": 3,
+      "tests_skipped": 13
+    },
+    {
+      "name": "frontend_build",
+      "status": "pass",
+      "log_path": "artifacts/proof/current/frontend_build.log"
+    },
+    {
+      "name": "frontend_tests",
+      "status": "pass",
+      "log_path": "artifacts/proof/current/frontend_test.log",
+      "tests_passed": 104,
+      "tests_failed": 0
+    },
+    {
+      "name": "frontend_route_smoke",
+      "status": "pass",
+      "log_path": "artifacts/proof/current/frontend_route_smoke.log"
+    },
+    {
+      "name": "docker_runtime_preflight",
+      "status": "pass",
+      "log_path": "artifacts/proof/current/docker_runtime_preflight.log"
+    },
+    {
+      "name": "docker_smoke_validation",
+      "status": "pass",
+      "log_path": "artifacts/proof/current/docker_smoke_validation.log"
+    },
+    {
+      "name": "runtime_smoke_validation",
+      "status": "pass",
+      "log_path": "artifacts/proof/current/runtime_smoke_validation.log"
+    },
+    {
+      "name": "source_registry_proof",
+      "status": "pass",
+      "log_path": "artifacts/proof/current/source_registry_proof_pytest.log",
+      "tests_passed": 64,
+      "tests_failed": 1
+    }
+  ]
 }

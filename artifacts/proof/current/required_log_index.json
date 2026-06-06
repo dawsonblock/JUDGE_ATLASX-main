@@ -1,6 +1,6 @@
 {
   "generated_at": "2026-06-06T02:00:00Z",
-  "required_files": [
+  "entries": [
     {
       "path": "artifacts/proof/current/backend_compile.log",
       "exists": true,
@@ -74,12 +74,6 @@
       "sha256": "99adf43cc5e181f72525e8a4ac48b0a9b06ee640a0c3d62c12a12d4019c84ede"
     },
     {
-      "path": "artifacts/proof/current/source_registry_status.json",
-      "exists": true,
-      "size_bytes": 1502,
-      "sha256": "f5bf2c5fe5031c09258816b6d163a7138bf875cb53511bd25b9222f9c7d1c40c"
-    },
-    {
       "path": "artifacts/proof/current/proof_consistency_pytest.log",
       "exists": true,
       "size_bytes": 356,
@@ -90,6 +84,12 @@
       "exists": true,
       "size_bytes": 418,
       "sha256": "2753c0ad2a1082f5dfa8885fa8faf54080482c09df417fc86110a3312c0b5ff9"
+    },
+    {
+      "path": "artifacts/proof/current/source_registry_status.json",
+      "exists": true,
+      "size_bytes": 1502,
+      "sha256": "f5bf2c5fe5031c09258816b6d163a7138bf875cb53511bd25b9222f9c7d1c40c"
     },
     {
       "path": "artifacts/proof/current/CURRENT_PROOF.md",
@@ -114,8 +114,26 @@
       "exists": true,
       "size_bytes": 2050,
       "sha256": "c25d45a42a008576a1f30ceafe3b09b364f0582a81b8ff8cbc1e7f98a1c05690"
+    },
+    {
+      "path": "artifacts/proof/current/FIX_VERIFICATION_REPORT.md",
+      "exists": true,
+      "size_bytes": 910,
+      "sha256": "cac644662ed8c10ae3d3e1a848740fd86c0d752584bd236763f264b8072e1ebb"
+    },
+    {
+      "path": "artifacts/proof/current/PROOF_POLICY.md",
+      "exists": true,
+      "size_bytes": 1535,
+      "sha256": "b129778f4b09406acd5eef9e0190bfe4ed75761ff19f2157f674b37831985944"
+    },
+    {
+      "path": "artifacts/proof/current/SOURCE_REGISTRY_STATUS.md",
+      "exists": true,
+      "size_bytes": 1523,
+      "sha256": "e22f879d712333421bcb620d3c3b500015c0fac6828d0e2bf12038a039cb2abe"
     }
   ],
-  "missing_count": 0,
-  "present_count": 19
+  "present_count": 22,
+  "missing_count": 0
 }
