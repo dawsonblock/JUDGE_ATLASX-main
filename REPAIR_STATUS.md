@@ -24,7 +24,7 @@ Current canonical state is derived from artifacts/proof/current/release_gate.jso
 - alpha_ready: true
 - production_ready: false
 - public_release_safe: false
-- ingestion_coverage: 7/26 runnable sources (from canonical source-registry proof)
+- ingestion_coverage: 8/27 runnable sources (from canonical source-registry proof)
 - AI_answering_enabled: true (derivative, evidence-cited alpha mode)
 - workflow_admin_enabled: false (gated/experimental)
 - live_map_enabled: false (gated)

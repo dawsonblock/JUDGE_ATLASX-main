@@ -4,13 +4,13 @@
 .env
 .env.*
 *.env
-!.env.example
+.env.example
 backend/.env
 backend/.env.*
-!backend/.env.example
+backend/.env.example
 frontend/.env
 frontend/.env.*
-!frontend/.env.example
+frontend/.env.example
 node_modules/
 .venv/
 backend/.venv/
@@ -21,4 +21,7 @@ __pycache__/
 dist/
 tmp/
 artifacts/tmp/
+artifacts/proof/release_readiness.md
+artifacts/proof/archive/
+artifacts/proof/old/
 THE-JUDGE.sln

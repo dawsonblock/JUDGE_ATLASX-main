@@ -1,7 +1,7 @@
 # PROOF_POLICY
 
-- generated_at_utc: 2026-06-04T08:09:19.898461+00:00
-- commit_hash: 2f3f99abb08402eb49460b9eb8e70b26998b9dad
+- generated_at_utc: 2026-06-07T09:24:31.228524+00:00
+- commit_hash: 131117bce06d46b2c73d436427a9f6477bfc7598
 
 ## Canonical Current Artifacts
 

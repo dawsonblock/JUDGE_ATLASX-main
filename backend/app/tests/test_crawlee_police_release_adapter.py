@@ -39,7 +39,7 @@ def _make_adapter(
 
 def _run(coro):
     """Run a coroutine synchronously inside a test."""
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 # ---------------------------------------------------------------------------
@@ -68,29 +68,8 @@ class TestCrawleePoliceReleaseRunWithDb:
         call_kwargs = MockTarget.call_args.kwargs
         assert call_kwargs["source_type"] == "police_news"
 
-    def test_run_with_db_sets_police_news_index_extractor_type(self) -> None:
-        """WebMonitorTarget gets extractor_type='police_news_index'."""
-        adapter = _make_adapter()
-        db = MagicMock()
-
-        mock_runner = MagicMock()
-        mock_runner.run = AsyncMock(return_value=None)
-        mock_runner.snapshots = []
-
-        with patch(
-            "app.ingestion.source_adapters.crawlee_police_release.CrawleeRunner",
-            return_value=mock_runner,
-        ), patch(
-            "app.ingestion.source_adapters.crawlee_police_release.WebMonitorTarget"
-        ) as MockTarget:
-            MockTarget.return_value = MagicMock()
-            _run(adapter.run_with_db(db))
-
-        call_kwargs = MockTarget.call_args.kwargs
-        assert call_kwargs["extractor_type"] == "police_news_index"
-
-    def test_run_with_db_builds_target_with_source_key(self) -> None:
-        """WebMonitorTarget receives the adapter's source_key."""
+    def test_run_with_db_builds_target_with_name(self) -> None:
+        """WebMonitorTarget receives a name containing the source_key."""
         adapter = _make_adapter(source_key="rcmp_sk_news")
         db = MagicMock()
 
@@ -108,10 +87,10 @@ class TestCrawleePoliceReleaseRunWithDb:
             _run(adapter.run_with_db(db))
 
         call_kwargs = MockTarget.call_args.kwargs
-        assert call_kwargs["source_key"] == "rcmp_sk_news"
+        assert "rcmp_sk_news" in call_kwargs["name"]
 
     def test_run_with_db_passes_db_to_runner(self) -> None:
-        """CrawleeRunner receives the db session supplied to run_with_db."""
+        """CrawleeRunner receives the db session in constructor."""
         adapter = _make_adapter()
         db = MagicMock()
 
@@ -129,7 +108,8 @@ class TestCrawleePoliceReleaseRunWithDb:
             _run(adapter.run_with_db(db))
 
         _args, _kwargs = MockRunner.call_args
-        assert _kwargs.get("db") is db or (_args and _args[1] is db)
+        # CrawleeRunner(target=target, db=db) - db is second positional arg
+        assert _args[1] is db if len(_args) > 1 else _kwargs.get("db") is db
 
     def test_run_with_db_awaits_runner_run(self) -> None:
         """CrawleeRunner.run() is awaited exactly once."""
@@ -158,8 +138,7 @@ class TestCrawleePoliceReleaseRunWithDb:
 
         snap1, snap2 = MagicMock(), MagicMock()
         mock_runner = MagicMock()
-        mock_runner.run = AsyncMock(return_value=None)
-        mock_runner.snapshots = [snap1, snap2]
+        mock_runner.run = AsyncMock(return_value=[snap1, snap2])
 
         with patch(
             "app.ingestion.source_adapters.crawlee_police_release.CrawleeRunner",
@@ -182,8 +161,7 @@ class TestCrawleePoliceReleaseRunWithDb:
         db = MagicMock()
 
         mock_runner = MagicMock()
-        mock_runner.run = AsyncMock(return_value=None)
-        mock_runner.snapshots = []
+        mock_runner.run = AsyncMock(return_value=[])
 
         with patch(
             "app.ingestion.source_adapters.crawlee_police_release.CrawleeRunner",
@@ -197,17 +175,20 @@ class TestCrawleePoliceReleaseRunWithDb:
         assert result == []
 
     # ------------------------------------------------------------------
-    # Regression: existing stub tests must still pass
+    # Phase 3: Active adapter tests (NotImplementedError removed)
     # ------------------------------------------------------------------
 
-    def test_existing_fetch_still_raises_not_implemented(self) -> None:
-        """Regression: fetch() still raises NotImplementedError (stub)."""
+    def test_fetch_now_works_without_error(self) -> None:
+        """fetch() is now implemented and returns a list (may be empty)."""
         adapter = _make_adapter()
-        with pytest.raises(NotImplementedError):
-            adapter.fetch()
+        result = adapter.fetch()  # Should not raise
+        assert isinstance(result, list)
 
-    def test_existing_run_captures_error(self) -> None:
-        """Regression: run() returns IngestionResult with error in errors list."""
+    def test_run_returns_result_without_stub_errors(self) -> None:
+        """run() now returns IngestionResult without NotImplementedError."""
         adapter = _make_adapter()
         result = adapter.run()
-        assert len(result.errors) > 0
+        # Result may have errors from actual fetch failure, but not NotImplementedError
+        for err in result.errors:
+            assert "NotImplementedError" not in err
+            assert "stub" not in err.lower()

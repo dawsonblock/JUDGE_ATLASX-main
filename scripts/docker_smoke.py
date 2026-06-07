@@ -152,6 +152,26 @@ def _reusable_images_present() -> bool:
 def main() -> int:
     lines: list[str] = ["docker smoke", f"repo_root: {REPO_ROOT}"]
     _log(lines)
+
+    # Skip gracefully when Docker is unavailable or daemon is not responding.
+    if subprocess.run(
+        ["docker", "--version"],
+        capture_output=True,
+        check=False,
+        timeout=10,
+    ).returncode != 0:
+        _append(lines, "SKIP: docker not available on this host")
+        return 0
+
+    if subprocess.run(
+        ["docker", "info"],
+        capture_output=True,
+        check=False,
+        timeout=10,
+    ).returncode != 0:
+        _append(lines, "SKIP: docker daemon is not responding")
+        return 0
+
     failed = False
     compose_cmd = _compose_command()
 

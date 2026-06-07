@@ -23,8 +23,10 @@ from pathlib import Path
 
 PROOF_INPUT_PATTERNS = [
     "README.md",
+    "STATUS.md",
     "CURRENT_STATUS.md",
     "PROOF_STATUS.md",
+    "REPAIR_STATUS.md",
     "RELEASE_BLOCKERS.md",
     "STUBS_AND_PLACEHOLDERS.md",
     "REPO_REALITY.md",
@@ -57,7 +59,6 @@ PROOF_INPUT_PATTERNS = [
     "docs/PROOF.md",
     "docs/SOURCES.md",
     "docs/AI_PIPELINE.md",
-    "artifacts/proof/CURRENT_PROOF.md",
 ]
 
 IGNORE_PATH_PREFIXES = {

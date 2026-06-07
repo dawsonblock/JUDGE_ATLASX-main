@@ -2984,7 +2984,6 @@ def main() -> int:
         "public_release_safe": False,
         # Legacy compatibility key retained for downstream scripts during migration.
         "release_candidate": False,
-        "git_commit": os.environ.get("GIT_COMMIT", "unknown"),
         "commit_hash": subprocess.run(
             ["git", "rev-parse", "HEAD"],
             capture_output=True,
@@ -2993,6 +2992,17 @@ def main() -> int:
             check=False,
         ).stdout.strip()
         or "unknown",
+        "git_commit": os.environ.get(
+            "GIT_COMMIT",
+            subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                capture_output=True,
+                text=True,
+                cwd=repo_root,
+                check=False,
+            ).stdout.strip()
+            or "unknown",
+        ),
         "python_version": sys.version.split()[0],
         "gate_runner_python_version": sys.version.split()[0],
         "gate_runner_python_executable": _redact_local_path(

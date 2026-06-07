@@ -22,10 +22,10 @@ REGISTRY_PATH = (
 
 # Minimum acceptable runnable count for alpha gate.
 # Update when new sources become runnable.
-MIN_RUNNABLE_NOW = 7
+MIN_RUNNABLE_NOW = 8
 
-# Maximum enable-ready for current state (0 — all were promoted or removed).
-MAX_ENABLE_READY = 0
+# Maximum enable-ready for current state (3 crawlee sources ready but disabled).
+MAX_ENABLE_READY = 3
 
 
 @pytest.fixture(scope="module")
@@ -64,10 +64,10 @@ class TestSourceRegistryCounts:
             "runnable_now=true in the per-source list."
         )
 
-    def test_total_sources_is_26(self, registry):
-        """Total registered sources must be 26 for current alpha."""
-        assert registry["total_sources"] == 26, (
-            f"Expected 26 registered sources, got {registry['total_sources']}. "
+    def test_total_sources_is_27(self, registry):
+        """Total registered sources must be 27 for current alpha."""
+        assert registry["total_sources"] == 27, (
+            f"Expected 27 registered sources, got {registry['total_sources']}. "
             "If sources were added/removed, update this test and all status docs."
         )
 

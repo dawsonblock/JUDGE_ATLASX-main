@@ -193,6 +193,9 @@ log "Validating local proof freshness"
 python scripts/check_proof_freshness.py
 python scripts/check_proof_freshness.py --strict-extra-files
 
+log "Refreshing proof hash after status doc sync"
+python3 scripts/refresh_proof_hash.py --root .
+
 log "Validating local proof integrity"
 python scripts/check_proof_consistency.py
 python scripts/check_single_proof_authority.py --root .

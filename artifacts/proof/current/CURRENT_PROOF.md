@@ -1,7 +1,7 @@
 # CURRENT_PROOF
 
-- generated_at_utc: 2026-06-04T08:09:19.898461+00:00
-- commit_hash: 2f3f99abb08402eb49460b9eb8e70b26998b9dad
+- generated_at_utc: 2026-06-07T09:24:31.228524+00:00
+- commit_hash: 131117bce06d46b2c73d436427a9f6477bfc7598
 - alpha_gate_passed: true
 - alpha_gate_status: PASS
 - alpha_candidate: true
@@ -16,15 +16,15 @@
 - demo_proof_result: PASS
 - proof_freshness_result: PASS
 - archive_validation_result: PASS
-- proof_input_tree_hash: c3fe86be9b2edf55a40000a48f31327da185ea07a1cc0f06e17c1a74d636a2d0
-- proof_input_file_count: 1138
+- proof_input_tree_hash: 7b360fbbfba4bc7a65cd87a70bbbeb0b25487bf3adc467c6989a476d4c847a87
+- proof_input_file_count: 1150
 - egress_proxy_proof_log: artifacts/proof/current/egress_proxy_proof.log
 - demo_proof_log: artifacts/proof/current/demo_proof.log
 
 ## Runtime Metadata
 
 - gate_runner_python_version: 3.11.9
-- gate_runner_python_executable: [REDACTED_LOCAL_PATH]
+- gate_runner_python_executable: [REDACTED_LOCAL_PATH]/backend/.venv/bin/python3
 - backend_test_python_version: 3.11.9
 - backend_test_python_executable: [REDACTED_LOCAL_PATH]/backend/.venv/bin/python
 - backend_required_python: >=3.11
@@ -74,7 +74,7 @@
 - demo proof: PASS
 - CanLII staging proof: PASS
 - mutation fail-closed coverage: PASS
-- Alembic migrations: 72
+- Alembic migrations: 75
 
 ## Egress Proxy Coverage
 

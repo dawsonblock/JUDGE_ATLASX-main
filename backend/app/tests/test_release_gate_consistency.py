@@ -216,8 +216,8 @@ def test_release_readiness_matches_release_gate(repo_root, release_gate_json):
     assert recommendation_match, "release_readiness.md missing release_recommendation"
 
     if alpha_gate_passed:
-        assert overall_status_match.group(1).strip() == "alpha-proof-pass"
-        assert recommendation_match.group(1).strip() == "alpha-proof-pass"
+        assert overall_status_match.group(1).strip() == "self-verifying-alpha"
+        assert recommendation_match.group(1).strip() == "self-verifying-alpha"
         assert "missing_required_gate:single_proof_authority" not in readiness_text
     else:
         assert overall_status_match.group(1).strip() == "blocked"
