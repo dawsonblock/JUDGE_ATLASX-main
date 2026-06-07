@@ -1,10 +1,10 @@
 # SOURCE_REGISTRY_STATUS
 
-- generated_at_utc: 2026-06-05T01:47:07.005225+00:00
-- commit_hash: fac262a453e85318535bbe00222971452f24349e
-- total_sources: 26
-- machine_ingest_sources: 8
-- runnable_now: 7
+- generated_at_utc: 2026-06-07T06:20:13.919225+00:00
+- commit_hash: abcd220675f7fb5134519ab88ae303bcab4b70a2
+- total_sources: 27
+- machine_ingest_sources: 9
+- runnable_now: 8
 - enable_ready: 0
 - deprecated: 3
 
@@ -28,6 +28,7 @@
 | saskatoon_police_open_data | Saskatoon Police Service – Open Data Portal | Saskatoon, Saskatchewan, Canada | portal_reference/crime_incident | portal_reference | adapter_missing | found | saskatoon_police_csv | yes | no | no | non_machine_ingest_source, lifecycle_state=portal_reference, automation_status=adapter_missing | yes | limited-alpha-source |
 | scc_decisions | Supreme Court of Canada – Decisions | Canada | machine_ingest/court_record | runnable | machine_ready_enabled | found | scc_lexum_api | yes | yes | no | none | yes | runnable-alpha-source |
 | scc_judgments | Supreme Court of Canada – Judgments | Canada | machine_ingest/court_record | deprecated | deprecated | found | scc_lexum_api | yes | no | no | lifecycle_state=deprecated, automation_status=deprecated, deprecated_source_noncanonical | yes | limited-alpha-source |
+| sk_court_of_appeal | Court of Appeal for Saskatchewan – Judgments | Saskatchewan, Canada | machine_ingest/court_record | runnable | machine_ready_enabled | found | sk_ca_rss | yes | yes | no | none | yes | runnable-alpha-source |
 | sk_courts_ca_decisions | Saskatchewan Court of Appeal – Decisions | Saskatchewan, Canada | machine_ingest/court_record | runnable | machine_ready_enabled | found | canlii_api | yes | yes | no | none | yes | runnable-alpha-source |
 | sk_courts_qb_decisions | Saskatchewan Court of King's Bench – Decisions | Saskatchewan, Canada | machine_ingest/court_record | runnable | machine_ready_enabled | found | canlii_api | yes | yes | no | none | yes | runnable-alpha-source |
 | sk_justice_ministry | Saskatchewan Ministry of Justice – News Releases | Saskatchewan, Canada | disabled_stub/news_monitor | disabled_stub | adapter_missing | found | crawlee_gov_news | yes | no | no | non_machine_ingest_source, lifecycle_state=disabled_stub, automation_status=adapter_missing | yes | limited-alpha-source |

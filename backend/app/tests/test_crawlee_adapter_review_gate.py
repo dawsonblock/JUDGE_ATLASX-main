@@ -27,7 +27,7 @@ from app.ingestion.source_adapters.crawlee_police_release import (
 # ---------------------------------------------------------------------------
 
 def _run(coro):
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 def _gov_news_adapter() -> CrawleeGovNewsAdapter:
@@ -119,8 +119,7 @@ class TestReviewGateNoAutoPublish:
         db = MagicMock()
         fake_snapshot = MagicMock(spec=["id", "source_key", "extracted_text"])
         mock_runner = MagicMock()
-        mock_runner.run = AsyncMock(return_value=None)
-        mock_runner.snapshots = [fake_snapshot]
+        mock_runner.run = AsyncMock(return_value=[fake_snapshot])  # run() returns list directly
 
         with patch(
             "app.ingestion.source_adapters.crawlee_gov_news.CrawleeRunner",
@@ -144,8 +143,7 @@ class TestReviewGateNoAutoPublish:
         adapter = _police_adapter()
         db = MagicMock()
         mock_runner = MagicMock()
-        mock_runner.run = AsyncMock(return_value=None)
-        mock_runner.snapshots = []
+        mock_runner.run = AsyncMock(return_value=[])  # run() returns list directly
 
         with patch(
             "app.ingestion.source_adapters.crawlee_police_release.CrawleeRunner",
@@ -169,8 +167,7 @@ class TestReviewGateReturnType:
         adapter = _gov_news_adapter()
         db = MagicMock()
         mock_runner = MagicMock()
-        mock_runner.run = AsyncMock(return_value=None)
-        mock_runner.snapshots = [MagicMock(), MagicMock()]
+        mock_runner.run = AsyncMock(return_value=[MagicMock(), MagicMock()])  # run() returns list directly
 
         with patch(
             "app.ingestion.source_adapters.crawlee_gov_news.CrawleeRunner",
@@ -187,8 +184,7 @@ class TestReviewGateReturnType:
         adapter = _police_adapter()
         db = MagicMock()
         mock_runner = MagicMock()
-        mock_runner.run = AsyncMock(return_value=None)
-        mock_runner.snapshots = [MagicMock()]
+        mock_runner.run = AsyncMock(return_value=[MagicMock()])  # run() returns list directly
 
         with patch(
             "app.ingestion.source_adapters.crawlee_police_release.CrawleeRunner",

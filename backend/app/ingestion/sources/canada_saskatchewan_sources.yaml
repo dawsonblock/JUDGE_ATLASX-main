@@ -535,14 +535,14 @@ sources:
   public_publish_default: false
   precision_level: city_centroid
   priority: 2
-  source_class: disabled_stub
-  automation_status: adapter_missing
-  admin_notes: crawlee_police_release adapter not yet implemented; reclassified from
-    machine_ingest pending real adapter.
-  lifecycle_state: disabled_stub
-  status_reason: "Web monitoring stub for Saskatoon Police news \u2014 no scraper\
-    \ adapter built."
-  operator_next_step: Evaluate whether a scraper is required or remove this stub.
+  source_class: machine_ingest
+  automation_status: machine_ready_disabled
+  parser_version: crawlee_police_v1
+  admin_notes: Crawler adapter implemented using web_monitor_base and fetch_for_ingestion.
+    Disabled until operator enablement for controlled staging crawl.
+  lifecycle_state: runnable_disabled
+  status_reason: "Crawler adapter implemented; disabled until operator enablement."
+  operator_next_step: "Run fixture tests, then enable manually for controlled staging crawl."
   confidence_class: tertiary
   retention_policy: rolling_90_days
   canonical_url: https://www.saskatoonpolice.ca
@@ -956,14 +956,14 @@ sources:
   public_publish_default: false
   precision_level: province
   priority: 3
-  source_class: disabled_stub
-  automation_status: adapter_missing
-  admin_notes: crawlee_gov_news adapter not yet implemented; reclassified from machine_ingest
-    pending real adapter.
-  lifecycle_state: disabled_stub
-  status_reason: "Saskatchewan Justice Ministry publications \u2014 stub only; no\
-    \ adapter written."
-  operator_next_step: Define what specific data is needed, then write a targeted adapter.
+  source_class: machine_ingest
+  automation_status: machine_ready_disabled
+  parser_version: crawlee_gov_v1
+  admin_notes: Government news crawler adapter implemented using web_monitor_base and fetch_for_ingestion.
+    Disabled until operator enablement for controlled staging crawl.
+  lifecycle_state: runnable_disabled
+  status_reason: "Government news crawler adapter implemented; disabled until operator enablement."
+  operator_next_step: "Run fixture tests, then enable manually for controlled staging crawl."
   confidence_class: tertiary
   retention_policy: rolling_90_days
   canonical_url: https://www.saskatchewan.ca
@@ -1113,14 +1113,14 @@ sources:
   public_publish_default: false
   precision_level: city_centroid
   priority: 3
-  source_class: disabled_stub
-  automation_status: adapter_missing
-  admin_notes: crawlee_police_release adapter not yet implemented; reclassified from
-    machine_ingest pending real adapter.
-  lifecycle_state: disabled_stub
-  status_reason: "RCMP Saskatchewan news releases \u2014 stub only; no scraper adapter\
-    \ written."
-  operator_next_step: Evaluate whether a scraper is required or remove this stub.
+  source_class: machine_ingest
+  automation_status: machine_ready_disabled
+  parser_version: crawlee_police_v1
+  admin_notes: Crawler adapter implemented using web_monitor_base and fetch_for_ingestion.
+    Disabled until operator enablement for controlled staging crawl.
+  lifecycle_state: runnable_disabled
+  status_reason: "Crawler adapter implemented; disabled until operator enablement."
+  operator_next_step: "Run fixture tests, then enable manually for controlled staging crawl."
   confidence_class: tertiary
   retention_policy: rolling_90_days
   canonical_url: https://www.rcmp-grc.gc.ca
@@ -1385,3 +1385,59 @@ sources:
   - type: reference_only
     path: null
     expected_min_records: 0
+- source_key: sk_court_of_appeal
+  source_name: "Court of Appeal for Saskatchewan \u2013 Judgments"
+  jurisdiction: Saskatchewan, Canada
+  category: court_decisions
+  country: Canada
+  province_state: Saskatchewan
+  city: null
+  source_type: court_record
+  source_tier: court_record
+  public_record_authority: official_court_record
+  license: "Crown copyright \u2013 public access"
+  license_url: https://sasklawcourts.ca/legal-disclaimer/
+  terms_url: https://sasklawcourts.ca/legal-disclaimer/
+  base_url: https://sasklawcourts.ca
+  allowed_domains:
+  - sasklawcourts.ca
+  - www.sasklawcourts.ca
+  fetch_method: rss
+  update_cadence: daily
+  refresh_interval_minutes: 1440
+  parser: sk_ca_rss
+  creates:
+  - ReviewItem
+  enabled_default: false
+  auto_publish_enabled: false
+  requires_manual_review: true
+  public_publish_default: false
+  precision_level: province
+  priority: 2
+  source_class: machine_ingest
+  automation_status: machine_ready_enabled
+  parser_version: '1.0'
+  admin_notes: 'Validated 2026-06-06: RSS feed at sasklawcourts.ca/rss/ca.xml. Fields:
+    title, link, description, pubDate. Title format includes neutral citation (e.g.,
+    2024 SKCA 123). All decisions require manual review before publication.'
+  lifecycle_state: runnable
+  status_reason: Saskatchewan Court of Appeal RSS adapter ready and enabled.
+  operator_next_step: Monitor ingestion runs and review queue for new snapshots.
+  confidence_class: primary_official
+  retention_policy: indefinite
+  canonical_url: https://sasklawcourts.ca/rss/ca.xml
+  evidence_required: true
+  terms_verified: '2026-06-06'
+  authentication_required: false
+  rate_limit_policy: polite_1rps
+  adapter:
+    parser: sk_ca_rss
+    mode: rss
+    machine_ingest_enabled: true
+    requires_secret: false
+    rate_limit_rpm: 30
+    timeout_seconds: 30
+  test_fixtures:
+  - type: json
+    path: backend/app/tests/fixtures/sources/sk_court_of_appeal/sample.json
+    expected_min_records: 1

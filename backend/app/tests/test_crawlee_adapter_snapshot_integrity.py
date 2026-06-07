@@ -27,7 +27,7 @@ from app.ingestion.source_adapters.crawlee_police_release import (
 # ---------------------------------------------------------------------------
 
 def _run(coro):
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 def _run_gov_news(
@@ -86,20 +86,17 @@ def _run_police(
 # ---------------------------------------------------------------------------
 
 class TestWebMonitorTargetSourceKey:
-    def test_gov_news_source_key_passed_to_target(self) -> None:
+    def test_gov_news_source_key_in_name(self) -> None:
         MockTarget, _ = _run_gov_news(source_key="sk_justice_ministry")
-        assert MockTarget.call_args.kwargs["source_key"] == "sk_justice_ministry"
+        assert "sk_justice_ministry" in MockTarget.call_args.kwargs["name"]
 
-    def test_police_source_key_saskatoon(self) -> None:
+    def test_police_source_key_saskatoon_in_name(self) -> None:
         MockTarget, _ = _run_police(source_key="web_monitor_saskatoon_police_news")
-        assert (
-            MockTarget.call_args.kwargs["source_key"]
-            == "web_monitor_saskatoon_police_news"
-        )
+        assert "web_monitor_saskatoon_police_news" in MockTarget.call_args.kwargs["name"]
 
-    def test_police_source_key_rcmp(self) -> None:
+    def test_police_source_key_rcmp_in_name(self) -> None:
         MockTarget, _ = _run_police(source_key="rcmp_sk_news")
-        assert MockTarget.call_args.kwargs["source_key"] == "rcmp_sk_news"
+        assert "rcmp_sk_news" in MockTarget.call_args.kwargs["name"]
 
 
 class TestWebMonitorTargetBaseUrl:

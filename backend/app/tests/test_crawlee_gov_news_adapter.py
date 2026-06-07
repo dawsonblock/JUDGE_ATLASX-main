@@ -37,7 +37,7 @@ def _make_adapter(
 
 def _run(coro):
     """Run a coroutine synchronously inside a test."""
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 # ---------------------------------------------------------------------------
@@ -46,13 +46,12 @@ def _run(coro):
 
 class TestCrawleeGovNewsRunWithDb:
     def test_run_with_db_builds_web_monitor_target(self) -> None:
-        """WebMonitorTarget receives the adapter's source_key and base_url."""
+        """WebMonitorTarget receives correct name and base_url."""
         adapter = _make_adapter()
         db = MagicMock()
 
         mock_runner = MagicMock()
-        mock_runner.run = AsyncMock(return_value=None)
-        mock_runner.snapshots = []
+        mock_runner.run = AsyncMock(return_value=[])
 
         with patch(
             "app.ingestion.source_adapters.crawlee_gov_news.CrawleeRunner",
@@ -64,11 +63,11 @@ class TestCrawleeGovNewsRunWithDb:
             _run(adapter.run_with_db(db))
 
         call_kwargs = MockTarget.call_args.kwargs
-        assert call_kwargs["source_key"] == "sk_justice_ministry"
+        assert "sk_justice_ministry" in call_kwargs["name"]
         assert call_kwargs["base_url"] == "https://www.saskatchewan.ca/government/news"
 
     def test_run_with_db_passes_db_to_runner(self) -> None:
-        """CrawleeRunner receives the db session from run_with_db."""
+        """CrawleeRunner receives the db session in constructor."""
         adapter = _make_adapter()
         db = MagicMock()
 
@@ -86,7 +85,8 @@ class TestCrawleeGovNewsRunWithDb:
             _run(adapter.run_with_db(db))
 
         _args, _kwargs = MockRunner.call_args
-        assert _kwargs.get("db") is db or _args[1] is db if _args else _kwargs["db"] is db
+        # CrawleeRunner(target=target, db=db) - db is second positional arg
+        assert _args[1] is db if len(_args) > 1 else _kwargs.get("db") is db
 
     def test_run_with_db_awaits_runner_run(self) -> None:
         """CrawleeRunner.run() is awaited exactly once."""
@@ -115,8 +115,7 @@ class TestCrawleeGovNewsRunWithDb:
 
         fake_snapshot = MagicMock()
         mock_runner = MagicMock()
-        mock_runner.run = AsyncMock(return_value=None)
-        mock_runner.snapshots = [fake_snapshot]
+        mock_runner.run = AsyncMock(return_value=[fake_snapshot])
 
         with patch(
             "app.ingestion.source_adapters.crawlee_gov_news.CrawleeRunner",
@@ -135,8 +134,7 @@ class TestCrawleeGovNewsRunWithDb:
         db = MagicMock()
 
         mock_runner = MagicMock()
-        mock_runner.run = AsyncMock(return_value=None)
-        mock_runner.snapshots = []
+        mock_runner.run = AsyncMock(return_value=[])
 
         with patch(
             "app.ingestion.source_adapters.crawlee_gov_news.CrawleeRunner",
@@ -174,17 +172,20 @@ class TestCrawleeGovNewsRunWithDb:
         assert "www.saskatchewan.ca" in call_kwargs["allowed_domains"]
 
     # ------------------------------------------------------------------
-    # Regression: existing stub tests must still pass
+    # Phase 3: Active adapter tests (NotImplementedError removed)
     # ------------------------------------------------------------------
 
-    def test_existing_fetch_still_raises_not_implemented(self) -> None:
-        """Regression: fetch() still raises NotImplementedError (stub)."""
+    def test_fetch_now_works_without_error(self) -> None:
+        """fetch() is now implemented and returns a list (may be empty)."""
         adapter = _make_adapter()
-        with pytest.raises(NotImplementedError):
-            adapter.fetch()
+        result = adapter.fetch()  # Should not raise
+        assert isinstance(result, list)
 
-    def test_existing_run_captures_error(self) -> None:
-        """Regression: run() returns IngestionResult with error in errors list."""
+    def test_run_returns_result_without_stub_errors(self) -> None:
+        """run() now returns IngestionResult without NotImplementedError."""
         adapter = _make_adapter()
         result = adapter.run()
-        assert len(result.errors) > 0
+        # Result may have errors from actual fetch failure, but not NotImplementedError
+        for err in result.errors:
+            assert "NotImplementedError" not in err
+            assert "stub" not in err.lower()

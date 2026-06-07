@@ -1,13 +1,13 @@
 # Source Coverage Matrix
 
 Generated from artifacts/proof/current/source_registry_status.json.
-Generated at: 2026-06-05T01:42:57.132353+00:00
+Generated at: 2026-06-07T06:18:55.589905+00:00
 
 ## Summary
 
-- total_sources: 26
-- machine_ingest_sources: 8
-- runnable_now: 7
+- total_sources: 27
+- machine_ingest_sources: 9
+- runnable_now: 8
 - enable_ready: 0
 - deprecated: 3
 
@@ -33,6 +33,7 @@ Generated at: 2026-06-05T01:42:57.132353+00:00
 | saskatoon_police_open_data | Saskatoon, Saskatchewan, Canada | portal_reference | portal_reference | adapter_missing | false | false | saskatoon_police_csv | found | Monitor Saskatoon Police data portal for a machine-readable feed. |
 | scc_decisions | Canada | machine_ingest | runnable | machine_ready_enabled | true | false | scc_lexum_api | found | Monitor ingestion runs and review queue for new snapshots. |
 | scc_judgments | Canada | machine_ingest | deprecated | deprecated | false | false | scc_lexum_api | found | Migrate any references from scc_judgments to scc_decisions and remove this entry. |
+| sk_court_of_appeal | Saskatchewan, Canada | machine_ingest | runnable | machine_ready_enabled | true | false | sk_ca_rss | found | Monitor ingestion runs and review queue for new snapshots. |
 | sk_courts_ca_decisions | Saskatchewan, Canada | machine_ingest | runnable | machine_ready_enabled | true | false | canlii_api | found | Monitor ingestion runs and review queue for new snapshots. |
 | sk_courts_qb_decisions | Saskatchewan, Canada | machine_ingest | runnable | machine_ready_enabled | true | false | canlii_api | found | Monitor ingestion runs and review queue for new snapshots. |
 | sk_justice_ministry | Saskatchewan, Canada | disabled_stub | disabled_stub | adapter_missing | false | false | crawlee_gov_news | found | Define what specific data is needed, then write a targeted adapter. |
