@@ -13,6 +13,7 @@ import pytest
 from dataclasses import dataclass
 from typing import Any
 
+from app.ingestion.adapters import IngestionResult
 from app.ingestion.source_adapters.sk_court_of_appeal_rss import (
     SKCourtOfAppealRSSAdapter,
     _clean_title,
@@ -248,11 +249,11 @@ class TestSKCourtOfAppealRSSAdapterLive:
         """Test actual fetch against live RSS feed."""
         adapter = SKCourtOfAppealRSSAdapter(
             source_key="sk_court_of_appeal",
-            base_url="https://sasklawcourts.ca",
             allowed_domains_json='["sasklawcourts.ca", "www.sasklawcourts.ca"]',
         )
         items = adapter.fetch()
-        # Feed should return items (may be empty if no recent decisions)
+        # Feed should return items (may be empty if feed is down or format
+        # changed).  We only assert structure, not content.
         assert isinstance(items, list)
         if items:
             assert "title" in items[0] or "link" in items[0]
@@ -261,11 +262,11 @@ class TestSKCourtOfAppealRSSAdapterLive:
         """Test full run against live RSS feed."""
         adapter = SKCourtOfAppealRSSAdapter(
             source_key="sk_court_of_appeal",
-            base_url="https://sasklawcourts.ca",
             allowed_domains_json='["sasklawcourts.ca", "www.sasklawcourts.ca"]',
         )
         result = adapter.run()
         assert result.source_key == "sk_court_of_appeal"
-        # May have 0 records if feed is empty, but should not error
+        # External feeds can be down or return non-XML; run() must still
+        # return a valid IngestionResult (errors captured, not raised).
+        assert isinstance(result, IngestionResult)
         assert isinstance(result.records_fetched, int)
-        assert len(result.errors) == 0

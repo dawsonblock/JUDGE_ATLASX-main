@@ -113,7 +113,7 @@ class SKCourtOfAppealRSSAdapter(CanadianSourceAdapter):
     def __init__(
         self,
         source_key: str,
-        base_url: str,
+        base_url: str | None = None,
         allowed_domains_json: str | None = None,
         public_record_authority: str | None = None,
         fetcher: FetchCallable | None = None,
@@ -149,6 +149,22 @@ class SKCourtOfAppealRSSAdapter(CanadianSourceAdapter):
         self._fetch_content_type = fetch_result.content_type or "application/rss+xml"
         self._fetch_url = fetch_result.final_url or url
         raw_text = (fetch_result.raw_content or b"").decode("utf-8", errors="replace")
+        # Defensive: reject responses that are clearly not XML/RSS.
+        stripped = raw_text.lstrip()
+        if not (
+            stripped.startswith("<?xml")
+            or stripped.startswith("<rss")
+            or stripped.startswith("<feed")
+        ):
+            logger.error(
+                "Expected RSS XML from %s but got non-XML response "
+                "(status=%s, content_type=%s, first_chars=%r)",
+                url,
+                fetch_result.http_status,
+                fetch_result.content_type,
+                stripped[:200],
+            )
+            return []
         root = ET.fromstring(raw_text)
         items: list[dict[str, Any]] = []
         for item in root.iter("item"):
