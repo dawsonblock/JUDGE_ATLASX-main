@@ -177,7 +177,7 @@ def test_sources_enable_disabled_stub_rejected(runner: CliRunner) -> None:
     """disabled_stub sources must be rejected with SOURCE_NOT_RUNNABLE."""
     result = runner.invoke(
         main,
-        ["--json", "sources", "enable", "web_monitor_saskatoon_police_news", "--yes"],
+        ["--json", "sources", "enable", "canada_justice_laws", "--yes"],
     )
     assert result.exit_code == 1
     data = json.loads(result.output)

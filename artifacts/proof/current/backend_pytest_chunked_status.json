@@ -1,15 +1,15 @@
 {
-  "started_at": "2026-06-07T06:16:24.034461+00:00",
-  "finished_at": "2026-06-07T06:17:56.451553+00:00",
+  "started_at": "2026-06-07T09:20:27.751082+00:00",
+  "finished_at": "2026-06-07T09:22:00.908619+00:00",
   "collect_exit_code": 0,
   "batch_exit_code": 0,
   "batch_size": 40,
-  "discovered_files": 306,
+  "discovered_files": 307,
   "batches": [
     {
       "index": 1,
-      "started_at": "2026-06-07T06:16:27.717565+00:00",
-      "finished_at": "2026-06-07T06:16:42.112032+00:00",
+      "started_at": "2026-06-07T09:20:32.045087+00:00",
+      "finished_at": "2026-06-07T09:20:46.821746+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/ingestion/test_ckan_adapter.py",
@@ -17,8 +17,8 @@
     },
     {
       "index": 2,
-      "started_at": "2026-06-07T06:16:42.112232+00:00",
-      "finished_at": "2026-06-07T06:17:01.489572+00:00",
+      "started_at": "2026-06-07T09:20:46.821969+00:00",
+      "finished_at": "2026-06-07T09:21:08.127356+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_auto_review.py",
@@ -26,8 +26,8 @@
     },
     {
       "index": 3,
-      "started_at": "2026-06-07T06:17:01.489926+00:00",
-      "finished_at": "2026-06-07T06:17:08.663114+00:00",
+      "started_at": "2026-06-07T09:21:08.127672+00:00",
+      "finished_at": "2026-06-07T09:21:14.723035+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_crime_source_ingestion.py",
@@ -35,8 +35,8 @@
     },
     {
       "index": 4,
-      "started_at": "2026-06-07T06:17:08.663246+00:00",
-      "finished_at": "2026-06-07T06:17:14.502564+00:00",
+      "started_at": "2026-06-07T09:21:14.723202+00:00",
+      "finished_at": "2026-06-07T09:21:20.761523+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_import_authority_roles.py",
@@ -44,8 +44,8 @@
     },
     {
       "index": 5,
-      "started_at": "2026-06-07T06:17:14.502723+00:00",
-      "finished_at": "2026-06-07T06:17:28.280738+00:00",
+      "started_at": "2026-06-07T09:21:20.762361+00:00",
+      "finished_at": "2026-06-07T09:21:35.255737+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_memory_derivative_boundary.py",
@@ -53,8 +53,8 @@
     },
     {
       "index": 6,
-      "started_at": "2026-06-07T06:17:28.280878+00:00",
-      "finished_at": "2026-06-07T06:17:34.692460+00:00",
+      "started_at": "2026-06-07T09:21:35.255960+00:00",
+      "finished_at": "2026-06-07T09:21:41.910464+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_prove_justice_canada_ingestion.py",
@@ -62,20 +62,20 @@
     },
     {
       "index": 7,
-      "started_at": "2026-06-07T06:17:34.692614+00:00",
-      "finished_at": "2026-06-07T06:17:48.913956+00:00",
+      "started_at": "2026-06-07T09:21:41.910607+00:00",
+      "finished_at": "2026-06-07T09:21:53.653321+00:00",
       "exit_code": 0,
       "file_count": 40,
       "first_file": "backend/app/tests/test_run_persist_summary_truth.py",
-      "last_file": "backend/app/tests/test_source_rules.py"
+      "last_file": "backend/app/tests/test_source_registry_truth_consistency.py"
     },
     {
       "index": 8,
-      "started_at": "2026-06-07T06:17:48.914459+00:00",
-      "finished_at": "2026-06-07T06:17:56.451365+00:00",
+      "started_at": "2026-06-07T09:21:53.653468+00:00",
+      "finished_at": "2026-06-07T09:22:00.908536+00:00",
       "exit_code": 0,
-      "file_count": 26,
-      "first_file": "backend/app/tests/test_source_run_failure_persistence.py",
+      "file_count": 27,
+      "first_file": "backend/app/tests/test_source_rules.py",
       "last_file": "backend/app/tests/test_workflow_admin_security.py"
     }
   ],

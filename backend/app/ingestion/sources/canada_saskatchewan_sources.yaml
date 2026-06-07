@@ -546,10 +546,17 @@ sources:
   confidence_class: tertiary
   retention_policy: rolling_90_days
   canonical_url: https://www.saskatoonpolice.ca
-  evidence_required: false
-  terms_verified: false
+  evidence_required: true
+  terms_verified: '2026-06-06'
   authentication_required: false
   rate_limit_policy: polite_1rps
+  adapter:
+    parser: crawlee_police_release
+    mode: web_crawl
+    machine_ingest_enabled: false
+    requires_secret: false
+    rate_limit_rpm: 30
+    timeout_seconds: 30
   test_fixtures:
   - type: json
     path: backend/app/tests/fixtures/sources/web_monitor_saskatoon_police_news/sample.json
@@ -967,10 +974,17 @@ sources:
   confidence_class: tertiary
   retention_policy: rolling_90_days
   canonical_url: https://www.saskatchewan.ca
-  evidence_required: false
-  terms_verified: false
+  evidence_required: true
+  terms_verified: '2026-06-06'
   authentication_required: false
   rate_limit_policy: polite_1rps
+  adapter:
+    parser: crawlee_gov_news
+    mode: web_crawl
+    machine_ingest_enabled: false
+    requires_secret: false
+    rate_limit_rpm: 30
+    timeout_seconds: 30
   test_fixtures:
   - type: json
     path: backend/app/tests/fixtures/sources/sk_justice_ministry/sample.json
@@ -1124,10 +1138,17 @@ sources:
   confidence_class: tertiary
   retention_policy: rolling_90_days
   canonical_url: https://www.rcmp-grc.gc.ca
-  evidence_required: false
-  terms_verified: false
+  evidence_required: true
+  terms_verified: '2026-06-06'
   authentication_required: false
   rate_limit_policy: polite_1rps
+  adapter:
+    parser: crawlee_police_release
+    mode: web_crawl
+    machine_ingest_enabled: false
+    requires_secret: false
+    rate_limit_rpm: 30
+    timeout_seconds: 30
   test_fixtures:
   - type: json
     path: backend/app/tests/fixtures/sources/rcmp_sk_news/sample.json
@@ -1405,7 +1426,7 @@ sources:
   fetch_method: rss
   update_cadence: daily
   refresh_interval_minutes: 1440
-  parser: sk_ca_rss
+  parser: sk_court_of_appeal_rss
   creates:
   - ReviewItem
   enabled_default: false
@@ -1416,7 +1437,7 @@ sources:
   priority: 2
   source_class: machine_ingest
   automation_status: machine_ready_enabled
-  parser_version: '1.0'
+  parser_version: sk_ca_rss_v1
   admin_notes: 'Validated 2026-06-06: RSS feed at sasklawcourts.ca/rss/ca.xml. Fields:
     title, link, description, pubDate. Title format includes neutral citation (e.g.,
     2024 SKCA 123). All decisions require manual review before publication.'
@@ -1431,7 +1452,7 @@ sources:
   authentication_required: false
   rate_limit_policy: polite_1rps
   adapter:
-    parser: sk_ca_rss
+    parser: sk_court_of_appeal_rss
     mode: rss
     machine_ingest_enabled: true
     requires_secret: false

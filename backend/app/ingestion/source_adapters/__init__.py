@@ -41,7 +41,7 @@ ADAPTER_REGISTRY: dict[str, type] = {
     "canlii_api": CanLIIApiAdapter,
     "federal_court_html": FederalCourtHtmlAdapter,
     "scc_lexum_api": SCCLexumApiAdapter,
-    "sk_ca_rss": SKCourtOfAppealRSSAdapter,
+    "sk_court_of_appeal_rss": SKCourtOfAppealRSSAdapter,
     "crawlee_gov_news": CrawleeGovNewsAdapter,
     "sk_legislature_html": SKLegislatureHtmlAdapter,
     "laws_justice_html": LawsJusticeHtmlAdapter,

@@ -23,6 +23,16 @@ export JTA_ADMIN_REVIEW_TOKEN="${JTA_ADMIN_REVIEW_TOKEN:-proof-review-token-ci}"
 
 log() { echo "[proof_docker] $*"; }
 
+# Skip gracefully when Docker is unavailable or daemon is not responding.
+if ! command -v docker >/dev/null 2>&1; then
+    log "SKIP: docker command not found on this host"
+    exit 0
+fi
+if ! timeout 10 docker info >/dev/null 2>&1; then
+    log "SKIP: docker daemon is not responding"
+    exit 0
+fi
+
 resolve_compose_command() {
     if docker compose version >/dev/null 2>&1; then
         COMPOSE_CMD=(docker compose)

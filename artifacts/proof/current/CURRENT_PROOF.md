@@ -1,30 +1,30 @@
 # CURRENT_PROOF
 
-- generated_at_utc: 2026-06-07T06:20:13.919225+00:00
-- commit_hash: abcd220675f7fb5134519ab88ae303bcab4b70a2
-- alpha_gate_passed: false
-- alpha_gate_status: BLOCKED
-- alpha_candidate: false
-- self_verifying_alpha: false
+- generated_at_utc: 2026-06-07T09:24:31.228524+00:00
+- commit_hash: 131117bce06d46b2c73d436427a9f6477bfc7598
+- alpha_gate_passed: true
+- alpha_gate_status: PASS
+- alpha_candidate: true
+- self_verifying_alpha: true
 - production_release_candidate: false
 - production_ready: false
 - public_release_safe: false
 - release_gate_check_count: 57
-- docker_available: false
-- postgis_proof_result: BLOCKED
+- docker_available: true
+- postgis_proof_result: PASS
 - egress_proxy_proof_result: PASS
-- demo_proof_result: FAIL
+- demo_proof_result: PASS
 - proof_freshness_result: PASS
 - archive_validation_result: PASS
-- proof_input_tree_hash: 64e6567734ce35cd92e9442a459a3277fb9d3efb846236a3a580f2a78a0cfc3c
-- proof_input_file_count: 1149
+- proof_input_tree_hash: 7b360fbbfba4bc7a65cd87a70bbbeb0b25487bf3adc467c6989a476d4c847a87
+- proof_input_file_count: 1150
 - egress_proxy_proof_log: artifacts/proof/current/egress_proxy_proof.log
 - demo_proof_log: artifacts/proof/current/demo_proof.log
 
 ## Runtime Metadata
 
 - gate_runner_python_version: 3.11.9
-- gate_runner_python_executable: [REDACTED_LOCAL_PATH]
+- gate_runner_python_executable: [REDACTED_LOCAL_PATH]/backend/.venv/bin/python3
 - backend_test_python_version: 3.11.9
 - backend_test_python_executable: [REDACTED_LOCAL_PATH]/backend/.venv/bin/python
 - backend_required_python: >=3.11
@@ -47,9 +47,9 @@
 - make verify = local no-Docker quality checks.
 - make release-proof-local = Docker/PostGIS alpha release gate.
 - Current alpha release is blocked if Docker/PostGIS proof fails.
-- Docker/PostGIS proof did not pass in the current release gate.
+- Docker/PostGIS proof passed in the current release gate.
 - Dedicated egress proxy proof passed in the current release gate.
-- Dedicated synthetic demo proof did not pass in the current release gate.
+- Dedicated synthetic demo proof passed in the current release gate.
 - Proof freshness passed against the stored proof-input file list and tree hash.
 - Archive validation passed against the final distributable archive shape.
 - archive_validation_log: artifacts/proof/current/archive_validation.log
@@ -68,29 +68,13 @@
 - backend import proof: PASS (112 routes)
 - frontend contracts: 51 passed
 - public API boundary: 55 passed
-- Docker runtime preflight: FAIL
-- PostGIS proof: BLOCKED
+- Docker runtime preflight: PASS
+- PostGIS proof: PASS
 - egress proxy proof: PASS
-- demo proof: FAIL
+- demo proof: PASS
 - CanLII staging proof: PASS
 - mutation fail-closed coverage: PASS
 - Alembic migrations: 75
-
-## Failed Checks
-
-- check_migrations
-- docker_runtime_preflight
-- docker_smoke
-- postgis_proof
-- demo_proof
-- check_source_registry_docs
-- prepare_proof_db
-- source_registry_proof_pytest
-
-## Blocked Checks
-
-- docker_smoke: docker_runtime_preflight failed
-- postgis_proof: docker_runtime_preflight failed
 
 ## Egress Proxy Coverage
 

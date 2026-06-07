@@ -1,14 +1,14 @@
 # Source Coverage Matrix
 
 Generated from artifacts/proof/current/source_registry_status.json.
-Generated at: 2026-06-07T06:18:55.589905+00:00
+Generated at: 2026-06-07T09:23:16.172179+00:00
 
 ## Summary
 
 - total_sources: 27
-- machine_ingest_sources: 9
+- machine_ingest_sources: 12
 - runnable_now: 8
-- enable_ready: 0
+- enable_ready: 3
 - deprecated: 3
 
 ## Sources
@@ -25,7 +25,7 @@ Generated at: 2026-06-07T06:18:55.589905+00:00
 | justice_canada_laws_xml_repo | Canada | manual_reference | manual_reference | adapter_missing | false | false |  | missing_parser | Use justice_canada_laws_xml as the live ingest source. This entry is for schema and DTD reference only. |
 | justice_canada_lims_xml_dtd | Canada | manual_reference | manual_reference | adapter_missing | false | false |  | missing_parser | Keep as a documentation reference; not a data source. |
 | justice_canada_otto_reference | Canada | manual_reference | manual_reference | adapter_missing | false | false |  | missing_parser | Keep as a documentation reference; not a data source. |
-| rcmp_sk_news | Saskatchewan, Canada | disabled_stub | disabled_stub | adapter_missing | false | false | crawlee_police_release | found | Evaluate whether a scraper is required or remove this stub. |
+| rcmp_sk_news | Saskatchewan, Canada | machine_ingest | runnable_disabled | machine_ready_disabled | false | true | crawlee_police_release | found | Run fixture tests, then enable manually for controlled staging crawl. |
 | saskatchewan_legislation | CA-SK | portal_reference | portal_reference | adapter_missing | false | false |  | missing_parser | Evaluate whether an RSS/XML feed can be configured; otherwise keep as portal_reference. |
 | saskatoon_open_data_crime | Saskatoon, Saskatchewan, Canada | portal_reference | portal_reference | adapter_missing | false | false | saskatoon_csv | found | Check data.saskatoon.ca for updated CSV/JSON endpoint; write adapter if machine-readable. |
 | saskatoon_open_data_portal | Saskatoon, Saskatchewan, Canada | portal_reference | portal_reference | adapter_missing | false | false | ckan_api | found | Prefer specific source_key entries per dataset. |
@@ -33,15 +33,15 @@ Generated at: 2026-06-07T06:18:55.589905+00:00
 | saskatoon_police_open_data | Saskatoon, Saskatchewan, Canada | portal_reference | portal_reference | adapter_missing | false | false | saskatoon_police_csv | found | Monitor Saskatoon Police data portal for a machine-readable feed. |
 | scc_decisions | Canada | machine_ingest | runnable | machine_ready_enabled | true | false | scc_lexum_api | found | Monitor ingestion runs and review queue for new snapshots. |
 | scc_judgments | Canada | machine_ingest | deprecated | deprecated | false | false | scc_lexum_api | found | Migrate any references from scc_judgments to scc_decisions and remove this entry. |
-| sk_court_of_appeal | Saskatchewan, Canada | machine_ingest | runnable | machine_ready_enabled | true | false | sk_ca_rss | found | Monitor ingestion runs and review queue for new snapshots. |
+| sk_court_of_appeal | Saskatchewan, Canada | machine_ingest | runnable | machine_ready_enabled | true | false | sk_court_of_appeal_rss | found | Monitor ingestion runs and review queue for new snapshots. |
 | sk_courts_ca_decisions | Saskatchewan, Canada | machine_ingest | runnable | machine_ready_enabled | true | false | canlii_api | found | Monitor ingestion runs and review queue for new snapshots. |
 | sk_courts_qb_decisions | Saskatchewan, Canada | machine_ingest | runnable | machine_ready_enabled | true | false | canlii_api | found | Monitor ingestion runs and review queue for new snapshots. |
-| sk_justice_ministry | Saskatchewan, Canada | disabled_stub | disabled_stub | adapter_missing | false | false | crawlee_gov_news | found | Define what specific data is needed, then write a targeted adapter. |
+| sk_justice_ministry | Saskatchewan, Canada | machine_ingest | runnable_disabled | machine_ready_disabled | false | true | crawlee_gov_news | found | Run fixture tests, then enable manually for controlled staging crawl. |
 | sk_legislature_hansard | Saskatchewan, Canada | machine_ingest | runnable | machine_ready_enabled | true | false | sk_legislature_html | found | Monitor ingestion runs and review queue for new snapshots. |
 | statscan_ccjs_crime_sk | Saskatchewan, Canada | portal_reference | portal_reference | adapter_missing | false | false | statscan_table | found | Monitor StatsCan open data API for a machine-readable CCJS endpoint. |
 | statscan_crime_tables | Canada | portal_reference | portal_reference | adapter_missing | false | false | statscan_table | found | Monitor StatsCan API roadmap; build adapter if open data endpoint is published. |
 | statscan_ucr_national | Canada | portal_reference | portal_reference | adapter_missing | false | false | statscan_table | found | Monitor StatsCan open data API for a machine-readable UCR endpoint. |
-| web_monitor_saskatoon_police_news | Saskatoon, Saskatchewan, Canada | disabled_stub | disabled_stub | adapter_missing | false | false | crawlee_police_release | found | Evaluate whether a scraper is required or remove this stub. |
+| web_monitor_saskatoon_police_news | Saskatoon, Saskatchewan, Canada | machine_ingest | runnable_disabled | machine_ready_disabled | false | true | crawlee_police_release | found | Run fixture tests, then enable manually for controlled staging crawl. |
 
 ## Notes
 

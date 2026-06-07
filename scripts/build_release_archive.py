@@ -51,6 +51,7 @@ DEFAULT_INCLUDE_FILES = (
     "artifacts/release_blockers.json",
     "STUBS_AND_PLACEHOLDERS.md",
     "REPO_REALITY.md",
+    "REPAIR_STATUS.md",
     "COMPLETION_CHECKLIST.md",
     "Makefile",
     "pyproject.toml",

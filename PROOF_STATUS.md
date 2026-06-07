@@ -24,8 +24,8 @@
 - **Platform**: macOS-26.2-arm64
 - **Database**: SQLite (test), PostgreSQL (PostGIS proof)
 - **Docker**: See canonical proof logs for the current run state.
-- **alpha_candidate**: false
-- **self_verifying_alpha**: false
+- **alpha_candidate**: true
+- **self_verifying_alpha**: true
 - **production_release_candidate**: false
 - **production_ready**: false
 - **public_release_safe**: false
@@ -61,12 +61,12 @@ make proof
 ## Status Matrix
 
 - authority: artifacts/proof/current/release_gate.json
-- alpha_candidate: false
-- self_verifying_alpha: false
+- alpha_candidate: true
+- self_verifying_alpha: true
 - production_release_candidate: false
 - production_ready: false
 - public_release_safe: false
-- ingestion_coverage: 7/26 runnable sources (from canonical source-registry proof)
+- ingestion_coverage: 8/27 runnable sources (from canonical source-registry proof)
 - AI_answering_enabled: true (derivative, evidence-cited alpha mode)
 - workflow_admin_enabled: false (gated/experimental)
 - live_map_enabled: false (gated)

@@ -38,6 +38,20 @@ mkdir -p "$(dirname "$PROOF_LOG")"
 # Capture complete script output from first line onward.
 exec > >(tee "$PROOF_LOG") 2>&1
 
+# Skip gracefully when Docker is unavailable.
+if ! command -v docker >/dev/null 2>&1; then
+    echo "[proof_postgis] SKIP: docker command not found on this host"
+    echo "[proof_postgis] INFO: PostGIS proof requires Docker; skipping on this host"
+    exit 0
+fi
+
+# Skip gracefully when Docker daemon is not responding.
+if ! timeout 5 docker info >/dev/null 2>&1; then
+    echo "[proof_postgis] SKIP: docker daemon is not responding"
+    echo "[proof_postgis] INFO: PostGIS proof requires Docker daemon; skipping on this host"
+    exit 0
+fi
+
 echo "[proof_postgis] Log path: $PROOF_LOG"
 echo "[proof_postgis] Backend Python: $BACKEND_PYTHON"
 echo "[proof_postgis] INFO: docker_timeout=${DOCKER_TIMEOUT_SECONDS}s pull_timeout=${PULL_TIMEOUT_SECONDS}s"

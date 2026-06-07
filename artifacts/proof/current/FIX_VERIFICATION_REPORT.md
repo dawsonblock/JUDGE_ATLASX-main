@@ -1,10 +1,10 @@
 # FIX_VERIFICATION_REPORT
 
-- generated_at_utc: 2026-06-07T06:20:13.919225+00:00
-- commit_hash: abcd220675f7fb5134519ab88ae303bcab4b70a2
-- alpha_gate_passed: false
-- alpha_candidate: false
-- self_verifying_alpha: false
+- generated_at_utc: 2026-06-07T09:24:31.228524+00:00
+- commit_hash: 131117bce06d46b2c73d436427a9f6477bfc7598
+- alpha_gate_passed: true
+- alpha_candidate: true
+- self_verifying_alpha: true
 - production_release_candidate: false
 - production_ready: false
 - public_release_safe: false
@@ -24,14 +24,7 @@
 
 ## Release Blockers
 
-- check_migrations
-- docker_runtime_preflight
-- docker_smoke
-- postgis_proof
-- demo_proof
-- check_source_registry_docs
-- prepare_proof_db
-- source_registry_proof_pytest
+- none
 
 ## Canonical Artifacts
 

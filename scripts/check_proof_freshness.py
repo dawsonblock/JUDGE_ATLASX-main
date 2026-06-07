@@ -59,7 +59,6 @@ PROOF_INPUT_PATTERNS = [
     "docs/PROOF.md",
     "docs/SOURCES.md",
     "docs/AI_PIPELINE.md",
-    "CURRENT_PROOF.md",
 ]
 
 IGNORE_PATH_PREFIXES = {

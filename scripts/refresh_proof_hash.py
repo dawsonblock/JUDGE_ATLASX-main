@@ -40,6 +40,18 @@ def main() -> int:
         return 2
 
     payload = metadata_payload(repo_root)
+    hash_value = payload["proof_input_tree_hash"]
+    count_value = str(payload["proof_input_file_count"])
+
+    # Update CURRENT_PROOF.md files (root and artifacts/proof/current/)
+    for cp_rel in ("CURRENT_PROOF.md", "artifacts/proof/current/CURRENT_PROOF.md"):
+        cp_path = repo_root / cp_rel
+        if not cp_path.exists():
+            continue
+        cp_text = cp_path.read_text(encoding="utf-8")
+        cp_text = CURRENT_PROOF_HASH_RE.sub(rf"\g<1>{hash_value}", cp_text)
+        cp_text = CURRENT_PROOF_COUNT_RE.sub(rf"\g<1>{count_value}", cp_text)
+        cp_path.write_text(cp_text, encoding="utf-8")
 
     # Update release_gate.json
     gate_path = repo_root / "artifacts" / "proof" / "current" / "release_gate.json"
@@ -55,19 +67,6 @@ def main() -> int:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest["proof_input_tree_hash"] = payload["proof_input_tree_hash"]
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
-
-    # Update CURRENT_PROOF.md files (root and artifacts/proof/current/)
-    hash_value = payload["proof_input_tree_hash"]
-    count_value = str(payload["proof_input_file_count"])
-
-    for cp_rel in ("CURRENT_PROOF.md", "artifacts/proof/current/CURRENT_PROOF.md"):
-        cp_path = repo_root / cp_rel
-        if not cp_path.exists():
-            continue
-        cp_text = cp_path.read_text(encoding="utf-8")
-        cp_text = CURRENT_PROOF_HASH_RE.sub(rf"\g<1>{hash_value}", cp_text)
-        cp_text = CURRENT_PROOF_COUNT_RE.sub(rf"\g<1>{count_value}", cp_text)
-        cp_path.write_text(cp_text, encoding="utf-8")
 
     print("Proof hash refreshed")
     return 0
